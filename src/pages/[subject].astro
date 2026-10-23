@@ -1,0 +1,41 @@
+---
+import Base from '../layouts/Base.astro';
+import SubjectTabs from '../components/shell/SubjectTabs.astro';
+import Quiz from '../components/quiz/Quiz.svelte';
+import { SUBJECTS } from '../lib/subjects';
+import type { Question, Subject } from '../lib/types';
+
+export function getStaticPaths() {
+  return SUBJECTS.map(({ slug, title }) => ({
+    params: { subject: slug },
+    props: { title },
+  }));
+}
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+const subject = Astro.params.subject as Subject;
+
+const modules = import.meta.glob<Question>('../data/*.json', { eager: true, import: 'default' });
+const questions = modules[`../data/${subject}.json`] ?? [];
+---
+
+<Base
+  title={`${title} practice`}
+  description={`Practise ICSE Class 10 ${title} multiple-choice questions with explanations for every answer.`}
+>
+  <SubjectTabs active={subject} />
+
+  <section class="mb-6 max-w-2xl">
+    <p class="text-sm font-semibold uppercase tracking-widest text-indigo-600 dark:text-indigo-400">ICSE Class 10</p>
+    <h1 class="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">{title}</h1>
+    <p class="mt-3 text-base leading-relaxed text-slate-600 dark:text-slate-400">
+      Choose a session length, then work through each question at your own pace.
+    </p>
+  </section>
+
+  <Quiz client:load subject={subject} questions={questions} />
+</Base>

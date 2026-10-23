@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import SubjectGrid from '../components/shell/SubjectGrid.svelte';
+import { SUBJECTS } from '../lib/subjects';
+---
+
+<Base>
+  <section class="mb-8 max-w-2xl">
+    <p class="text-sm font-semibold uppercase tracking-widest text-indigo-600 dark:text-indigo-400">ICSE Class 10</p>
+    <h1 class="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">Practice MCQs by subject</h1>
+    <p class="mt-3 text-base leading-relaxed text-slate-600 dark:text-slate-400">
+      Pick a subject, choose a session length, and get an explanation after every answer. Your progress and accuracy are
+      saved in this browser.
+    </p>
+  </section>
+
+  <SubjectGrid client:load subjects={SUBJECTS} />
+</Base>

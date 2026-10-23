@@ -1,0 +1,71 @@
+---
+import '../styles/global.css';
+import ThemeToggle from '../components/shell/ThemeToggle.svelte';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = 'Practise ICSE Class 10 multiple-choice questions for History & Civics, Economics, Geography, Maths and English Literature.',
+} = Astro.props;
+
+const pageTitle = title ? `${title} | ICSE 10 MCQs` : 'ICSE Class 10 MCQ Practice';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="color-scheme" content="light dark" />
+    <script is:inline>
+      (() => {
+        let stored = null;
+        try {
+          stored = localStorage.getItem('theme');
+        } catch {
+          /* localStorage can be blocked; fall back to the system preference */
+        }
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const isDark = stored === 'dark' || (stored !== 'light' && prefersDark);
+        document.documentElement.classList.toggle('dark', isDark);
+        document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
+      })();
+    </script>
+    <title>{pageTitle}</title>
+  </head>
+  <body class="flex min-h-dvh flex-col bg-slate-50 text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-indigo-600 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white"
+    >
+      Skip to content
+    </a>
+
+    <header class="sticky top-0 z-40 border-b border-slate-200 bg-slate-50/90 backdrop-blur dark:border-slate-800 dark:bg-slate-950/90">
+      <div class="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-4 py-3">
+        <a href="/" class="flex items-center gap-2 rounded-lg text-sm font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+          <span class="grid h-8 w-8 place-items-center rounded-lg bg-indigo-600 text-sm font-bold text-white dark:bg-indigo-500">
+            10
+          </span>
+          <span>ICSE MCQs</span>
+        </a>
+        <ThemeToggle client:load />
+      </div>
+    </header>
+
+    <main id="main" tabindex="-1" class="mx-auto w-full max-w-5xl flex-1 px-4 pb-16 pt-6 sm:pt-10">
+      <slot />
+    </main>
+
+    <footer class="border-t border-slate-200 py-6 dark:border-slate-800">
+      <p class="mx-auto w-full max-w-5xl px-4 text-sm text-slate-500 dark:text-slate-400">
+        ICSE Class 10 practice. Progress is saved only in this browser.
+      </p>
+    </footer>
+  </body>
+</html>

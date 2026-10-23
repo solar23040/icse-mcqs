@@ -1,14 +1,13 @@
-// Temporary local copy for Agent A tests. Agent C owns the real types.ts.
 export type Subject = 'history' | 'economics' | 'geography' | 'maths' | 'english-lit';
 
 export interface Question {
   id: string;
   question: string;
-  options: string[];
-  answer: number;
+  options: string[]; /* exactly 4 */
+  answer: number; /* index into options, 0-3 */
   explanation: string;
   verified: boolean;
-  source?: string;
+  source?: string; /* INTERNAL ONLY, never render */
 }
 
 export interface SessionQuestion {
