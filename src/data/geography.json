@@ -1,0 +1,47 @@
+[
+  {
+    "id": "geo-001",
+    "question": "PLACEHOLDER: Geography question 1 - replace with a verified board-style question.",
+    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
+    "answer": 0,
+    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "verified": false,
+    "source": "placeholder"
+  },
+  {
+    "id": "geo-002",
+    "question": "PLACEHOLDER: Geography question 2 - replace with a verified board-style question.",
+    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
+    "answer": 0,
+    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "verified": false,
+    "source": "placeholder"
+  },
+  {
+    "id": "geo-003",
+    "question": "PLACEHOLDER: Geography question 3 - replace with a verified board-style question.",
+    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
+    "answer": 0,
+    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "verified": false,
+    "source": "placeholder"
+  },
+  {
+    "id": "geo-004",
+    "question": "PLACEHOLDER: Geography question 4 - replace with a verified board-style question.",
+    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
+    "answer": 0,
+    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "verified": false,
+    "source": "placeholder"
+  },
+  {
+    "id": "geo-005",
+    "question": "PLACEHOLDER: Geography question 5 - replace with a verified board-style question.",
+    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
+    "answer": 0,
+    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "verified": false,
+    "source": "placeholder"
+  }
+]

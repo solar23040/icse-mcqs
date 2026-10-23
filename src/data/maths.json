@@ -1,0 +1,47 @@
+[
+  {
+    "id": "math-001",
+    "question": "PLACEHOLDER: Maths question 1 - replace with a verified board-style question.",
+    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
+    "answer": 0,
+    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "verified": false,
+    "source": "placeholder"
+  },
+  {
+    "id": "math-002",
+    "question": "PLACEHOLDER: Maths question 2 - replace with a verified board-style question.",
+    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
+    "answer": 0,
+    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "verified": false,
+    "source": "placeholder"
+  },
+  {
+    "id": "math-003",
+    "question": "PLACEHOLDER: Maths question 3 - replace with a verified board-style question.",
+    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
+    "answer": 0,
+    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "verified": false,
+    "source": "placeholder"
+  },
+  {
+    "id": "math-004",
+    "question": "PLACEHOLDER: Maths question 4 - replace with a verified board-style question.",
+    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
+    "answer": 0,
+    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "verified": false,
+    "source": "placeholder"
+  },
+  {
+    "id": "math-005",
+    "question": "PLACEHOLDER: Maths question 5 - replace with a verified board-style question.",
+    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
+    "answer": 0,
+    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "verified": false,
+    "source": "placeholder"
+  }
+]
