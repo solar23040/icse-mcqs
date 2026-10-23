@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { buildSession, shuffle } from './engine';
 import type { Question } from './types';
 
@@ -58,6 +58,17 @@ describe('buildSession', () => {
     expect(result.questions).toHaveLength(4);
     expect(result.unseenCount).toBe(4);
     expect(result.questions.every((question) => !['q2', 'q6'].includes(question.id))).toBe(true);
+  });
+
+  it('shuffles the question order', () => {
+    const random = vi.spyOn(Math, 'random').mockReturnValue(0);
+
+    try {
+      const result = buildSession(makePool(4), [], 'all');
+      expect(ids(result.questions)).toEqual(['q2', 'q3', 'q4', 'q1']);
+    } finally {
+      random.mockRestore();
+    }
   });
 
   it('keeps the correct answer after shuffling options for 200 iterations', () => {
