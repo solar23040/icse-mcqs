@@ -1,0 +1,6 @@
+Near-duplicate question report
+
+Jaccard token similarity, threshold > 0.90.
+These are warnings only and do not fail validation.
+
+No near-duplicate warnings.

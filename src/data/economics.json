@@ -1,47 +1,842 @@
 [
   {
-    "id": "eco-001",
-    "question": "PLACEHOLDER: Economics question 1 - replace with a verified board-style question.",
-    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
-    "answer": 0,
-    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "id": "econ-001",
+    "question": "Land is a ___ factor of production.",
+    "options": [
+      "slow",
+      "primary",
+      "secondary",
+      "perishable"
+    ],
+    "answer": 1,
+    "explanation": "Land is a primary or original factor of production because it is provided by nature.",
     "verified": false,
-    "source": "placeholder"
+    "source": "icse-class-10-economics-t23-641-2023.pdf"
   },
   {
-    "id": "eco-002",
-    "question": "PLACEHOLDER: Economics question 2 - replace with a verified board-style question.",
-    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
-    "answer": 0,
-    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "id": "econ-002",
+    "question": "There is a ___ relationship between demand and price.",
+    "options": [
+      "direct",
+      "inverse",
+      "positive",
+      "substitute"
+    ],
+    "answer": 1,
+    "explanation": "The law of demand states that demand and price are inversely related, other things remaining constant.",
     "verified": false,
-    "source": "placeholder"
+    "source": "icse-class-10-economics-t23-641-2023.pdf"
   },
   {
-    "id": "eco-003",
-    "question": "PLACEHOLDER: Economics question 3 - replace with a verified board-style question.",
-    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
-    "answer": 0,
-    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "id": "econ-003",
+    "question": "The products which are identical in design, shape, quality, size, colour, packing, etc. are:",
+    "options": [
+      "Heterogeneous products",
+      "Differentiated products",
+      "Homogeneous products",
+      "Progressive products"
+    ],
+    "answer": 2,
+    "explanation": "Homogeneous products are identical and are a feature of perfect competition.",
     "verified": false,
-    "source": "placeholder"
+    "source": "icse-class-10-economics-t23-641-2023.pdf"
   },
   {
-    "id": "eco-004",
-    "question": "PLACEHOLDER: Economics question 4 - replace with a verified board-style question.",
-    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
-    "answer": 0,
-    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "id": "econ-004",
+    "question": "Which of the following is a form of consumer exploitation?",
+    "options": [
+      "Limited competition",
+      "Illiteracy",
+      "Food adulteration",
+      "Consumer forum"
+    ],
+    "answer": 2,
+    "explanation": "Food adulteration is a direct form of consumer exploitation because it involves selling harmful or inferior goods.",
     "verified": false,
-    "source": "placeholder"
+    "source": "icse-class-10-economics-t23-641-2023.pdf"
   },
   {
-    "id": "eco-005",
-    "question": "PLACEHOLDER: Economics question 5 - replace with a verified board-style question.",
-    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
+    "id": "econ-005",
+    "question": "The apex bank which controls, regulates, and supervises the activities of commercial banks is the:",
+    "options": [
+      "Central Bank",
+      "Scheduled Banks",
+      "State Bank of India",
+      "State Government"
+    ],
     "answer": 0,
-    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "explanation": "The Central Bank is the apex monetary institution that controls and supervises commercial banks.",
     "verified": false,
-    "source": "placeholder"
+    "source": "icse-class-10-economics-t23-641-2023.pdf"
+  },
+  {
+    "id": "econ-006",
+    "question": "The study about the revenue and expenditure operations of the government is also known as:",
+    "options": [
+      "public revenue",
+      "public expenditure",
+      "public debt",
+      "public finance"
+    ],
+    "answer": 3,
+    "explanation": "Public finance studies the revenue and expenditure operations of the government.",
+    "verified": false,
+    "source": "icse-class-10-economics-t23-641-2023.pdf"
+  },
+  {
+    "id": "econ-007",
+    "question": "Which market structure has only one seller?",
+    "options": [
+      "Oligopoly",
+      "Monopolistic competition",
+      "Monopoly",
+      "Perfect competition"
+    ],
+    "answer": 2,
+    "explanation": "A monopoly market has a single seller of a product with no close substitutes.",
+    "verified": false,
+    "source": "icse-class-10-economics-t23-641-2023.pdf"
+  },
+  {
+    "id": "econ-008",
+    "question": "Labour cannot be separated from the:",
+    "options": [
+      "labourer",
+      "contractor",
+      "entrepreneur",
+      "occupation"
+    ],
+    "answer": 0,
+    "explanation": "Labour is inseparable from the labourer because the worker must be present when work is done.",
+    "verified": false,
+    "source": "icse-class-10-economics-t23-641-2023.pdf"
+  },
+  {
+    "id": "econ-009",
+    "question": "The firm under perfect competition is a:",
+    "options": [
+      "price maker",
+      "price taker",
+      "price stabilizer",
+      "price controller"
+    ],
+    "answer": 1,
+    "explanation": "Under perfect competition, a firm is a price taker because it cannot influence the market price.",
+    "verified": false,
+    "source": "icse-class-10-economics-t23-641-2023.pdf"
+  },
+  {
+    "id": "econ-010",
+    "question": "The evolution of money started with the ___ stage.",
+    "options": [
+      "commodity money",
+      "metallic money",
+      "bank money",
+      "animal money"
+    ],
+    "answer": 3,
+    "explanation": "Animal money is regarded as the earliest stage in the evolution of money.",
+    "verified": false,
+    "source": "icse-class-10-economics-t23-641-2023.pdf"
+  },
+  {
+    "id": "econ-011",
+    "question": "The demand for rice by all the people in your area will be called ___ demand.",
+    "options": [
+      "individual",
+      "social",
+      "market",
+      "society"
+    ],
+    "answer": 2,
+    "explanation": "Market demand is the total demand for a commodity by all buyers in the market.",
+    "verified": false,
+    "source": "icse-class-10-economics-t23-641-2023.pdf"
+  },
+  {
+    "id": "econ-012",
+    "question": "___ deposits earn a very low rate of interest.",
+    "options": [
+      "Demand",
+      "Saving",
+      "Recurring",
+      "Cumulative"
+    ],
+    "answer": 1,
+    "explanation": "Saving deposits earn a low rate of interest compared with fixed deposits.",
+    "verified": false,
+    "source": "icse-class-10-economics-t23-641-2023.pdf"
+  },
+  {
+    "id": "econ-013",
+    "question": "Printers and ink cartridges are an example of ___ demand.",
+    "options": [
+      "competitive",
+      "composite",
+      "joint",
+      "office"
+    ],
+    "answer": 2,
+    "explanation": "Joint demand occurs for complementary goods that are used together.",
+    "verified": false,
+    "source": "icse-class-10-economics-t23-641-2023.pdf"
+  },
+  {
+    "id": "econ-014",
+    "question": "The debt borrowed by the government from within the boundaries of the country is called ___ debt.",
+    "options": [
+      "internal",
+      "external",
+      "wholesale",
+      "retail"
+    ],
+    "answer": 0,
+    "explanation": "Internal debt is borrowed by the government from sources within the country.",
+    "verified": false,
+    "source": "icse-class-10-economics-t23-641-2023.pdf"
+  },
+  {
+    "id": "econ-015",
+    "question": "When percentage change in quantity supplied is equal to percentage change in price, then it is ___ supply.",
+    "options": [
+      "unit elastic",
+      "perfectly elastic",
+      "perfectly inelastic",
+      "normal elastic"
+    ],
+    "answer": 0,
+    "explanation": "Unit elastic supply means the percentage change in quantity supplied equals the percentage change in price.",
+    "verified": false,
+    "source": "icse-class-10-economics-t23-641-2023.pdf"
+  },
+  {
+    "id": "econ-016",
+    "question": "Toll tax is an example of ___ revenue of the government.",
+    "options": [
+      "administrative",
+      "commercial",
+      "fee",
+      "direct"
+    ],
+    "answer": 0,
+    "explanation": "Toll is treated as a fee-type receipt, which is part of administrative revenue.",
+    "verified": false,
+    "source": "icse-class-10-economics-t23-641-2023.pdf"
+  },
+  {
+    "id": "econ-017",
+    "question": "If the rate of tax falls with an increase in income, it is called as:",
+    "options": [
+      "Regressive",
+      "Progressive",
+      "Digressive",
+      "Proportional"
+    ],
+    "answer": 0,
+    "explanation": "A regressive tax takes a larger proportion of income from lower-income groups.",
+    "verified": false,
+    "source": "icse-class-10-economics-t24-641-2024.pdf"
+  },
+  {
+    "id": "econ-018",
+    "question": "Which is an assumption to law of demand?",
+    "options": [
+      "No change in price of factor input",
+      "No change in size and composition of population",
+      "No change in number of firms operating in a market",
+      "No change in goal of a firm"
+    ],
+    "answer": 1,
+    "explanation": "The law of demand assumes that factors such as population size and composition do not change.",
+    "verified": false,
+    "source": "icse-class-10-economics-t24-641-2024.pdf"
+  },
+  {
+    "id": "econ-019",
+    "question": "Which is an essential feature of barter system?",
+    "options": [
+      "It is based on transfer of value",
+      "It is based on double coincidence of wants",
+      "It is based on unit of account",
+      "It is based on store of value"
+    ],
+    "answer": 1,
+    "explanation": "Barter requires a double coincidence of wants for exchange to take place.",
+    "verified": false,
+    "source": "icse-class-10-economics-t24-641-2024.pdf"
+  },
+  {
+    "id": "econ-020",
+    "question": "If a labourer does not work for a day, his one day's work will be lost forever. It implies:",
+    "options": [
+      "Labour is less mobile",
+      "Labour is perishable",
+      "Labour is less efficient",
+      "Labour is sensitive in nature"
+    ],
+    "answer": 1,
+    "explanation": "Labour is perishable because it cannot be stored and is lost if not used at that time.",
+    "verified": false,
+    "source": "icse-class-10-economics-t24-641-2024.pdf"
+  },
+  {
+    "id": "econ-021",
+    "question": "With reference to Perfect competition form of market, choose the odd one out.",
+    "options": [
+      "Restricted entry",
+      "Perfect knowledge",
+      "Homogeneous products",
+      "Perfect mobility"
+    ],
+    "answer": 0,
+    "explanation": "Perfect competition requires free entry and exit, not restricted entry.",
+    "verified": false,
+    "source": "icse-class-10-economics-t24-641-2024.pdf"
+  },
+  {
+    "id": "econ-022",
+    "question": "Maruti, Tata and Hyundai are examples of which form of market?",
+    "options": [
+      "Perfect competition",
+      "Oligopoly",
+      "Monopoly",
+      "Duopoly"
+    ],
+    "answer": 1,
+    "explanation": "Oligopoly is a market with a few large sellers, such as major car manufacturers.",
+    "verified": false,
+    "source": "icse-class-10-economics-t24-641-2024.pdf"
+  },
+  {
+    "id": "econ-023",
+    "question": "With price being same, an increase in the price of inputs will lead to ___ in the supply curve.",
+    "options": [
+      "Upward movement",
+      "Rightward shift",
+      "Downward movement",
+      "Leftward shift"
+    ],
+    "answer": 3,
+    "explanation": "Higher input prices raise costs and reduce supply, shifting the supply curve leftward.",
+    "verified": false,
+    "source": "icse-class-10-economics-t24-641-2024.pdf"
+  },
+  {
+    "id": "econ-024",
+    "question": "Which of the following is not an advantage of division of labour?",
+    "options": [
+      "Reduces cost of production",
+      "Expansion of employment",
+      "Low quality goods",
+      "Inventions"
+    ],
+    "answer": 2,
+    "explanation": "Low quality goods is a disadvantage, not an advantage, of division of labour.",
+    "verified": false,
+    "source": "icse-class-10-economics-t24-641-2024.pdf"
+  },
+  {
+    "id": "econ-025",
+    "question": "The State Electricity Board sells electricity at cheaper rates for domestic use than for commercial use. The given statement shows an act of:",
+    "options": [
+      "Product differentiation",
+      "Price discrimination",
+      "Consumer exploitation",
+      "Price determination"
+    ],
+    "answer": 1,
+    "explanation": "Price discrimination means charging different prices to different buyers for the same product.",
+    "verified": false,
+    "source": "icse-class-10-economics-t24-641-2024.pdf"
+  },
+  {
+    "id": "econ-026",
+    "question": "The year 2023 was celebrated as 'International Year of Millets' and the government decided to subsidize the production of millets. In such case the supply curve will:",
+    "options": [
+      "Shift to the right",
+      "Shift to the left",
+      "Be horizontal",
+      "Be vertical"
+    ],
+    "answer": 0,
+    "explanation": "A subsidy reduces production cost and increases supply, shifting the supply curve to the right.",
+    "verified": false,
+    "source": "icse-class-10-economics-t24-641-2024.pdf"
+  },
+  {
+    "id": "econ-027",
+    "question": "Mr. Rao needs to pay license fee to the government to start his electric vehicle shop and some documents to meet the safety norms. The revenue earned by the government from this process will be called ___ revenue.",
+    "options": [
+      "Commercial",
+      "Central",
+      "GST",
+      "Administrative"
+    ],
+    "answer": 3,
+    "explanation": "License fees are part of administrative revenue of the government.",
+    "verified": false,
+    "source": "icse-class-10-economics-t24-641-2024.pdf"
+  },
+  {
+    "id": "econ-028",
+    "question": "The 'Right' which allows the consumer to receive due consideration at appropriate forum relating to his/her welfare is:",
+    "options": [
+      "Right to education",
+      "Right to seek redressal",
+      "Right to be heard",
+      "Right to be informed"
+    ],
+    "answer": 2,
+    "explanation": "The right to be heard means the consumer's interest receives due consideration at appropriate forums.",
+    "verified": false,
+    "source": "icse-class-10-economics-t24-641-2024.pdf"
+  },
+  {
+    "id": "econ-029",
+    "question": "The elasticity of demand for school bag will be:",
+    "options": [
+      "Elastic",
+      "Perfectly elastic",
+      "Unitary elastic",
+      "Inelastic"
+    ],
+    "answer": 3,
+    "explanation": "A school bag is a necessity with few substitutes, so its demand is relatively inelastic.",
+    "verified": false,
+    "source": "icse-class-10-economics-t24-641-2024.pdf"
+  },
+  {
+    "id": "econ-030",
+    "question": "When State Bank of India is under financial crisis and borrows money from Central Bank at a certain rate against approved securities, it will be called as:",
+    "options": [
+      "Interest rate",
+      "Lending rate",
+      "Reverse lending",
+      "Bank rate"
+    ],
+    "answer": 3,
+    "explanation": "The bank rate is the rate at which the Central Bank lends to commercial banks against approved securities.",
+    "verified": false,
+    "source": "icse-class-10-economics-t24-641-2024.pdf"
+  },
+  {
+    "id": "econ-031",
+    "question": "If Coke and Fanta are close substitutes to each other, a rise in price of Coke will lead to ___ for Fanta.",
+    "options": [
+      "Decrease in demand",
+      "Increase in demand",
+      "Increase in quantity supplied",
+      "No change in demand"
+    ],
+    "answer": 1,
+    "explanation": "When the price of a substitute rises, demand for the other good increases.",
+    "verified": false,
+    "source": "icse-class-10-economics-t24-641-2024.pdf"
+  },
+  {
+    "id": "econ-032",
+    "question": "In economics, what does capital earn as income?",
+    "options": [
+      "Wages",
+      "Rent",
+      "Profit",
+      "Interest"
+    ],
+    "answer": 3,
+    "explanation": "Capital earns interest as its factor income.",
+    "verified": false,
+    "source": "icse-class-10-economics-t25-641-2025.pdf"
+  },
+  {
+    "id": "econ-033",
+    "question": "Which of the following are examples of substitute goods?",
+    "options": [
+      "Coke and Coffee",
+      "Pencil and Eraser",
+      "Tea and Sugar",
+      "Apple iPhones and Samsung Smart Phones"
+    ],
+    "answer": 3,
+    "explanation": "Apple iPhones and Samsung smartphones are close substitutes because they can replace each other.",
+    "verified": false,
+    "source": "icse-class-10-economics-t25-641-2025.pdf"
+  },
+  {
+    "id": "econ-034",
+    "question": "Assertion (A): Mr. Gupta earns a fixed income every month, but he tends to get adversely affected during inflation. Reason (R): The prices of goods, services and the cost of living do not rise in the same proportion as income during inflation.",
+    "options": [
+      "Both (A) and (R) are true and (R) is the correct explanation of (A).",
+      "Both (A) and (R) are true but (R) is not the correct explanation of (A).",
+      "Both (A) and (R) are false.",
+      "(A) is false and (R) is true."
+    ],
+    "answer": 0,
+    "explanation": "Fixed-income earners lose purchasing power during inflation because prices rise faster than their income.",
+    "verified": false,
+    "source": "icse-class-10-economics-t25-641-2025.pdf"
+  },
+  {
+    "id": "econ-035",
+    "question": "Amit buys 1 kg of mangoes at ₹120 per kg. Other things remaining constant, when the price of mangoes falls to ₹90 per kg, he buys 2 kg of mangoes. Amit's choice in the given situation shows which concept?",
+    "options": [
+      "Demand schedule",
+      "Market demand",
+      "Contraction of demand",
+      "Expansion of demand"
+    ],
+    "answer": 3,
+    "explanation": "A fall in price causing a rise in quantity demanded is expansion of demand.",
+    "verified": false,
+    "source": "icse-class-10-economics-t25-641-2025.pdf"
+  },
+  {
+    "id": "econ-036",
+    "question": "The rate of tax, which is uniform for all the taxpayers, is termed as:",
+    "options": [
+      "Progressive",
+      "Proportional",
+      "Regressive",
+      "Direct"
+    ],
+    "answer": 1,
+    "explanation": "A proportional tax applies the same tax rate to all income levels.",
+    "verified": false,
+    "source": "icse-class-10-economics-t25-641-2025.pdf"
+  },
+  {
+    "id": "econ-037",
+    "question": "Which factor will be responsible for 'product diversification' through innovation?",
+    "options": [
+      "Labour",
+      "Entrepreneur",
+      "Capital",
+      "Landowner"
+    ],
+    "answer": 1,
+    "explanation": "The entrepreneur introduces innovations and diversifies production.",
+    "verified": false,
+    "source": "icse-class-10-economics-t25-641-2025.pdf"
+  },
+  {
+    "id": "econ-038",
+    "question": "Statement 1: The primary function of money is to act as a 'store of value'. Statement 2: Money helps in monetary expression of the market value of the commodity.",
+    "options": [
+      "Both Statement 1 and Statement 2 are true.",
+      "Both Statement 1 and Statement 2 are false.",
+      "Statement 1 is true and Statement 2 is false.",
+      "Statement 1 is false and Statement 2 is true."
+    ],
+    "answer": 3,
+    "explanation": "The primary function of money is medium of exchange; store of value is secondary. Money does act as a measure of value.",
+    "verified": false,
+    "source": "icse-class-10-economics-t25-641-2025.pdf"
+  },
+  {
+    "id": "econ-039",
+    "question": "BIS stands for:",
+    "options": [
+      "Bureau of Indian States",
+      "Bureau of Indian Standards",
+      "Bureau of Indian System",
+      "Bureau of Indian Solutions"
+    ],
+    "answer": 1,
+    "explanation": "BIS is the Bureau of Indian Standards, which sets quality standards for goods.",
+    "verified": false,
+    "source": "icse-class-10-economics-t25-641-2025.pdf"
+  },
+  {
+    "id": "econ-040",
+    "question": "Study the table and examine the relation between price and quantity supplied: Price (₹) 10, 12, 14; Quantity supplied (kgs) 5, 7, 9.",
+    "options": [
+      "Positive",
+      "Negative",
+      "Indirect",
+      "Proportional"
+    ],
+    "answer": 0,
+    "explanation": "As price rises, quantity supplied also rises, showing a positive relationship.",
+    "verified": false,
+    "source": "icse-class-10-economics-t25-641-2025.pdf"
+  },
+  {
+    "id": "econ-041",
+    "question": "Which market structure has the least number of sellers?",
+    "options": [
+      "Oligopoly",
+      "Monopolistic competition",
+      "Monopsony",
+      "Perfect competition"
+    ],
+    "answer": 0,
+    "explanation": "Among the given options, oligopoly has a few sellers, which is the least number of sellers.",
+    "verified": false,
+    "source": "icse-class-10-economics-t25-641-2025.pdf"
+  },
+  {
+    "id": "econ-042",
+    "question": "Direct taxes are regressive in nature.",
+    "options": [
+      "True",
+      "False",
+      "Partially true",
+      "Cannot be determined"
+    ],
+    "answer": 1,
+    "explanation": "Direct taxes are generally progressive, not regressive.",
+    "verified": false,
+    "source": "icse-class-10-economics-t25-641-2025.pdf"
+  },
+  {
+    "id": "econ-043",
+    "question": "Radhika cannot postpone her demand for woollen clothes during winter season but at the same time can postpone her demand for a car. This is because her demand for woollen clothes is:",
+    "options": [
+      "Elastic",
+      "Inelastic",
+      "Highly Elastic",
+      "Unit Elastic"
+    ],
+    "answer": 1,
+    "explanation": "Demand for woollen clothes in winter is a necessity and cannot be postponed, so it is inelastic.",
+    "verified": false,
+    "source": "icse-class-10-economics-t25-641-2025.pdf"
+  },
+  {
+    "id": "econ-044",
+    "question": "Revenue earned through Special Assessment is an example of ___ revenue.",
+    "options": [
+      "Direct tax",
+      "Indirect tax",
+      "Administrative",
+      "Commercial"
+    ],
+    "answer": 2,
+    "explanation": "Special assessment is a type of administrative revenue.",
+    "verified": false,
+    "source": "icse-class-10-economics-t25-641-2025.pdf"
+  },
+  {
+    "id": "econ-045",
+    "question": "Efficiency of labour shows the productive capacity of a labourer, whereas division of labour shows ___ of labour.",
+    "options": [
+      "Specialisation",
+      "Utilisation",
+      "Quantity",
+      "Perishability"
+    ],
+    "answer": 0,
+    "explanation": "Division of labour leads to specialisation of labour.",
+    "verified": false,
+    "source": "icse-class-10-economics-t25-641-2025.pdf"
+  },
+  {
+    "id": "econ-046",
+    "question": "Identify the type of debt raised by the government for organising relief camps during natural disasters.",
+    "options": [
+      "Productive",
+      "Unproductive",
+      "Gross",
+      "Funded"
+    ],
+    "answer": 1,
+    "explanation": "Debt used for relief and consumption purposes is unproductive debt.",
+    "verified": false,
+    "source": "icse-class-10-economics-t25-641-2025.pdf"
+  },
+  {
+    "id": "econ-047",
+    "question": "When the value of a commodity is expressed in terms of money it is called:",
+    "options": [
+      "Deposit",
+      "Price",
+      "Barter system",
+      "Transfer of value"
+    ],
+    "answer": 1,
+    "explanation": "Price is the value of a commodity expressed in money.",
+    "verified": false,
+    "source": "icse-class-10-economics-t25-641i-2025.pdf"
+  },
+  {
+    "id": "econ-048",
+    "question": "Which of the following market structures has the maximum number of sellers?",
+    "options": [
+      "Oligopoly",
+      "Monopolistic competition",
+      "Monopsony",
+      "Monopoly"
+    ],
+    "answer": 1,
+    "explanation": "Monopolistic competition has many sellers, more than oligopoly or monopoly.",
+    "verified": false,
+    "source": "icse-class-10-economics-t25-641i-2025.pdf"
+  },
+  {
+    "id": "econ-049",
+    "question": "Rajesh bought a protein powder that claimed to be 100% natural. However, after using it, he developed skin allergy as it contained synthetic ingredients. Which consumer right is violated?",
+    "options": [
+      "Right to be Informed",
+      "Right to Speak",
+      "Right to Choose",
+      "Right to be Heard"
+    ],
+    "answer": 0,
+    "explanation": "The product's false claim violated the consumer's right to be informed.",
+    "verified": false,
+    "source": "icse-class-10-economics-t25-641i-2025.pdf"
+  },
+  {
+    "id": "econ-050",
+    "question": "In modern times public expenditure in all the countries has increased tremendously. Reason (R): The provision for social security measures like old age pensions is NOT one of the duties of the Government.",
+    "options": [
+      "Both (A) and (R) are correct and (R) is the correct explanation of (A).",
+      "Both (A) and (R) are correct and (R) is not the correct explanation of (A).",
+      "(A) is false and (R) is true.",
+      "(A) is true and (R) is false."
+    ],
+    "answer": 3,
+    "explanation": "Public expenditure has increased, but social security is a government duty, so the reason is false.",
+    "verified": false,
+    "source": "icse-class-10-economics-t25-641i-2025.pdf"
+  },
+  {
+    "id": "econ-051",
+    "question": "If inflation is a result of an increase in the price of factors of production, the result is ___ inflation.",
+    "options": [
+      "Creeping",
+      "Cost-push",
+      "Demand-pull",
+      "Running"
+    ],
+    "answer": 1,
+    "explanation": "Cost-push inflation arises from rising costs of production, including factor prices.",
+    "verified": false,
+    "source": "icse-class-10-economics-t25-641i-2025.pdf"
+  },
+  {
+    "id": "econ-052",
+    "question": "Which of the following is a primary reason for demonetisation by the government?",
+    "options": [
+      "To increase foreign investment",
+      "To curb black money and counterfeit currency",
+      "To increase inflation",
+      "To promote foreign trade"
+    ],
+    "answer": 1,
+    "explanation": "Demonetisation is primarily aimed at curbing black money and counterfeit currency.",
+    "verified": false,
+    "source": "icse-class-10-economics-t25-641i-2025.pdf"
+  },
+  {
+    "id": "econ-053",
+    "question": "Study the relationship in the first pair and complete the second pair: I. Monopolistic competition – Differentiated goods; II. Monopoly – ?",
+    "options": [
+      "No close substitutes",
+      "Perfect substitutes",
+      "No Cartel formation",
+      "Small number of sellers"
+    ],
+    "answer": 0,
+    "explanation": "A monopoly sells a product with no close substitutes.",
+    "verified": false,
+    "source": "icse-class-10-economics-t25-641i-2025.pdf"
+  },
+  {
+    "id": "econ-054",
+    "question": "A group of innovative entrepreneurs help to:",
+    "options": [
+      "Create employment opportunities",
+      "Reduce export income",
+      "Bring imbalance in regional growth",
+      "Increase dependence on other economies"
+    ],
+    "answer": 0,
+    "explanation": "Innovative entrepreneurs expand production and create employment opportunities.",
+    "verified": false,
+    "source": "icse-class-10-economics-t25-641i-2025.pdf"
+  },
+  {
+    "id": "econ-055",
+    "question": "Ecofriendly bricks are made from recycled waste. To encourage the producers, Government plans to subsidise electricity and water supply. In this scenario the supply curve of the ecofriendly bricks in market:",
+    "options": [
+      "Shifts rightward",
+      "Shifts leftward",
+      "Moves downward",
+      "Moves upward"
+    ],
+    "answer": 0,
+    "explanation": "A subsidy lowers production cost and increases supply, shifting the supply curve rightward.",
+    "verified": false,
+    "source": "icse-class-10-economics-t25-641i-2025.pdf"
+  },
+  {
+    "id": "econ-056",
+    "question": "Goods that can be used in place of one another are ___ goods.",
+    "options": [
+      "Complementary",
+      "Substitute",
+      "Composite",
+      "Joint"
+    ],
+    "answer": 1,
+    "explanation": "Substitute goods can be used in place of one another.",
+    "verified": false,
+    "source": "icse-class-10-economics-t25-641i-2025.pdf"
+  },
+  {
+    "id": "econ-057",
+    "question": "Statement 1: Producers benefit from improved and advance technology. Statement 2: Improved technology reduces the cost of production.",
+    "options": [
+      "Statement 1 is true and Statement 2 is false.",
+      "Statement 1 is false and Statement 2 is true.",
+      "Both Statements 1 and 2 are true.",
+      "Both Statements 1 and 2 are false."
+    ],
+    "answer": 2,
+    "explanation": "Improved technology lowers costs and benefits producers, so both statements are true.",
+    "verified": false,
+    "source": "icse-class-10-economics-t25-641i-2025.pdf"
+  },
+  {
+    "id": "econ-058",
+    "question": "Division of labour discourages production in large scale.",
+    "options": [
+      "True",
+      "False",
+      "Partially true",
+      "Cannot be determined"
+    ],
+    "answer": 1,
+    "explanation": "Division of labour encourages large-scale production by increasing efficiency.",
+    "verified": false,
+    "source": "icse-class-10-economics-t25-641i-2025.pdf"
+  },
+  {
+    "id": "econ-059",
+    "question": "Identify the incorrect statement about fixed deposits.",
+    "options": [
+      "They are also called as time deposits.",
+      "The deposits are made in equal intervals.",
+      "They earn high rate of interest.",
+      "There is no cheque facility provided."
+    ],
+    "answer": 1,
+    "explanation": "Deposits made at equal intervals describe recurring deposits, not fixed deposits.",
+    "verified": false,
+    "source": "icse-class-10-economics-t25-641i-2025.pdf"
+  },
+  {
+    "id": "econ-060",
+    "question": "The image shows a type of demand which has many uses. Identify the type of demand.",
+    "options": [
+      "Composite",
+      "Complementary",
+      "Joint",
+      "Substitute"
+    ],
+    "answer": 0,
+    "explanation": "Composite demand refers to demand for a good that has many uses.",
+    "verified": false,
+    "source": "icse-class-10-economics-t25-641i-2025.pdf"
   }
 ]

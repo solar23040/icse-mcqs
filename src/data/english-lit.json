@@ -1,47 +1,450 @@
 [
   {
     "id": "lit-001",
-    "question": "PLACEHOLDER: English Literature question 1 - replace with a verified board-style question.",
-    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
-    "answer": 0,
-    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "question": "What does Antony describe as 'thou bleeding piece of earth'?",
+    "options": [
+      "Caesar's robe that was stained with his blood",
+      "The blood-soaked spot on which Caesar lies",
+      "The bloodied pedestal on which Caesar fell",
+      "Caesar's lifeless body covered in blood"
+    ],
+    "answer": 3,
+    "explanation": "Antony addresses Caesar's corpse as the 'bleeding piece of earth'.",
     "verified": false,
-    "source": "placeholder"
+    "source": "Julius Caesar Act 3 Sc 1"
   },
   {
     "id": "lit-002",
-    "question": "PLACEHOLDER: English Literature question 2 - replace with a verified board-style question.",
-    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
+    "question": "When Brutus says 'ambition's debt is paid', he means that",
+    "options": [
+      "Caesar's greed for power and possession had resulted in his death",
+      "Caesar had left seventy-five drachmas for every citizen of Rome",
+      "Mark Antony would be permitted to speak at Caesar's funeral",
+      "The conspirators would be punished for assassinating Caesar"
+    ],
     "answer": 0,
-    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "explanation": "Brutus claims that Caesar's ambition has been punished by his death.",
     "verified": false,
-    "source": "placeholder"
+    "source": "Julius Caesar Act 3 Sc 2"
   },
   {
     "id": "lit-003",
-    "question": "PLACEHOLDER: English Literature question 3 - replace with a verified board-style question.",
-    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
-    "answer": 0,
-    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "question": "After Antony's speech following Caesar's assassination, the angry mob kills",
+    "options": [
+      "Cinna the conspirator",
+      "Cinna the poet",
+      "Decius Brutus",
+      "Cicero"
+    ],
+    "answer": 1,
+    "explanation": "The mob kills Cinna the poet after confusing him with Cinna the conspirator.",
     "verified": false,
-    "source": "placeholder"
+    "source": "Julius Caesar Act 3 Sc 3"
   },
   {
     "id": "lit-004",
-    "question": "PLACEHOLDER: English Literature question 4 - replace with a verified board-style question.",
-    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
-    "answer": 0,
-    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "question": "When Antony says 'He must be taught, and train'd, and bid go forth: A barren-spirited fellow', he refers to",
+    "options": [
+      "Octavius",
+      "Lucilius",
+      "Lucius",
+      "Lepidus"
+    ],
+    "answer": 3,
+    "explanation": "Antony is speaking dismissively about Lepidus in the triumvirate scene.",
     "verified": false,
-    "source": "placeholder"
+    "source": "Julius Caesar Act 4 Sc 1"
   },
   {
     "id": "lit-005",
-    "question": "PLACEHOLDER: English Literature question 5 - replace with a verified board-style question.",
-    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
-    "answer": 0,
-    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "question": "Who were the members of the Second Triumvirate, formed to rule over Rome after Caesar's assassination?",
+    "options": [
+      "Julius Caesar, Crassus, Pompey",
+      "Marcus Brutus, Caius Cassius, Casca",
+      "Mark Antony, Octavius Caesar, Lepidus",
+      "Octavius Caesar, Julius Caesar, Mark Antony"
+    ],
+    "answer": 2,
+    "explanation": "The Second Triumvirate consisted of Antony, Octavius Caesar and Lepidus.",
     "verified": false,
-    "source": "placeholder"
+    "source": "Julius Caesar Act 4 Sc 1"
+  },
+  {
+    "id": "lit-006",
+    "question": "Which of the following words best describes Cassius's mood when he says: 'Come, Antony, and young Octavius, come, Revenge yourselves alone on Cassius'?",
+    "options": [
+      "anxious",
+      "regretful",
+      "fearful",
+      "frustrated"
+    ],
+    "answer": 3,
+    "explanation": "Cassius is weary and frustrated with the course of events and invites his enemies to target him.",
+    "verified": false,
+    "source": "Julius Caesar Act 5 Sc 3"
+  },
+  {
+    "id": "lit-007",
+    "question": "In the poem 'Haunted Houses', what does the speaker see at his fireside that the stranger cannot?",
+    "options": [
+      "the speaker only sees what is physically present",
+      "the stranger can see the spirits while the speaker cannot",
+      "the speaker sees both the present and the past",
+      "the stranger sees both the present and the future"
+    ],
+    "answer": 2,
+    "explanation": "The speaker perceives the past and its ghosts alongside the present.",
+    "verified": false,
+    "source": "Haunted Houses"
+  },
+  {
+    "id": "lit-008",
+    "question": "In the poem 'The Glove and the Lions', who does Count de Lorge 'sigh for'?",
+    "options": [
+      "The lions that ramped and roared",
+      "King Francis who loved a royal sport",
+      "The nobles who filled the benches",
+      "The beauteous lively dame"
+    ],
+    "answer": 3,
+    "explanation": "Count de Lorge sighs for the beautiful lady in the poem.",
+    "verified": false,
+    "source": "The Glove and the Lions"
+  },
+  {
+    "id": "lit-009",
+    "question": "Select the option that shows the correct relationship between Statement 1 and Statement 2 from 'When Great Trees Fall'. Statement 1: When great trees fall, the world is left permanently unstable. Statement 2: In the poem, the natural world is depicted as reacting with fear and uncertainty when great trees fall.",
+    "options": [
+      "(1) is false, but (2) is true.",
+      "Both (1) and (2) are false.",
+      "(1) is true, but (2) is false.",
+      "Both (1) and (2) are true."
+    ],
+    "answer": 0,
+    "explanation": "The natural world reacts with fear and uncertainty, but the poem does not say the world is left permanently unstable.",
+    "verified": false,
+    "source": "When Great Trees Fall"
+  },
+  {
+    "id": "lit-010",
+    "question": "The poem 'A Considerable Speck' expresses Frost's",
+    "options": [
+      "love for the little organism",
+      "respect for intelligent life",
+      "indifference to the tiny creature",
+      "anger at the mite's escape"
+    ],
+    "answer": 1,
+    "explanation": "Frost recognises the mite as a living creature with intelligence and responds with respect.",
+    "verified": false,
+    "source": "A Considerable Speck"
+  },
+  {
+    "id": "lit-011",
+    "question": "Which of the given options contains the figure of speech that appears in the following line from the poem 'The Power of Music'? 'And in the sky the feathered fly turn turtle while They're winging,'",
+    "options": [
+      "You're one month on in the middle of May",
+      "Rainbow-tinted circles of light",
+      "And life is too much like a pathless wood",
+      "The wind lies asleep in the arms of the dawn"
+    ],
+    "answer": 0,
+    "explanation": "The line uses alliteration, as does 'middle of May'.",
+    "verified": false,
+    "source": "The Power of Music"
+  },
+  {
+    "id": "lit-012",
+    "question": "In the short story 'With the Photographer', the narrator asks the photographer 'Is it me?' because",
+    "options": [
+      "He is delighted with the photographer's skill",
+      "He looks very handsome in the photograph",
+      "He is unable to recognise his own face",
+      "He is ashamed of how he looks in the picture"
+    ],
+    "answer": 2,
+    "explanation": "The retouched photograph looks so unlike him that he cannot recognise himself.",
+    "verified": false,
+    "source": "With the Photographer"
+  },
+  {
+    "id": "lit-013",
+    "question": "In the short story 'The Elevator', which of the following does Martin's father NOT do when Martin expresses his fear of the elevator?",
+    "options": [
+      "He dismisses Martin's concerns",
+      "He encourages Martin to use the stairs",
+      "He tells Martin to grow up and be brave",
+      "He watches TV and ignores Martin's fear"
+    ],
+    "answer": 1,
+    "explanation": "Martin's father dismisses his fear and tells him to grow up; he does not encourage him to use the stairs.",
+    "verified": false,
+    "source": "The Elevator"
+  },
+  {
+    "id": "lit-014",
+    "question": "Arrange the following events from 'The Pedestrian' in the correct sequence: 1. One night, as he was nearing home, he was stopped by a police car. 2. Since his answers were considered odd and unacceptable, he was forced to enter the car and taken away. 3. Leonard Mead loved to walk through the empty streets at night. 4. A metallic voice from the car asked him a series of questions.",
+    "options": [
+      "2, 1, 3, 4",
+      "1, 3, 4, 2",
+      "3, 1, 4, 2",
+      "4, 1, 2, 3"
+    ],
+    "answer": 2,
+    "explanation": "Mead walks at night, is stopped by the police car, is questioned, and is then taken away.",
+    "verified": false,
+    "source": "The Pedestrian"
+  },
+  {
+    "id": "lit-015",
+    "question": "Where was Adjoa born?",
+    "options": [
+      "Nigeria",
+      "Ghana",
+      "Ethiopia",
+      "Kenya"
+    ],
+    "answer": 1,
+    "explanation": "Adjoa is from Ghana in 'The Girl Who Can'.",
+    "verified": false,
+    "source": "The Girl Who Can"
+  },
+  {
+    "id": "lit-016",
+    "question": "Why did M. Hamel have to leave the school after forty years of service?",
+    "options": [
+      "He was not allowed to teach French any longer",
+      "He had grown tired of his job as a schoolteacher",
+      "He was thought to be too strict in his ways",
+      "He wanted to retire and take up farming"
+    ],
+    "answer": 0,
+    "explanation": "The order from Berlin required only German to be taught, so M. Hamel could no longer teach French.",
+    "verified": false,
+    "source": "The Last Lesson"
+  },
+  {
+    "id": "lit-017",
+    "question": "What were Julius Caesar's dying words?",
+    "options": [
+      "'Caesar, now be still...'",
+      "'Et tu brute? Then fall Caesar!'",
+      "'This is the most unkindest cut of all;'",
+      "'By your leave, gods; this is a Roman's part.'"
+    ],
+    "answer": 1,
+    "explanation": "Caesar's famous dying words in the play are 'Et tu, Brute? Then fall Caesar!'",
+    "verified": false,
+    "source": "Julius Caesar Act 3 Sc 1"
+  },
+  {
+    "id": "lit-018",
+    "question": "Which of the following phrases best describes Antony's mood when he says: 'O mighty Caesar! dost thou lie so low? Are all thy conquests, glories, triumphs, spoils, Shrunk to this little measure?'",
+    "options": [
+      "frustration and rage",
+      "grief and sorrow",
+      "hate and anger",
+      "remorse and regret"
+    ],
+    "answer": 1,
+    "explanation": "Antony is mourning Caesar and lamenting how death has reduced his greatness.",
+    "verified": false,
+    "source": "Julius Caesar Act 3 Sc 1"
+  },
+  {
+    "id": "lit-019",
+    "question": "Which of the following does Antony NOT say about Caesar in his funeral speech?",
+    "options": [
+      "Caesar was ambitious and wanted to be crowned king.",
+      "Caesar had compassion for the poor and cried when they cried.",
+      "Caesar was valiant in battle and had brought riches to the Roman treasury.",
+      "Caesar had left seventy-five drachmas to every Roman citizen."
+    ],
+    "answer": 0,
+    "explanation": "Antony argues against Caesar being ambitious and notes that Caesar refused the crown.",
+    "verified": false,
+    "source": "Julius Caesar Act 3 Sc 2"
+  },
+  {
+    "id": "lit-020",
+    "question": "Antony says, 'These many then shall die; their names are prick'd.' These words reveal that he is",
+    "options": [
+      "ruthless",
+      "anxious",
+      "frustrated",
+      "angry"
+    ],
+    "answer": 0,
+    "explanation": "Antony is calmly marking names for execution, showing his ruthlessness.",
+    "verified": false,
+    "source": "Julius Caesar Act 4 Sc 1"
+  },
+  {
+    "id": "lit-021",
+    "question": "During their quarrel, Brutus says to Cassius, 'Away, slight man!' Brutus's tone in the above line can be best described as",
+    "options": [
+      "disappointed",
+      "argumentative",
+      "vengeful",
+      "dismissive"
+    ],
+    "answer": 3,
+    "explanation": "Brutus speaks contemptuously and dismissively to Cassius.",
+    "verified": false,
+    "source": "Julius Caesar Act 4 Sc 3"
+  },
+  {
+    "id": "lit-022",
+    "question": "Towards the end of the play, Pindarus reports that Titinius had been captured by enemy troops. What does Cassius do on hearing this news?",
+    "options": [
+      "He orders an immediate attack to rescue Titinius.",
+      "Fearing defeat, he decides to flee the battlefield.",
+      "He persuades Pindarus to help him take his life.",
+      "He surrenders to Antony's forces to save his men."
+    ],
+    "answer": 2,
+    "explanation": "Cassius believes all is lost and gets Pindarus to kill him.",
+    "verified": false,
+    "source": "Julius Caesar Act 5 Sc 3"
+  },
+  {
+    "id": "lit-023",
+    "question": "What did Martin dislike about the elevator in his apartment building?",
+    "options": [
+      "The unpleasant smell",
+      "Its dirty floor",
+      "Its small size",
+      "The poor ventilation"
+    ],
+    "answer": 2,
+    "explanation": "Martin is uneasy because the elevator is small and enclosed.",
+    "verified": false,
+    "source": "The Elevator"
+  },
+  {
+    "id": "lit-024",
+    "question": "Arrange the following events from 'With the Photographer' in the correct sequence: 1. Even as he was protesting, the photographer managed to take a candid photograph with which he was very pleased. 2. At the studio, the photographer's criticism of his face made the author feel worthless and unattractive. 3. Disturbed and upset by the photographer's criticisms and instructions, the author voiced his protest. 4. The author wanted to have his photograph taken.",
+    "options": [
+      "3, 2, 1, 4",
+      "4, 2, 3, 1",
+      "2, 3, 4, 1",
+      "1, 4, 3, 2"
+    ],
+    "answer": 1,
+    "explanation": "The narrator first wants a photograph, then is criticised, protests, and finally is photographed mid-protest.",
+    "verified": false,
+    "source": "With the Photographer"
+  },
+  {
+    "id": "lit-025",
+    "question": "'Nana has many voices. There is a special one she uses to shut everyone up.' What do these lines from 'The Girl Who Can' tell us about Nana?",
+    "options": [
+      "She is a loud, rude woman.",
+      "She has a strong, powerful voice.",
+      "She can speak many languages.",
+      "She dominates the household."
+    ],
+    "answer": 3,
+    "explanation": "The line shows that Nana has authority and can silence the household.",
+    "verified": false,
+    "source": "The Girl Who Can"
+  },
+  {
+    "id": "lit-026",
+    "question": "What were the people in Mead's neighbourhood doing when he was out walking at night?",
+    "options": [
+      "Watching television",
+      "Reading magazines",
+      "Driving to the gas station",
+      "Staring out of their windows"
+    ],
+    "answer": 0,
+    "explanation": "In 'The Pedestrian', people stay indoors watching television.",
+    "verified": false,
+    "source": "The Pedestrian"
+  },
+  {
+    "id": "lit-027",
+    "question": "In 'The Last Lesson', Franz says that 'all our bad news had come from there.' What does 'there' refer to?",
+    "options": [
+      "The school building",
+      "The bulletin board",
+      "The clock tower",
+      "The town hall"
+    ],
+    "answer": 1,
+    "explanation": "Franz refers to the bulletin board outside the town hall where bad news was posted.",
+    "verified": false,
+    "source": "The Last Lesson"
+  },
+  {
+    "id": "lit-028",
+    "question": "Which of the given options contains the figure of speech that appears in the following lines from Longfellow's poem 'Haunted Houses'? 'The spirit-world around this world of sense Floats like an atmosphere, ...'",
+    "options": [
+      "'Strange, it is a huge nothing that we fear.'",
+      "'When Frost was spectre-gray'",
+      "'An hundred years should go to praise / Thine eyes'",
+      "'She sways like a flower in the wind of our song.'"
+    ],
+    "answer": 3,
+    "explanation": "The original lines use a simile with 'like', just as 'like a flower' does.",
+    "verified": false,
+    "source": "Haunted Houses"
+  },
+  {
+    "id": "lit-029",
+    "question": "The mood in the poem 'When Great Trees Fall' moves from",
+    "options": [
+      "hurt to wonder",
+      "calm to distress",
+      "hope to despair",
+      "fear to hope"
+    ],
+    "answer": 0,
+    "explanation": "The poem moves from grief and hurt towards a sense of healing and wonder.",
+    "verified": false,
+    "source": "When Great Trees Fall"
+  },
+  {
+    "id": "lit-030",
+    "question": "In the poem 'The Glove and the Lions', King Francis exclaims 'rightly done!'. What action of Count de Lorge does he applaud when he says this?",
+    "options": [
+      "Leaping into the pit full of angry lions.",
+      "Retrieving the lady's glove from the pit.",
+      "Flinging the glove angrily in the lady's face.",
+      "Sighing for the 'beauteous lively dame'."
+    ],
+    "answer": 2,
+    "explanation": "The king approves of the count's rejection of the lady by throwing the glove in her face.",
+    "verified": false,
+    "source": "The Glove and the Lions"
+  },
+  {
+    "id": "lit-031",
+    "question": "Select the option that shows the correct relationship between Statement 1 and Statement 2 based on the poem 'A Considerable Speck'. Statement 1: The mite on the paper ran, crept, faltered, hesitated and cowered. Statement 2: The poet-narrator realised that it was an intelligent living creature.",
+    "options": [
+      "Statement 1 is true and Statement 2 is false.",
+      "Statement 1 is false and Statement 2 is true.",
+      "Statement 1 is the reason for Statement 2.",
+      "Statement 2 is a contradiction of Statement 1."
+    ],
+    "answer": 2,
+    "explanation": "The mite's varied movements make the narrator realise that it has intelligence.",
+    "verified": false,
+    "source": "A Considerable Speck"
+  },
+  {
+    "id": "lit-032",
+    "question": "Sukumar Ray's poem 'The Power of Music' can be classified as ______.",
+    "options": [
+      "nonsense verse",
+      "a sonnet",
+      "a lyrical poem",
+      "an ode"
+    ],
+    "answer": 0,
+    "explanation": "The poem uses absurd and exaggerated imagery typical of nonsense verse.",
+    "verified": false,
+    "source": "The Power of Music"
   }
 ]

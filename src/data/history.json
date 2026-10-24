@@ -1,47 +1,768 @@
 [
   {
     "id": "hist-001",
-    "question": "PLACEHOLDER: History & Civics question 1 - replace with a verified board-style question.",
-    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
-    "answer": 0,
-    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "question": "A Supreme Court judge can continue in office till the age of:",
+    "options": ["60 years", "62 years", "65 years", "67 years"],
+    "answer": 2,
+    "explanation": "The Constitution fixes the retirement age of a Supreme Court judge at 65 years.",
     "verified": false,
-    "source": "placeholder"
+    "source": "icse-class-10-history-and-civics-hcg-p1-t25-501i-2025.pdf"
   },
   {
     "id": "hist-002",
-    "question": "PLACEHOLDER: History & Civics question 2 - replace with a verified board-style question.",
-    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
-    "answer": 0,
-    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "question": "Given details of a few Indian citizens: W is 20 and a famous actor; X is 48 and has been convicted for corruption; Y is 35 and has accepted foreign citizenship; Z is 50 and a scientist. Who is eligible to be appointed as the Prime Minister of India?",
+    "options": ["X", "W", "Y", "Z"],
+    "answer": 3,
+    "explanation": "A person must be a citizen of India and at least 25 years old; Z meets the basic eligibility, while the others are disqualified by age, conviction, or foreign citizenship.",
     "verified": false,
-    "source": "placeholder"
+    "source": "icse-class-10-history-and-civics-hcg-p1-t25-501i-2025.pdf"
   },
   {
     "id": "hist-003",
-    "question": "PLACEHOLDER: History & Civics question 3 - replace with a verified board-style question.",
-    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
+    "question": "How can Mr. Amit, a non-member of the Parliament, be appointed to the Union Cabinet?",
+    "options": [
+      "He has to become a member of either house within six months of appointment.",
+      "He can be appointed under the Discretionary Power of the Prime Minister.",
+      "The appointment will be delayed until he becomes a member.",
+      "He cannot be appointed as a Minister."
+    ],
     "answer": 0,
-    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "explanation": "A non-member may be appointed as a minister but must become a member of either House within six months.",
     "verified": false,
-    "source": "placeholder"
+    "source": "icse-class-10-history-and-civics-hcg-p1-t25-501i-2025.pdf"
   },
   {
     "id": "hist-004",
-    "question": "PLACEHOLDER: History & Civics question 4 - replace with a verified board-style question.",
-    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
-    "answer": 0,
-    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "question": "How many elected members are there in the Rajya Sabha?",
+    "options": ["235", "232", "238", "245"],
+    "answer": 2,
+    "explanation": "The Rajya Sabha has 250 members, of whom 12 are nominated and 238 are elected.",
     "verified": false,
-    "source": "placeholder"
+    "source": "icse-class-10-history-and-civics-hcg-p1-t25-501i-2025.pdf"
   },
   {
     "id": "hist-005",
-    "question": "PLACEHOLDER: History & Civics question 5 - replace with a verified board-style question.",
-    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
-    "answer": 0,
-    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "question": "Choose the correct option with regard to an Ordinance.",
+    "options": [
+      "It is passed in the winter session of the Parliament.",
+      "It must be approved within six weeks of re-assembly of Parliament.",
+      "The President prepares the ordinance.",
+      "It is a permanent law."
+    ],
+    "answer": 1,
+    "explanation": "An ordinance must be approved by Parliament within six weeks of its reassembly, otherwise it becomes inoperative.",
     "verified": false,
-    "source": "placeholder"
+    "source": "icse-class-10-history-and-civics-hcg-p1-t25-501i-2025.pdf"
+  },
+  {
+    "id": "hist-006",
+    "question": "Assertion (A): The Congress accepted the Mountbatten Plan. Reason (R): The only alternate to Partition was a Federation with a weak centre.",
+    "options": [
+      "(A) is true and (R) is false.",
+      "(R) is false but (A) is true.",
+      "Both (A) and (R) are independent of each other.",
+      "(R) is the reason for (A)."
+    ],
+    "answer": 3,
+    "explanation": "The Congress accepted the plan because the alternative was seen as a weak federation, making the reason the basis for the assertion.",
+    "verified": false,
+    "source": "icse-class-10-history-and-civics-hcg-p1-t25-501i-2025.pdf"
+  },
+  {
+    "id": "hist-007",
+    "question": "Anita wants to do a project on the Governor General who introduced the Subsidiary Alliance. Who among the following will she choose?",
+    "options": ["Lord Wellesley", "Lord Cornwallis", "Lord Canning", "Lord Dalhousie"],
+    "answer": 0,
+    "explanation": "The Subsidiary Alliance system was introduced by Lord Wellesley.",
+    "verified": false,
+    "source": "icse-class-10-history-and-civics-hcg-p1-t25-501i-2025.pdf"
+  },
+  {
+    "id": "hist-008",
+    "question": "From the given descriptions of the Cold War, choose the odd one out.",
+    "options": [
+      "It was a consequence of the Second World War.",
+      "Uneasy peace between the two countries.",
+      "Division of the world into two power blocs.",
+      "Two countries joined hands to fight Britain and France."
+    ],
+    "answer": 3,
+    "explanation": "The Cold War was a post-war rivalry between power blocs, not a joint alliance against Britain and France.",
+    "verified": false,
+    "source": "icse-class-10-history-and-civics-hcg-p1-t25-501i-2025.pdf"
+  },
+  {
+    "id": "hist-009",
+    "question": "Which of the following countries suffered due to the atom bomb during World War II?",
+    "options": ["France", "Japan", "Germany", "Britain"],
+    "answer": 1,
+    "explanation": "Japan suffered atomic bombings at Hiroshima and Nagasaki during the Second World War.",
+    "verified": false,
+    "source": "icse-class-10-history-and-civics-hcg-p1-t25-501i-2025.pdf"
+  },
+  {
+    "id": "hist-010",
+    "question": "Which of the following statements about the composition of the General Assembly is NOT true?",
+    "options": [
+      "All countries are members.",
+      "Decisions are made by the voting of the majority members.",
+      "Each State has five representatives but has one vote.",
+      "Permanent members have the Veto Power."
+    ],
+    "answer": 3,
+    "explanation": "Veto power belongs to the permanent members of the Security Council, not to the General Assembly.",
+    "verified": false,
+    "source": "icse-class-10-history-and-civics-hcg-p1-t25-501i-2025.pdf"
+  },
+  {
+    "id": "hist-011",
+    "question": "Identify the Early Nationalist leaders: P: Dadabhai Naoroji; Q: Bipin Chandra Pal; R: Surendranath Banerjee; S: Aurobindo Ghosh.",
+    "options": ["P & Q", "R & S", "P & R", "Q & S"],
+    "answer": 2,
+    "explanation": "Dadabhai Naoroji and Surendranath Banerjee were Early Nationalists, while Bipin Chandra Pal and Aurobindo Ghosh were Assertive Nationalists.",
+    "verified": false,
+    "source": "icse-class-10-history-and-civics-hcg-p1-t25-501i-2025.pdf"
+  },
+  {
+    "id": "hist-012",
+    "question": "Which of the following has influenced the objectives of the Non-Aligned Movement?",
+    "options": ["NATO", "The Panchsheel", "SEATO", "The Warsaw Pact"],
+    "answer": 1,
+    "explanation": "The Panchsheel principles of peaceful coexistence influenced the objectives of the Non-Aligned Movement.",
+    "verified": false,
+    "source": "icse-class-10-history-and-civics-hcg-p1-t25-501i-2025.pdf"
+  },
+  {
+    "id": "hist-013",
+    "question": "The Council of Ministers is collectively responsible to the:",
+    "options": ["Lok Sabha", "President", "Rajya Sabha", "Prime Minister"],
+    "answer": 0,
+    "explanation": "The Council of Ministers is collectively responsible to the Lok Sabha.",
+    "verified": false,
+    "source": "icse-class-10-history-and-civics-p1-t25-501-2025.pdf"
+  },
+  {
+    "id": "hist-014",
+    "question": "Given details of a few Indian citizens: W is 25 and a famous journalist; X is 45 and an industrialist; Y is 35 and has declared insolvency; Z is 50 and has taken citizenship of another country. Who is eligible to be a member of the Rajya Sabha?",
+    "options": ["X", "W", "Y", "Z"],
+    "answer": 0,
+    "explanation": "A Rajya Sabha member must be at least 30, a citizen, and not insolvent; X is the only eligible person.",
+    "verified": false,
+    "source": "icse-class-10-history-and-civics-p1-t25-501-2025.pdf"
+  },
+  {
+    "id": "hist-015",
+    "question": "With reference to the Supreme Court of India, complete the following: Advisory Jurisdiction : Advise the President :: Judicial Review :",
+    "options": [
+      "Review its own judgements.",
+      "Review the judgements of the High Court.",
+      "Review the laws passed by the Parliament.",
+      "Review the administration of the Government."
+    ],
+    "answer": 2,
+    "explanation": "Judicial review refers to the Supreme Court's power to examine the constitutionality of laws passed by Parliament.",
+    "verified": false,
+    "source": "icse-class-10-history-and-civics-p1-t25-501-2025.pdf"
+  },
+  {
+    "id": "hist-016",
+    "question": "If an Adjournment Motion is passed in the Lok Sabha:",
+    "options": [
+      "the Lok Sabha will be dissolved.",
+      "the House will discuss a matter of urgent public importance.",
+      "the President ends the session.",
+      "the Government will fall."
+    ],
+    "answer": 1,
+    "explanation": "An adjournment motion sets aside normal business to discuss a matter of urgent public importance.",
+    "verified": false,
+    "source": "icse-class-10-history-and-civics-p1-t25-501-2025.pdf"
+  },
+  {
+    "id": "hist-017",
+    "question": "Which emergency will be declared by the President if the security of the Nation is under threat?",
+    "options": ["General Emergency", "Financial Emergency", "Constitutional Emergency", "President's Rule"],
+    "answer": 0,
+    "explanation": "A national emergency, or general emergency, may be declared when the security of India is threatened.",
+    "verified": false,
+    "source": "icse-class-10-history-and-civics-p1-t25-501-2025.pdf"
+  },
+  {
+    "id": "hist-018",
+    "question": "Assertion (A): Lord Curzon partitioned Bengal in 1905. Reason (R): The Nationalists felt that the British wanted to divide the Hindus and the Muslims.",
+    "options": [
+      "(A) is true and (R) is false.",
+      "(R) is true but (A) is false.",
+      "Both (A) and (R) are independent of each other.",
+      "(A) is the reason for (R)."
+    ],
+    "answer": 2,
+    "explanation": "Both statements are true, but the nationalist suspicion was a reaction to the partition, not the reason for it.",
+    "verified": false,
+    "source": "icse-class-10-history-and-civics-p1-t25-501-2025.pdf"
+  },
+  {
+    "id": "hist-019",
+    "question": "Identify the odd one out of the following Assertive Nationalist leaders.",
+    "options": ["Bipin Chandra Pal", "Lala Lajpat Rai", "Dadabhai Naoroji", "Bal Gangadhar Tilak"],
+    "answer": 2,
+    "explanation": "Dadabhai Naoroji was an Early Nationalist, while the others were Assertive Nationalists.",
+    "verified": false,
+    "source": "icse-class-10-history-and-civics-p1-t25-501-2025.pdf"
+  },
+  {
+    "id": "hist-020",
+    "question": "Identify the contributions of Subhash Chandra Bose: P: Was the Supreme Commander of INA; Q: Signed the Lucknow Pact; R: Led the Quit India Movement; S: Founded the Forward Bloc.",
+    "options": ["P and Q", "Q and R", "P and S", "R and S"],
+    "answer": 2,
+    "explanation": "Subhash Chandra Bose was Supreme Commander of the INA and founded the Forward Bloc.",
+    "verified": false,
+    "source": "icse-class-10-history-and-civics-p1-t25-501-2025.pdf"
+  },
+  {
+    "id": "hist-021",
+    "question": "The market of a small industrial town is dominated by products of foreign companies. The local residents decide to save Indian industries by helping them increase sales. Which method of the Assertive Nationalists must they follow to become self-reliant?",
+    "options": ["Passive Resistance", "National Education", "Swadeshi", "Revivalism"],
+    "answer": 2,
+    "explanation": "Swadeshi means promoting Indian goods and boycotting foreign goods to build self-reliance.",
+    "verified": false,
+    "source": "icse-class-10-history-and-civics-p1-t25-501-2025.pdf"
+  },
+  {
+    "id": "hist-022",
+    "question": "Which of the following is NOT an objective of the United Nations Organisation?",
+    "options": ["Disarm", "Disengage", "Decolonise", "Develop"],
+    "answer": 1,
+    "explanation": "The UN's objectives include disarmament, decolonisation, and development, not 'disengage'.",
+    "verified": false,
+    "source": "icse-class-10-history-and-civics-p1-t25-501-2025.pdf"
+  },
+  {
+    "id": "hist-023",
+    "question": "Which of the following is a common cause for the rise of dictatorship?",
+    "options": ["Faith in Democracy", "Economic Crisis", "Freedom of Press", "Political Stability"],
+    "answer": 1,
+    "explanation": "Economic crisis created instability and disillusionment, helping dictators rise to power.",
+    "verified": false,
+    "source": "icse-class-10-history-and-civics-p1-t25-501-2025.pdf"
+  },
+  {
+    "id": "hist-025",
+    "question": "Given details of a few Indian citizens: W is 30 and an army officer; X is 25 and a Union Leader; Y is 34 and a school Principal; Z is 69 and a retired Professor. Select the one who is eligible to be a Vice President.",
+    "options": ["X", "W", "Y", "Z"],
+    "answer": 3,
+    "explanation": "A Vice President must be at least 35 years old and qualified for Rajya Sabha membership; Z meets the age requirement.",
+    "verified": false,
+    "source": "icse-class-10-history-and-civics-p1-t26-501-2026.pdf"
+  },
+  {
+    "id": "hist-027",
+    "question": "Mr. Anand has been illegally detained by the police, and his family has not been able to meet him. The family members approach the High Court for help. Which writ will the court issue in this case?",
+    "options": ["Habeas Corpus", "Quo Warranto", "Mandamus", "Certiorari"],
+    "answer": 0,
+    "explanation": "Habeas Corpus is issued to produce a person unlawfully detained before the court.",
+    "verified": false,
+    "source": "icse-class-10-history-and-civics-p1-t26-501-2026.pdf"
+  },
+  {
+    "id": "hist-028",
+    "question": "Identify the correct statements about the Lok Sabha: P: Has no nominated members. Q: Term can be extended during emergency. R: Has two members nominated by the President. S: Can be dissolved by the Speaker.",
+    "options": ["P and Q", "R and S", "Q and R", "P and S"],
+    "answer": 2,
+    "explanation": "The Lok Sabha's term can be extended during an emergency, and the President may nominate two Anglo-Indian members.",
+    "verified": false,
+    "source": "icse-class-10-history-and-civics-p1-t26-501-2026.pdf"
+  },
+  {
+    "id": "hist-029",
+    "question": "Assertion (A): Hitler attacked Poland to capture the Danzig Port. Reason (R): Poland was accused of committing atrocities against the Germans.",
+    "options": [
+      "(A) is true and (R) is false.",
+      "(A) is false and (R) is true.",
+      "Both (A) and (R) are true and (R) is the correct explanation of (A).",
+      "Both (A) and (R) are true but (R) is not the correct explanation of (A)."
+    ],
+    "answer": 3,
+    "explanation": "Danzig was a Nazi demand, and the atrocity claim was a pretext; both are true, but the reason is not the full explanation.",
+    "verified": false,
+    "source": "icse-class-10-history-and-civics-p1-t26-501-2026.pdf"
+  },
+  {
+    "id": "hist-030",
+    "question": "Arrange the following events in chronological order: 1. The Lucknow Pact 2. The Surat Split 3. The establishment of the Muslim League.",
+    "options": ["1-2-3", "1-3-2", "3-2-1", "2-1-3"],
+    "answer": 2,
+    "explanation": "The Muslim League was established first, then the Surat Split occurred, and the Lucknow Pact came later.",
+    "verified": false,
+    "source": "icse-class-10-history-and-civics-p1-t26-501-2026.pdf"
+  },
+  {
+    "id": "hist-031",
+    "question": "Identify the odd one out of the following signatories of the Triple Entente.",
+    "options": ["France", "Russia", "Japan", "England"],
+    "answer": 2,
+    "explanation": "The Triple Entente consisted of France, Russia, and England; Japan was not a member.",
+    "verified": false,
+    "source": "icse-class-10-history-and-civics-p1-t26-501-2026.pdf"
+  },
+  {
+    "id": "hist-032",
+    "question": "A group of school students decides to take action based on the methods of the Early Nationalists. Which of the following actions are they NOT likely to adopt?",
+    "options": [
+      "Hold placards with the message 'Save Our Trees'.",
+      "Write letters to the local newspapers expressing their concerns.",
+      "Plant saplings to show their commitment to the environment.",
+      "Forcibly prevent workers sent by the Government."
+    ],
+    "answer": 3,
+    "explanation": "Early Nationalists believed in constitutional and peaceful methods, not forcible obstruction.",
+    "verified": false,
+    "source": "icse-class-10-history-and-civics-p1-t26-501-2026.pdf"
+  },
+  {
+    "id": "hist-034",
+    "question": "Identify the correct pair of Governor-General and the policy or act associated with him.",
+    "options": [
+      "Doctrine of Lapse - Lord Canning",
+      "Subsidiary Alliance - Lord Wellesley",
+      "Arms Act - Lord Curzon",
+      "Vernacular Press Act - Lord Dalhousie"
+    ],
+    "answer": 1,
+    "explanation": "Lord Wellesley introduced the Subsidiary Alliance; the other pairings are incorrect.",
+    "verified": false,
+    "source": "icse-class-10-history-and-civics-p1-t26-501-2026.pdf"
+  },
+  {
+    "id": "hist-035",
+    "question": "Which of the following is NOT a consequence of the Second World War?",
+    "options": [
+      "Cold War",
+      "Defeat of the Axis Powers",
+      "Formation of the United Nations",
+      "Formation of the League of Nations"
+    ],
+    "answer": 3,
+    "explanation": "The League of Nations was formed after the First World War, not the Second.",
+    "verified": false,
+    "source": "icse-class-10-history-and-civics-p1-t26-501-2026.pdf"
+  },
+  {
+    "id": "hist-036",
+    "question": "Read the description and choose the correct option: He was an Early Nationalist leader who presided over the second session of the Indian National Congress.",
+    "options": ["Dadabhai Naoroji", "Gopal Krishna Gokhale", "Bipin Chandra Pal", "Lokmanya Tilak"],
+    "answer": 0,
+    "explanation": "Dadabhai Naoroji presided over the second session of the Indian National Congress.",
+    "verified": false,
+    "source": "icse-class-10-history-and-civics-p1-t26-501-2026.pdf"
+  },
+  {
+    "id": "hist-037",
+    "question": "Which organ of the United Nations Organisation gives special power to its permanent members?",
+    "options": ["The General Assembly", "The International Court of Justice", "The Security Council", "The Trusteeship Council"],
+    "answer": 2,
+    "explanation": "Permanent members with veto power sit on the Security Council.",
+    "verified": false,
+    "source": "icse-class-10-history-and-civics-p1-t26-501-2026.pdf"
+  },
+  {
+    "id": "hist-038",
+    "question": "The International Court of Justice has how many judges?",
+    "options": ["15", "10", "9", "5"],
+    "answer": 0,
+    "explanation": "The International Court of Justice consists of 15 judges.",
+    "verified": false,
+    "source": "icse-class-10-history-and-civics-p1-t26-501-2026.pdf"
+  },
+  {
+    "id": "hist-039",
+    "question": "In a system of government all administrative powers are divided between the Central and the State governments.",
+    "options": ["Democracy", "Communist", "Parliamentary", "Federal"],
+    "answer": 3,
+    "explanation": "A federal system divides powers between the central and state governments.",
+    "verified": false,
+    "source": "icse-class-10-pb-history-and-civics-hcg-p1-300925-2023.pdf"
+  },
+  {
+    "id": "hist-040",
+    "question": "Motion which lays aside all other business to take up a definite matter of urgent importance:",
+    "options": ["Cut", "Adjournment", "Prorogation", "No-confidence"],
+    "answer": 1,
+    "explanation": "An adjournment motion is used to discuss an urgent matter by setting aside normal business.",
+    "verified": false,
+    "source": "icse-class-10-pb-history-and-civics-hcg-p1-300925-2023.pdf"
+  },
+  {
+    "id": "hist-041",
+    "question": "The Union territory which participates in the procedure of President's election is:",
+    "options": ["Puducherry", "Andaman Islands", "Daman and Diu", "Lakshadweep"],
+    "answer": 0,
+    "explanation": "Elected members from Puducherry participate in the President's election.",
+    "verified": false,
+    "source": "icse-class-10-pb-history-and-civics-hcg-p1-300925-2023.pdf"
+  },
+  {
+    "id": "hist-042",
+    "question": "The maximum duration a non-parliament member can remain in office as a minister is:",
+    "options": ["1 year", "3 months", "5 months", "6 months"],
+    "answer": 3,
+    "explanation": "A non-member minister must become a member of either House within six months.",
+    "verified": false,
+    "source": "icse-class-10-pb-history-and-civics-hcg-p1-300925-2023.pdf"
+  },
+  {
+    "id": "hist-043",
+    "question": "The District Judge acts as a ___ and maintains law and order in a district.",
+    "options": ["Deputy Commissioner", "District Collector", "Sessions judge", "Municipal Commissioner"],
+    "answer": 2,
+    "explanation": "The District Judge also acts as the Sessions Judge for criminal cases in the district.",
+    "verified": false,
+    "source": "icse-class-10-pb-history-and-civics-hcg-p1-300925-2023.pdf"
+  },
+  {
+    "id": "hist-044",
+    "question": "The UN agency which published the monthly magazine 'Courier' is:",
+    "options": ["UNICEF", "UNESCO", "WHO", "FAO"],
+    "answer": 1,
+    "explanation": "UNESCO publishes the monthly magazine 'Courier'.",
+    "verified": false,
+    "source": "icse-class-10-pb-history-and-civics-hcg-p1-300925-2023.pdf"
+  },
+  {
+    "id": "hist-045",
+    "question": "The present strength of the Lok Sabha is:",
+    "options": ["550", "545", "543", "552"],
+    "answer": 0,
+    "explanation": "The Lok Sabha has a maximum strength of 550 members — 530 from the states and 20 from the Union Territories.",
+    "verified": false,
+    "source": "icse-class-10-specimen-history-and-civics-300925-2025.pdf"
+  },
+  {
+    "id": "hist-046",
+    "question": "Name the presiding officer of the Lok Sabha.",
+    "options": ["President", "Vice President", "Speaker", "Prime Minister"],
+    "answer": 2,
+    "explanation": "The Speaker presides over the Lok Sabha.",
+    "verified": false,
+    "source": "icse-class-10-specimen-history-and-civics-300925-2025.pdf"
+  },
+  {
+    "id": "hist-047",
+    "question": "The power to legislate on the Residuary List lies with the:",
+    "options": ["Legislative Assemblies", "Lok Sabha", "Rajya Sabha", "Parliament"],
+    "answer": 3,
+    "explanation": "Residuary powers are vested in Parliament.",
+    "verified": false,
+    "source": "icse-class-10-specimen-history-and-civics-300925-2025.pdf"
+  },
+  {
+    "id": "hist-048",
+    "question": "The annual Budget is laid before the Parliament on which date every year?",
+    "options": ["28 February", "29 February", "1 February", "30 March"],
+    "answer": 2,
+    "explanation": "The Union Budget is presented before Parliament on 1 February.",
+    "verified": false,
+    "source": "icse-class-10-specimen-history-and-civics-300925-2025.pdf"
+  },
+  {
+    "id": "hist-049",
+    "question": "Which of the following statements regarding an ordinance is not correct?",
+    "options": [
+      "It is issued by the Prime Minister.",
+      "It is issued by the President.",
+      "It remains in force for 8 months.",
+      "(a) and (c)"
+    ],
+    "answer": 3,
+    "explanation": "An ordinance is issued by the President and does not remain in force for eight months; both (a) and (c) are incorrect.",
+    "verified": false,
+    "source": "icse-class-10-specimen-history-and-civics-300925-2025.pdf"
+  },
+  {
+    "id": "hist-050",
+    "question": "The Prime Minister is:",
+    "options": ["head of the state", "head of the government", "head of the state as well as government", "none of these"],
+    "answer": 1,
+    "explanation": "The Prime Minister is the head of the government, while the President is the nominal head of state.",
+    "verified": false,
+    "source": "icse-class-10-specimen-history-and-civics-300925-2025.pdf"
+  },
+  {
+    "id": "hist-051",
+    "question": "Annexation of which kingdom infuriated the Bengal sepoys and sparked off the Rebellion?",
+    "options": ["Satara", "Jhansi", "Awadh", "Punjab"],
+    "answer": 2,
+    "explanation": "The annexation of Awadh angered Bengal sepoys, many of whom came from that region.",
+    "verified": false,
+    "source": "icse-class-10-specimen-history-and-civics-300925-2025.pdf"
+  },
+  {
+    "id": "hist-052",
+    "question": "Reactionary policies of which of the following Viceroys gave a great impetus to the arousing of nationalism?",
+    "options": ["Lord Lytton", "Lord Curzon", "Lord Ripon", "Both (a) and (b)"],
+    "answer": 3,
+    "explanation": "The repressive policies of both Lord Lytton and Lord Curzon stimulated nationalist feeling.",
+    "verified": false,
+    "source": "icse-class-10-specimen-history-and-civics-300925-2025.pdf"
+  },
+  {
+    "id": "hist-053",
+    "question": "Choose the wrong pair regarding Congress session and its President.",
+    "options": ["1886: W.C. Bonnerjee", "1947: J.B. Kripalani", "1924: Mahatma Gandhi", "1918: Pt. M.M. Malaviya"],
+    "answer": 0,
+    "explanation": "W.C. Bonnerjee presided over the first session, not the 1886 session.",
+    "verified": false,
+    "source": "icse-class-10-specimen-history-and-civics-300925-2025.pdf"
+  },
+  {
+    "id": "hist-054",
+    "question": "Who founded the Kesari & Mahratta journals?",
+    "options": ["Lala Lajpat Rai", "Lokmanya Tilak", "Annie Besant", "G.K. Gokhale"],
+    "answer": 1,
+    "explanation": "Lokmanya Tilak founded Kesari and Mahratta.",
+    "verified": false,
+    "source": "icse-class-10-specimen-history-and-civics-300925-2025.pdf"
+  },
+  {
+    "id": "hist-055",
+    "question": "When did the Congress split between Moderates & Radicals?",
+    "options": ["1907", "1885", "1924", "1916"],
+    "answer": 0,
+    "explanation": "The Congress split into Moderates and Radicals at the Surat session in 1907.",
+    "verified": false,
+    "source": "icse-class-10-specimen-history-and-civics-300925-2025.pdf"
+  },
+  {
+    "id": "hist-056",
+    "question": "The Morley-Minto Reforms introduced communal electorate in:",
+    "options": ["1809", "1909", "1919", "1935"],
+    "answer": 1,
+    "explanation": "The Morley-Minto Reforms of 1909 introduced separate electorates.",
+    "verified": false,
+    "source": "icse-class-10-specimen-history-and-civics-300925-2025.pdf"
+  },
+  {
+    "id": "hist-057",
+    "question": "The newspapers New India and The Common Weal were associated with:",
+    "options": ["Annie Bajaj", "B.G. Tilak", "Lajpat Rai", "Annie Besant"],
+    "answer": 3,
+    "explanation": "Annie Besant was associated with New India and The Common Weal.",
+    "verified": false,
+    "source": "icse-class-10-specimen-history-and-civics-300925-2025.pdf"
+  },
+  {
+    "id": "hist-058",
+    "question": "Arrest of which of the following leaders sparked off an agitation in Amritsar culminating in the massacre of Jallianwala Bagh?",
+    "options": ["Mahatma Gandhi", "Lajpat Rai", "Dr Satyapal and Saifuddin Kitchlew", "Ali Brothers"],
+    "answer": 2,
+    "explanation": "The arrest of Dr Satyapal and Saifuddin Kitchlew sparked the Amritsar agitation.",
+    "verified": false,
+    "source": "icse-class-10-specimen-history-and-civics-300925-2025.pdf"
+  },
+  {
+    "id": "hist-059",
+    "question": "The Gandhi-Irwin Pact led to the suspension of which national movement?",
+    "options": ["Non-Cooperation Movement", "Bardoli Satyagraha", "Champaran Satyagraha", "Civil Disobedience Movement"],
+    "answer": 3,
+    "explanation": "The Gandhi-Irwin Pact led to the suspension of the Civil Disobedience Movement.",
+    "verified": false,
+    "source": "icse-class-10-specimen-history-and-civics-300925-2025.pdf"
+  },
+  {
+    "id": "hist-060",
+    "question": "The March on Rome is related to which dictator?",
+    "options": ["Adolf Hitler", "Mussolini", "Napoleon", "Winston Churchill"],
+    "answer": 1,
+    "explanation": "The March on Rome was led by Mussolini and helped him come to power in Italy.",
+    "verified": false,
+    "source": "icse-class-10-specimen-history-and-civics-300925-2025.pdf"
+  },
+  {
+    "id": "hist-061",
+    "question": "Identify the exclusive powers of the Rajya Sabha: P: Can introduce a new All India Service; Q: Can impeach the President; R: Can never be dissolved as a whole; S: Can introduce a Money Bill.",
+    "options": ["P and Q", "R and S", "P and R", "Q and S"],
+    "answer": 2,
+    "explanation": "The Rajya Sabha can create new All India Services and is a permanent body, but money bills originate only in the Lok Sabha.",
+    "verified": true,
+    "source": "icse-class-10-specimen-history-and-civics-hcg-p1-t26-501-2026.pdf"
+  },
+  {
+    "id": "hist-063",
+    "question": "Given details of a few Indian citizens: W is 34 and a Professor in a Government College; X is 35 and has taken up citizenship of the United States of America; Y is 27 and a reputed sportsperson; Z is 36 and a scientist. Select the person who fulfils the eligibility criteria to become the President of India.",
+    "options": ["W", "X", "Y", "Z"],
+    "answer": 3,
+    "explanation": "The President must be a citizen and at least 35 years old; Z meets the criteria, while W and Y are too young and X is not an Indian citizen.",
+    "verified": true,
+    "source": "icse-class-10-specimen-history-and-civics-hcg-p1-t26-501-2026.pdf"
+  },
+  {
+    "id": "hist-065",
+    "question": "Choose the correct option to replace the underlined word: The Union ministers are collectively responsible to the Prime Minister.",
+    "options": ["Lok Sabha", "Rajya Sabha", "President", "Speaker"],
+    "answer": 0,
+    "explanation": "The Council of Ministers is collectively responsible to the Lok Sabha.",
+    "verified": true,
+    "source": "icse-class-10-specimen-history-and-civics-hcg-p1-t26-501-2026.pdf"
+  },
+  {
+    "id": "hist-066",
+    "question": "Residents of Jodhpur got married and later separated. The matter was placed before the Lok Adalat Family Court, where counselling helped the parties agree to live together and withdraw their divorce petition. Which advantage of the Lok Adalat is highlighted?",
+    "options": ["Saves money", "Speedy justice", "Works on the spirit of compromise", "Reduces the burden on High Courts"],
+    "answer": 2,
+    "explanation": "Lok Adalats encourage settlement through compromise and counselling.",
+    "verified": true,
+    "source": "icse-class-10-specimen-history-and-civics-hcg-p1-t26-501-2026.pdf"
+  },
+  {
+    "id": "hist-067",
+    "question": "Assertion (A): The Indian National Congress was formed in 1885. Reason (R): The main aim of the Indian National Congress at its inception was to demand complete independence for India.",
+    "options": [
+      "(A) is true and (R) is false.",
+      "(A) is false and (R) is true.",
+      "Both (A) and (R) are true, and (R) is the correct explanation of (A).",
+      "Both (A) and (R) are true, but (R) is not the correct explanation of (A)."
+    ],
+    "answer": 0,
+    "explanation": "The Congress was formed in 1885, but its early aim was not complete independence.",
+    "verified": true,
+    "source": "icse-class-10-specimen-history-and-civics-hcg-p1-t26-501-2026.pdf"
+  },
+  {
+    "id": "hist-068",
+    "question": "Arrange the following events in chronological order: 1. The Dandi March 2. The Second Round Table Conference 3. The Simon Commission.",
+    "options": ["3-1-2", "1-3-2", "3-2-1", "2-1-3"],
+    "answer": 0,
+    "explanation": "The Simon Commission came first, then the Dandi March, and then the Second Round Table Conference.",
+    "verified": true,
+    "source": "icse-class-10-specimen-history-and-civics-hcg-p1-t26-501-2026.pdf"
+  },
+  {
+    "id": "hist-069",
+    "question": "Anand's area has had no water supply for three days despite repeated complaints. Being a follower of the beliefs and methods of the Early Nationalists, which method is Anand NOT likely to approve?",
+    "options": [
+      "Peaceful procession by the residents",
+      "Follow the method of boycott",
+      "Write a petition to the government",
+      "Write an article in the newspaper highlighting the problem"
+    ],
+    "answer": 1,
+    "explanation": "Early Nationalists favoured petitions, peaceful meetings, and press publicity, not boycott in this context.",
+    "verified": true,
+    "source": "icse-class-10-specimen-history-and-civics-hcg-p1-t26-501-2026.pdf"
+  },
+  {
+    "id": "hist-070",
+    "question": "Identify the cities most affected by American action in World War II.",
+    "options": ["Rome, Berlin", "Tokyo, Berlin", "Hiroshima, Nagasaki", "Tokyo, Rome"],
+    "answer": 2,
+    "explanation": "The United States dropped atomic bombs on Hiroshima and Nagasaki.",
+    "verified": true,
+    "source": "icse-class-10-specimen-history-and-civics-hcg-p1-t26-501-2026.pdf"
+  },
+  {
+    "id": "hist-073",
+    "question": "Read the description and choose the correct option: This was a significant event in Indian history. Many underlying causes included economic exploitation, social reforms, and political annexations by the British. Even in its failure it ignited nationalism. Its immediate cause was:",
+    "options": [
+      "introduction of the Doctrine of Lapse",
+      "annexation of Indian states by the British",
+      "use of greased cartridges in Enfield rifles",
+      "establishment of English as the medium of instruction"
+    ],
+    "answer": 2,
+    "explanation": "The immediate cause of the Revolt of 1857 was the use of greased cartridges in the Enfield rifles.",
+    "verified": true,
+    "source": "icse-class-10-specimen-history-and-civics-hcg-p1-t26-501-2026.pdf"
+  },
+  {
+    "id": "hist-075",
+    "question": "Identify the correct pair of leader and their contribution.",
+    "options": [
+      "Surendranath Banerjee - Assertive Nationalist",
+      "Raja Ram Mohan Roy - Delhi Durbar",
+      "Dadabhai Naoroji - First President of Congress",
+      "Jyotiba Phule - Women's Education"
+    ],
+    "answer": 3,
+    "explanation": "Jyotiba Phule is associated with women's education and social reform.",
+    "verified": true,
+    "source": "icse-class-10-specimen-history-and-civics-hcg-p1-t26-501-2026.pdf"
+  },
+  {
+    "id": "hist-076",
+    "question": "Which of the following scenarios describes the Non-Alignment Policy (NAM)?",
+    "options": [
+      "A country forms a military alliance only with the United States.",
+      "A country maintains relations with both factions during the Cold War and does not take sides.",
+      "A country is part of a religious movement advocating non-violence.",
+      "A country aligns with the Soviet Union and receives military aid."
+    ],
+    "answer": 1,
+    "explanation": "Non-alignment meant not joining either Cold War power bloc and maintaining independent relations.",
+    "verified": true,
+    "source": "icse-class-10-specimen-history-and-civics-hcg-p1-t26-501-2026.pdf"
+  },
+  {
+    "id": "hist-077",
+    "question": "District Judge : ___ cases :: Sessions Judge : Criminal Cases",
+    "options": ["Advisory", "Civil", "Constitutional", "Appellate"],
+    "answer": 1,
+    "explanation": "The District Judge hears civil cases, while the Sessions Judge hears criminal cases.",
+    "verified": true,
+    "source": "icse-class-10-specimen-history-and-civics-p1-t25-501-2025.pdf"
+  },
+  {
+    "id": "hist-078",
+    "question": "Assertion (A): The Civil Disobedience Movement was renewed by Mahatma Gandhi. Reason (R): The Second Round Table Conference was a failure.",
+    "options": [
+      "(R) contradicts (A).",
+      "(R) is the reason for (A).",
+      "(A) is true but (R) is false.",
+      "(A) and (R) are independent of each other."
+    ],
+    "answer": 1,
+    "explanation": "Gandhi renewed the movement because the Second Round Table Conference failed to produce a settlement.",
+    "verified": true,
+    "source": "icse-class-10-specimen-history-and-civics-p1-t25-501-2025.pdf"
+  },
+  {
+    "id": "hist-079",
+    "question": "The government of Country X has introduced a law similar to the Ilbert Bill introduced in 1883. Who will be impacted by this Bill?",
+    "options": ["The Farmers", "The Artisans", "The Soldiers", "The Judges"],
+    "answer": 3,
+    "explanation": "The Ilbert Bill concerned the jurisdiction and powers of Indian judges.",
+    "verified": true,
+    "source": "icse-class-10-specimen-history-and-civics-p1-t25-501-2025.pdf"
+  },
+  {
+    "id": "hist-081",
+    "question": "Identify the ODD ONE out of the following objectives of the Muslim League.",
+    "options": [
+      "To promote among Muslims of India, support for the British",
+      "To promote cultural and socio-economic cooperation among Muslims",
+      "To protect and advance political rights and interests of the Muslims",
+      "To present the needs and demands of the Muslims to the government"
+    ],
+    "answer": 1,
+    "explanation": "Promoting cultural and socio-economic cooperation was not an objective of the Muslim League; the other three were its stated political aims.",
+    "verified": true,
+    "source": "icse-class-10-specimen-history-and-civics-p1-t25-501-2025.pdf"
+  },
+  {
+    "id": "hist-082",
+    "question": "Your school has organized a poster-making competition on the topic 'Education empowerment for Girls in India'. Which leader would MOST LIKELY be part of the poster?",
+    "options": ["Surendranath Banerjee", "Pherozeshah Mehta", "Dadabhai Naoroji", "Jyotiba Phule"],
+    "answer": 3,
+    "explanation": "Jyotiba Phule worked for women's education and social reform.",
+    "verified": true,
+    "source": "icse-class-10-specimen-history-and-civics-hcg-p1-t25-501-2025.pdf"
+  },
+  {
+    "id": "hist-083",
+    "question": "Read the description and identify the person: He established the Forward Bloc and coined the slogan 'Delhi Chalo'.",
+    "options": ["Mahatma Gandhi", "Subash Chandra Bose", "Bal Gangadhar Tilak", "Dadabhai Naoroji"],
+    "answer": 1,
+    "explanation": "Subhash Chandra Bose founded the Forward Bloc and gave the slogan 'Delhi Chalo'.",
+    "verified": true,
+    "source": "icse-class-10-specimen-history-and-civics-hcg-p1-t25-501-2025.pdf"
   }
 ]

@@ -7,6 +7,7 @@ import {
   SUBJECTS,
   formatReport,
   jaccardSimilarity,
+  normalizeOption,
   normalizeText,
   validateProject,
   validateSubjects,
@@ -108,6 +109,23 @@ describe('validateSubjects', () => {
     ]);
 
     expect(messages(report)).toContain('duplicate option at positions 1 and 2');
+  });
+
+  it('keeps maths signs and operators when comparing options', () => {
+    expect(normalizeOption(' -2 ')).toBe('-2');
+    expect(normalizeOption('2')).toBe('2');
+    expect(normalizeOption('p^2 = 4qr')).not.toBe(normalizeOption('p^2 > 4qr'));
+
+    const report = validateOne([
+      makeQuestion({ options: ['2', '-2', '1, 2', '1, -2'] }),
+      makeQuestion({
+        id: 'hist-002',
+        question: 'Which quadratic condition gives equal roots?',
+        options: ['p^2 = 4qr', 'p^2 > 4qr', 'q^2 = 4pr', '-q^2 = 4pr'],
+      }),
+    ]);
+
+    expect(report.errors).toEqual([]);
   });
 
   it('fails on duplicate ids across subjects', () => {
@@ -241,12 +259,12 @@ describe('project files', () => {
     });
   });
 
-  it('validates the five shipped placeholder data files', () => {
+  it('validates the five shipped data files', () => {
     const projectRoot = fileURLToPath(new URL('..', import.meta.url));
     const report = validateProject(projectRoot);
 
     expect(report.errors).toEqual([]);
-    expect(report.total).toBe(25);
-    expect(report.counts.map((item) => item.count)).toEqual([5, 5, 5, 5, 5]);
+    expect(report.total).toBe(247);
+    expect(report.counts.map((item) => item.count)).toEqual([74, 60, 37, 44, 32]);
   });
 });

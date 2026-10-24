@@ -1,47 +1,520 @@
 [
   {
     "id": "geo-001",
-    "question": "PLACEHOLDER: Geography question 1 - replace with a verified board-style question.",
-    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
-    "answer": 0,
-    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "question": "Which of the following area receives rain from the North East Monsoon?",
+    "options": [
+      "Konkan coast",
+      "Ganga basin",
+      "Coromandel coast",
+      "Malabar coast"
+    ],
+    "answer": 2,
+    "explanation": "The Coromandel coast receives rainfall from the north-east monsoon.",
     "verified": false,
-    "source": "placeholder"
+    "source": "Geography_2023.pdf"
   },
   {
     "id": "geo-002",
-    "question": "PLACEHOLDER: Geography question 2 - replace with a verified board-style question.",
-    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
-    "answer": 0,
-    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "question": "Which is the most widespread soil of India?",
+    "options": [
+      "Red soil",
+      "Alluvial soil",
+      "Laterite soil",
+      "Black soil"
+    ],
+    "answer": 1,
+    "explanation": "Alluvial soil is the most widespread soil group in India.",
     "verified": false,
-    "source": "placeholder"
+    "source": "Geography_2023.pdf"
   },
   {
     "id": "geo-003",
-    "question": "PLACEHOLDER: Geography question 3 - replace with a verified board-style question.",
-    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
-    "answer": 0,
-    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "question": "Which type of forest is found mostly in the coastal areas of India?",
+    "options": [
+      "Tropical Evergreen Forest",
+      "Tropical Desert Forest",
+      "Littoral Forest",
+      "Tropical Deciduous Forest"
+    ],
+    "answer": 2,
+    "explanation": "Littoral forests occur along coastal and marshy areas.",
     "verified": false,
-    "source": "placeholder"
+    "source": "Geography_2023.pdf"
   },
   {
     "id": "geo-004",
-    "question": "PLACEHOLDER: Geography question 4 - replace with a verified board-style question.",
-    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
-    "answer": 0,
-    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "question": "Which of the following is a ground water source?",
+    "options": [
+      "Pond",
+      "Lake",
+      "Spring",
+      "River"
+    ],
+    "answer": 2,
+    "explanation": "A spring is a groundwater source.",
     "verified": false,
-    "source": "placeholder"
+    "source": "Geography_2023.pdf"
   },
   {
     "id": "geo-005",
-    "question": "PLACEHOLDER: Geography question 5 - replace with a verified board-style question.",
-    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
-    "answer": 0,
-    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "question": "Copper is alloyed with Zinc to form:",
+    "options": [
+      "Stainless steel",
+      "Brass",
+      "Bronze",
+      "Aluminium"
+    ],
+    "answer": 1,
+    "explanation": "Copper alloyed with zinc forms brass.",
     "verified": false,
-    "source": "placeholder"
+    "source": "Geography_2023.pdf"
+  },
+  {
+    "id": "geo-006",
+    "question": "Hirakud dam is based on which of the following rivers?",
+    "options": [
+      "River Godavari",
+      "River Mahanadi",
+      "River Krishna",
+      "River Narmada"
+    ],
+    "answer": 1,
+    "explanation": "Hirakud dam is built on the Mahanadi river.",
+    "verified": false,
+    "source": "Geography_2023.pdf"
+  },
+  {
+    "id": "geo-007",
+    "question": "Which of the following is NOT a problem of Indian agriculture?",
+    "options": [
+      "Dependence on monsoon",
+      "Small land holdings",
+      "Two main cropping seasons",
+      "Use of traditional methods of farming"
+    ],
+    "answer": 2,
+    "explanation": "Having two main cropping seasons is not a problem of Indian agriculture.",
+    "verified": false,
+    "source": "Geography_2023.pdf"
+  },
+  {
+    "id": "geo-008",
+    "question": "Which of the following is a basic / key industry?",
+    "options": [
+      "Iron and Steel Industry",
+      "Silk Industry",
+      "Electronic Industry",
+      "Cotton textile Industry"
+    ],
+    "answer": 0,
+    "explanation": "Iron and steel is a basic/key industry.",
+    "verified": false,
+    "source": "Geography_2023.pdf"
+  },
+  {
+    "id": "geo-009",
+    "question": "Which of the following is a staple food grain of Indians?",
+    "options": [
+      "Wheat",
+      "Rice",
+      "Gram",
+      "Arhar"
+    ],
+    "answer": 1,
+    "explanation": "Rice is the staple food grain for most Indians.",
+    "verified": false,
+    "source": "Geography_2023.pdf"
+  },
+  {
+    "id": "geo-010",
+    "question": "Which of the following method of waste disposal is harmful?",
+    "options": [
+      "Composting",
+      "Segregation",
+      "Dumping",
+      "Vermicomposting"
+    ],
+    "answer": 2,
+    "explanation": "Dumping of waste is harmful.",
+    "verified": false,
+    "source": "Geography_2023.pdf"
+  },
+  {
+    "id": "geo-011",
+    "question": "What causes snowfall in Kashmir during winter?",
+    "options": [
+      "Tropical cyclone",
+      "Northeast Monsoon wind",
+      "Southwest Monsoon wind",
+      "Temperate cyclone"
+    ],
+    "answer": 3,
+    "explanation": "Temperate cyclones cause winter snowfall in Kashmir.",
+    "verified": false,
+    "source": "ICSE 2024 - 502 HCG2.pdf"
+  },
+  {
+    "id": "geo-012",
+    "question": "Which of the following helps in soil conservation?",
+    "options": [
+      "Afforestation",
+      "Overgrazing",
+      "Mining",
+      "Shifting agriculture"
+    ],
+    "answer": 0,
+    "explanation": "Afforestation helps conserve soil.",
+    "verified": false,
+    "source": "ICSE 2024 - 502 HCG2.pdf"
+  },
+  {
+    "id": "geo-013",
+    "question": "Which means of irrigation can be developed with minimum expenditure?",
+    "options": [
+      "Tube well",
+      "Canal",
+      "Well",
+      "Drip irrigation"
+    ],
+    "answer": 2,
+    "explanation": "A well can be developed with minimum expenditure.",
+    "verified": false,
+    "source": "ICSE 2024 - 502 HCG2.pdf"
+  },
+  {
+    "id": "geo-014",
+    "question": "Read the table and identify the pair that is correctly matched: P—Tropical evergreen—Babool; Q—Tropical deciduous—Teak; R—Littoral—Ebony; S—Mountain forest—Banyan.",
+    "options": [
+      "P",
+      "Q",
+      "R",
+      "S"
+    ],
+    "answer": 1,
+    "explanation": "Tropical deciduous forests are correctly paired with teak.",
+    "verified": false,
+    "source": "ICSE 2024 - 502 HCG2.pdf"
+  },
+  {
+    "id": "geo-015",
+    "question": "Bauxite is the ore of:",
+    "options": [
+      "Aluminium",
+      "Copper",
+      "Manganese",
+      "Iron"
+    ],
+    "answer": 0,
+    "explanation": "Bauxite is an ore of aluminium.",
+    "verified": false,
+    "source": "ICSE 2024 - 502 HCG2.pdf"
+  },
+  {
+    "id": "geo-016",
+    "question": "Identify the source of energy that leads to pollution:",
+    "options": [
+      "Tidal energy",
+      "Wind energy",
+      "Natural gas",
+      "Geo-thermal energy"
+    ],
+    "answer": 2,
+    "explanation": "Natural gas is a fossil fuel and causes pollution.",
+    "verified": false,
+    "source": "ICSE 2024 - 502 HCG2.pdf"
+  },
+  {
+    "id": "geo-017",
+    "question": "Which of the following is NOT a centre for the iron and steel industry?",
+    "options": [
+      "Bhilai",
+      "Bengaluru",
+      "Rourkela",
+      "Vishakhapatnam"
+    ],
+    "answer": 1,
+    "explanation": "Bengaluru is not a centre of the iron and steel industry.",
+    "verified": false,
+    "source": "ICSE 2024 - 502 HCG2.pdf"
+  },
+  {
+    "id": "geo-018",
+    "question": "Which of the following farming method is used to grow tea on a large scale?",
+    "options": [
+      "Subsistence farming",
+      "Plantation farming",
+      "Mixed farming",
+      "Shifting agriculture"
+    ],
+    "answer": 1,
+    "explanation": "Tea is grown on large plantations.",
+    "verified": false,
+    "source": "ICSE 2024 - 502 HCG2.pdf"
+  },
+  {
+    "id": "geo-019",
+    "question": "Which of the following means of transport has best use during floods / earthquake?",
+    "options": [
+      "Airways",
+      "Railways",
+      "Roadways",
+      "Waterways"
+    ],
+    "answer": 0,
+    "explanation": "Airways are most useful during floods and earthquakes.",
+    "verified": false,
+    "source": "ICSE 2024 - 502 HCG2.pdf"
+  },
+  {
+    "id": "geo-020",
+    "question": "Which of the following is a biodegradable waste?",
+    "options": [
+      "Broken glass",
+      "Wastepaper",
+      "Polythene",
+      "Plastic bags"
+    ],
+    "answer": 1,
+    "explanation": "Wastepaper is biodegradable.",
+    "verified": false,
+    "source": "ICSE 2024 - 502 HCG2.pdf"
+  },
+  {
+    "id": "geo-021",
+    "question": "Assertion (A): Mumbai receives more rainfall than Pune. Reason (R): Mumbai gets rain from Arabian Sea branch of southwest monsoon.",
+    "options": [
+      "Both (A) and (R) are true and (R) is the correct explanation for (A).",
+      "Both (A) and (R) are true and (R) is not the correct explanation for (A).",
+      "(A) is true and (R) is false.",
+      "(A) is false and (R) is true."
+    ],
+    "answer": 0,
+    "explanation": "Mumbai lies on the windward side and receives rain from the Arabian Sea branch.",
+    "verified": false,
+    "source": "ICSE 2025 HCG2 QP.pdf"
+  },
+  {
+    "id": "geo-022",
+    "question": "Which of the following pairs of soils displays similar characteristics in terms of their colour and texture?",
+    "options": [
+      "Alluvial soil and laterite soil",
+      "Black soil and red soil",
+      "Red soil and laterite soil",
+      "Alluvial soil and black soil"
+    ],
+    "answer": 2,
+    "explanation": "Red and laterite soils are both reddish in colour.",
+    "verified": false,
+    "source": "ICSE 2025 HCG2 QP.pdf"
+  },
+  {
+    "id": "geo-023",
+    "question": "Which of the following prevents wastage of water?",
+    "options": [
+      "Canal",
+      "Well",
+      "Sprinkler",
+      "Tube well"
+    ],
+    "answer": 2,
+    "explanation": "Sprinkler irrigation reduces water wastage.",
+    "verified": false,
+    "source": "ICSE 2025 HCG2 QP.pdf"
+  },
+  {
+    "id": "geo-024",
+    "question": "Balaghat : Manganese :: Mumbai High :",
+    "options": [
+      "Copper",
+      "Coal",
+      "Iron Ore",
+      "Petroleum"
+    ],
+    "answer": 3,
+    "explanation": "Mumbai High is an offshore petroleum field.",
+    "verified": false,
+    "source": "ICSE 2025 HCG2 QP.pdf"
+  },
+  {
+    "id": "geo-025",
+    "question": "A microbiological process that loosens the bark of a crop and facilitates removal of fibre from the stalk:",
+    "options": [
+      "Rolling",
+      "Ratooning",
+      "Retting",
+      "Fermentation"
+    ],
+    "answer": 2,
+    "explanation": "Retting is a microbiological process that loosens bark fibres.",
+    "verified": false,
+    "source": "ICSE 2025 HCG2 QP.pdf"
+  },
+  {
+    "id": "geo-026",
+    "question": "Which industry amongst the following has revolutionised the lifestyle of the Indian masses in recent years?",
+    "options": [
+      "Cotton Textile",
+      "Electronic",
+      "Iron and Steel",
+      "Sugar"
+    ],
+    "answer": 1,
+    "explanation": "The electronic industry has transformed lifestyles in recent years.",
+    "verified": false,
+    "source": "ICSE 2025 HCG2 QP.pdf"
+  },
+  {
+    "id": "geo-027",
+    "question": "Which of the following household products is associated with the petrochemical industry?",
+    "options": [
+      "Glass bottle",
+      "Wooden chopping board",
+      "Kitchen knife",
+      "Plastic mug"
+    ],
+    "answer": 3,
+    "explanation": "Plastic mugs are petrochemical products.",
+    "verified": false,
+    "source": "ICSE 2025 HCG2 QP.pdf"
+  },
+  {
+    "id": "geo-028",
+    "question": "Raman, a dairy farmer in Ludhiana, supplies milk within the city on a daily basis. Which mode of transport is he most likely to use?",
+    "options": [
+      "Railway",
+      "Roadway",
+      "Airway",
+      "Waterway"
+    ],
+    "answer": 1,
+    "explanation": "Roadways are suitable for daily local milk supply.",
+    "verified": false,
+    "source": "ICSE 2025 HCG2 QP.pdf"
+  },
+  {
+    "id": "geo-029",
+    "question": "The collection of discarded materials and converting them into useful products is:",
+    "options": [
+      "Recycling",
+      "Processing",
+      "Reducing",
+      "Composting"
+    ],
+    "answer": 0,
+    "explanation": "Recycling converts discarded materials into useful products.",
+    "verified": false,
+    "source": "ICSE 2025 HCG2 QP.pdf"
+  },
+  {
+    "id": "geo-030",
+    "question": "Mawsynram, the rainiest place in the world, gets the rain from:",
+    "options": [
+      "South-west monsoon wind - Arabian Sea branch",
+      "South-west monsoon wind - Bay of Bengal branch",
+      "Western Disturbance",
+      "North-east monsoon wind"
+    ],
+    "answer": 1,
+    "explanation": "Mawsynram receives rain from the Bay of Bengal branch of the southwest monsoon.",
+    "verified": false,
+    "source": "502 HCG2 - QP.pdf"
+  },
+  {
+    "id": "geo-031",
+    "question": "Choose the characteristic that is true about Laterite soil.",
+    "options": [
+      "It is a clayey soil.",
+      "It is moisture retentive.",
+      "It is rich in calcium.",
+      "It undergoes desilication."
+    ],
+    "answer": 3,
+    "explanation": "Laterite soil undergoes desilication.",
+    "verified": false,
+    "source": "502 HCG2 - QP.pdf"
+  },
+  {
+    "id": "geo-032",
+    "question": "Identify the option which is most similar to: Tropical Evergreen vegetation : Tall trees and hardwood",
+    "options": [
+      "Tropical Deciduous vegetation : Pure stands",
+      "Tropical Desert vegetation : Small leaves and spines",
+      "Coniferous forests : Mountain",
+      "Littoral vegetation : Boat making"
+    ],
+    "answer": 1,
+    "explanation": "Small leaves and spines are characteristic of tropical desert vegetation.",
+    "verified": false,
+    "source": "502 HCG2 - QP.pdf"
+  },
+  {
+    "id": "geo-033",
+    "question": "Assertion (A): Irrigation is practised in large parts of India. Reason (R): India has a variety of soil types.",
+    "options": [
+      "(A) is true and (R) is false.",
+      "(A) is false and (R) is true.",
+      "Both (A) and (R) are true and (R) is the correct explanation of (A).",
+      "Both (A) and (R) are true but (R) is not the correct explanation of (A)."
+    ],
+    "answer": 3,
+    "explanation": "Irrigation is widely practised, but soil variety is not its explanation.",
+    "verified": false,
+    "source": "502 HCG2 - QP.pdf"
+  },
+  {
+    "id": "geo-034",
+    "question": "Identify the type of coal that has the highest calorific value.",
+    "options": [
+      "Peat",
+      "Lignite",
+      "Bituminous",
+      "Anthracite"
+    ],
+    "answer": 3,
+    "explanation": "Anthracite has the highest calorific value among coal types.",
+    "verified": false,
+    "source": "502 HCG2 - QP.pdf"
+  },
+  {
+    "id": "geo-035",
+    "question": "Identify the crop that is grown in the Rabi cropping season.",
+    "options": [
+      "Sugarcane",
+      "Rice",
+      "Mustard",
+      "Cotton"
+    ],
+    "answer": 2,
+    "explanation": "Mustard is a rabi crop.",
+    "verified": false,
+    "source": "502 HCG2 - QP.pdf"
+  },
+  {
+    "id": "geo-036",
+    "question": "Which industry is ideally located close to the raw material producing area?",
+    "options": [
+      "Silk industry",
+      "Jute industry",
+      "Cotton textile industry",
+      "Sugar industry"
+    ],
+    "answer": 3,
+    "explanation": "Sugar industry is located near sugarcane-producing areas.",
+    "verified": false,
+    "source": "502 HCG2 - QP.pdf"
+  },
+  {
+    "id": "geo-037",
+    "question": "Which of the following is NOT suitable for composting?",
+    "options": [
+      "Fruit peels",
+      "Egg shells",
+      "Neem soap",
+      "Used tea leaves"
+    ],
+    "answer": 2,
+    "explanation": "Neem soap is not suitable for composting.",
+    "verified": false,
+    "source": "502 HCG2 - QP.pdf"
   }
 ]

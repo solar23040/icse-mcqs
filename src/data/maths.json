@@ -1,47 +1,398 @@
 [
   {
     "id": "math-001",
-    "question": "PLACEHOLDER: Maths question 1 - replace with a verified board-style question.",
-    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
+    "question": "If [[2, 0], [0, 4]][x; y] = [2; -8], the value of x and y respectively are:",
+    "options": ["1, -2", "-2, 1", "1, 2", "-2, -1"],
     "answer": 0,
-    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "explanation": "From 2x = 2, x = 1; from 4y = -8, y = -2.",
     "verified": false,
-    "source": "placeholder"
+    "source": "Mathematics_2023.pdf"
   },
   {
     "id": "math-002",
-    "question": "PLACEHOLDER: Maths question 2 - replace with a verified board-style question.",
-    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
-    "answer": 0,
-    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "question": "If x - 2 is a factor of x^3 - kx - 12, then the value of k is:",
+    "options": ["3", "2", "-2", "-3"],
+    "answer": 2,
+    "explanation": "Put x = 2: 8 - 2k - 12 = 0, so -2k = 4 and k = -2.",
     "verified": false,
-    "source": "placeholder"
+    "source": "Mathematics_2023.pdf"
   },
   {
     "id": "math-003",
-    "question": "PLACEHOLDER: Maths question 3 - replace with a verified board-style question.",
-    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
-    "answer": 0,
-    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "question": "A letter is chosen at random from all the letters of the English alphabet. The probability that the letter chosen is a vowel is:",
+    "options": ["4/26", "5/26", "21/26", "5/24"],
+    "answer": 1,
+    "explanation": "There are 5 vowels and 26 letters, so probability = 5/26.",
     "verified": false,
-    "source": "placeholder"
+    "source": "Mathematics_2023.pdf"
   },
   {
     "id": "math-004",
-    "question": "PLACEHOLDER: Maths question 4 - replace with a verified board-style question.",
-    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
+    "question": "If 3 is a root of x^2 - px + 3 = 0, then p is equal to:",
+    "options": ["4", "3", "5", "2"],
     "answer": 0,
-    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "explanation": "Substitute x = 3: 9 - 3p + 3 = 0, so 12 - 3p = 0 and p = 4.",
     "verified": false,
-    "source": "placeholder"
+    "source": "Mathematics_2023.pdf"
   },
   {
     "id": "math-005",
-    "question": "PLACEHOLDER: Maths question 5 - replace with a verified board-style question.",
-    "options": ["Placeholder option A", "Placeholder option B", "Placeholder option C", "Placeholder option D"],
-    "answer": 0,
-    "explanation": "Placeholder explanation only. Replace it together with the question.",
+    "question": "The printed price of an article is ₹3080. If the rate of GST is 10%, then the GST charged is:",
+    "options": ["154", "308", "30.80", "15.40"],
+    "answer": 1,
+    "explanation": "GST = 10% of 3080 = 308.",
     "verified": false,
-    "source": "placeholder"
+    "source": "Mathematics_2023.pdf"
+  },
+  {
+    "id": "math-006",
+    "question": "(1 + sin A)(1 - sin A) is equal to:",
+    "options": ["cosec^2 A", "sin^2 A", "sec^2 A", "cos^2 A"],
+    "answer": 3,
+    "explanation": "(1 + sin A)(1 - sin A) = 1 - sin^2 A = cos^2 A.",
+    "verified": false,
+    "source": "Mathematics_2023.pdf"
+  },
+  {
+    "id": "math-007",
+    "question": "The coordinates of the vertices of ΔABC are (-4, -2), (6, 2) and (4, 6). The centroid G is:",
+    "options": ["(2, 2)", "(2, 3)", "(3, 3)", "(0, -1)"],
+    "answer": 0,
+    "explanation": "G = ((-4 + 6 + 4)/3, (-2 + 2 + 6)/3) = (2, 2).",
+    "verified": false,
+    "source": "Mathematics_2023.pdf"
+  },
+  {
+    "id": "math-008",
+    "question": "The mean proportional between 4 and 9 is:",
+    "options": ["4", "6", "9", "36"],
+    "answer": 1,
+    "explanation": "Mean proportional = sqrt(4 × 9) = sqrt(36) = 6.",
+    "verified": false,
+    "source": "Mathematics_2023.pdf"
+  },
+  {
+    "id": "math-009",
+    "question": "Which of the following cannot be determined graphically for a grouped frequency distribution?",
+    "options": ["Median", "Mode", "Quartiles", "Mean"],
+    "answer": 3,
+    "explanation": "Median and quartiles can be read from an ogive, mode from a histogram, but mean cannot be determined graphically.",
+    "verified": false,
+    "source": "Mathematics_2023.pdf"
+  },
+  {
+    "id": "math-010",
+    "question": "Volume of a cylinder of height 3 cm is 48π. Radius of the cylinder is:",
+    "options": ["48 cm", "16 cm", "4 cm", "24 cm"],
+    "answer": 2,
+    "explanation": "πr^2(3) = 48π, so r^2 = 16 and r = 4 cm.",
+    "verified": false,
+    "source": "Mathematics_2023.pdf"
+  },
+  {
+    "id": "math-011",
+    "question": "Naveen deposits ₹800 every month in a recurring deposit account for 6 months. If he receives ₹4884 at the time of maturity, then the interest he earns is:",
+    "options": ["84", "42", "24", "284"],
+    "answer": 0,
+    "explanation": "Total deposit = 800 × 6 = 4800; interest = 4884 - 4800 = 84.",
+    "verified": false,
+    "source": "Mathematics_2023.pdf"
+  },
+  {
+    "id": "math-012",
+    "question": "The solution set for the inequation 2x + 4 ≤ 14, x ∈ W is:",
+    "options": ["{1,2,3,4,5}", "{0,1,2,3,4,5}", "{1,2,3,4}", "{0,1,2,3,4}"],
+    "answer": 1,
+    "explanation": "2x ≤ 10, so x ≤ 5. Since x ∈ W, the set is {0,1,2,3,4,5}.",
+    "verified": false,
+    "source": "Mathematics_2023.pdf"
+  },
+  {
+    "id": "math-013",
+    "question": "For an intra-state sale, the CGST paid by a dealer to the Central Government is ₹120. If the marked price of the article is ₹2000, the rate of GST is:",
+    "options": ["6%", "10%", "12%", "16.67%"],
+    "answer": 2,
+    "explanation": "CGST is half of GST, so total GST = 240. Rate = 240/2000 × 100% = 12%.",
+    "verified": false,
+    "source": "ICSE 2024 - 511 MAT.pdf"
+  },
+  {
+    "id": "math-014",
+    "question": "What must be subtracted from x^3 + x^2 - 2x + 1 so that the result is exactly divisible by x - 3?",
+    "options": ["-31", "-30", "30", "31"],
+    "answer": 3,
+    "explanation": "Remainder at x = 3 is 27 + 9 - 6 + 1 = 31, so subtract 31.",
+    "verified": false,
+    "source": "ICSE 2024 - 511 MAT.pdf"
+  },
+  {
+    "id": "math-015",
+    "question": "The roots of the quadratic equation px^2 - qx + r = 0 are real and equal if:",
+    "options": ["p^2 = 4qr", "q^2 = 4pr", "-q^2 = 4pr", "p^2 > 4qr"],
+    "answer": 1,
+    "explanation": "For equal real roots, discriminant = 0, so (-q)^2 - 4pr = 0, i.e. q^2 = 4pr.",
+    "verified": false,
+    "source": "ICSE 2024 - 511 MAT.pdf"
+  },
+  {
+    "id": "math-016",
+    "question": "If A = [[2,2],[0,2]] and A^2 = [[4,x],[0,4]], then the value of x is:",
+    "options": ["2", "4", "8", "10"],
+    "answer": 2,
+    "explanation": "A^2 = [[4, 8], [0, 4]], so x = 8.",
+    "verified": false,
+    "source": "ICSE 2024 - 511 MAT.pdf"
+  },
+  {
+    "id": "math-017",
+    "question": "The median of the observations 27, 31, 46, 52, x, x + 4, 71, 79, 85, 90 arranged in ascending order is 64. The value of x is:",
+    "options": ["60", "61", "62", "66"],
+    "answer": 2,
+    "explanation": "Median = (x + x + 4)/2 = x + 2 = 64, so x = 62.",
+    "verified": false,
+    "source": "ICSE 2024 - 511 MAT.pdf"
+  },
+  {
+    "id": "math-018",
+    "question": "Points A(x, y), B(3, -2) and C(4, -5) are collinear. The value of y in terms of x is:",
+    "options": ["3x - 11", "11 - 3x", "3x - 7", "7 - 3x"],
+    "answer": 3,
+    "explanation": "Slope BC = (-5 + 2)/(4 - 3) = -3. Through B: y + 2 = -3(x - 3), so y = 7 - 3x.",
+    "verified": false,
+    "source": "ICSE 2024 - 511 MAT.pdf"
+  },
+  {
+    "id": "math-019",
+    "question": "The table shows distance covered and time taken by a train at uniform speed. Distance (m): 60, 90, y; Time (s): 2, x, 5. The values of x and y are:",
+    "options": ["x = 4, y = 150", "x = 3, y = 100", "x = 4, y = 100", "x = 3, y = 150"],
+    "answer": 3,
+    "explanation": "Speed = 60/2 = 30 m/s. So x = 90/30 = 3 and y = 30 × 5 = 150.",
+    "verified": false,
+    "source": "ICSE 2024 - 511 MAT.pdf"
+  },
+  {
+    "id": "math-020",
+    "question": "The 7th term of the A.P. 1/a, (1/a + 1), (1/a + 2), ... is:",
+    "options": ["1/a + 6", "1/a + 7", "1/a + 8", "1/a + 7^7"],
+    "answer": 0,
+    "explanation": "First term = 1/a and common difference = 1. Seventh term = 1/a + 6.",
+    "verified": false,
+    "source": "ICSE 2024 - 511 MAT.pdf"
+  },
+  {
+    "id": "math-021",
+    "question": "The sum invested to purchase 15 shares of nominal value ₹75 available at a discount of 20% is:",
+    "options": ["60", "90", "1350", "900"],
+    "answer": 3,
+    "explanation": "Market value per share = 80% of 75 = 60. Total = 15 × 60 = 900.",
+    "verified": false,
+    "source": "ICSE 2024 - 511 MAT.pdf"
+  },
+  {
+    "id": "math-022",
+    "question": "The circumcentre of a triangle is the point which is:",
+    "options": ["at equal distance from the three sides of the triangle", "at equal distance from the three vertices of the triangle", "the point of intersection of the three medians", "the point of intersection of the three altitudes"],
+    "answer": 1,
+    "explanation": "The circumcentre is equidistant from the three vertices of the triangle.",
+    "verified": false,
+    "source": "ICSE 2024 - 511 MAT.pdf"
+  },
+  {
+    "id": "math-023",
+    "question": "Statement 1: sin^2 θ + cos^2 θ = 1. Statement 2: cosec^2 θ + cot^2 θ = 1. Which of the following is valid?",
+    "options": ["only 1", "only 2", "both 1 and 2", "neither 1 nor 2"],
+    "answer": 0,
+    "explanation": "The standard identity is cosec^2 θ - cot^2 θ = 1, so only Statement 1 is true.",
+    "verified": false,
+    "source": "ICSE 2024 - 511 MAT.pdf"
+  },
+  {
+    "id": "math-024",
+    "question": "Assertion (A): A die is thrown once and the probability of getting an even number is 2/3. Reason (R): The sample space for even numbers on a die is {2, 4, 6}.",
+    "options": ["A is true, R is false", "A is false, R is true", "Both A and R are true", "Both A and R are false"],
+    "answer": 1,
+    "explanation": "Probability of an even number is 3/6 = 1/2, so A is false; R is true.",
+    "verified": false,
+    "source": "ICSE 2024 - 511 MAT.pdf"
+  },
+  {
+    "id": "math-025",
+    "question": "A rectangular sheet of paper of size 11 cm × 7 cm is first rotated about the side 11 cm and then about the side 7 cm to form a cylinder. The ratio of their curved surface areas is:",
+    "options": ["1:1", "7:11", "11:7", "11π/7 : 7π/11"],
+    "answer": 0,
+    "explanation": "In each case the curved surface area equals the area of the rectangle, 11 × 7, so the ratio is 1:1.",
+    "verified": false,
+    "source": "ICSE 2024 - 511 MAT.pdf"
+  },
+  {
+    "id": "math-026",
+    "question": "The quadratic equation 3x^2 + √7 x + 2 = 0 has:",
+    "options": ["two equal real roots", "two distinct real roots", "more than two real roots", "no real roots"],
+    "answer": 3,
+    "explanation": "Discriminant = (√7)^2 - 4 × 3 × 2 = 7 - 24 = -17 < 0, so no real roots.",
+    "verified": false,
+    "source": "ICSE 2025 MAT QP.pdf"
+  },
+  {
+    "id": "math-027",
+    "question": "Mr. Anuj deposits ₹500 per month for 18 months in a recurring deposit account at a certain rate. If he earns ₹570 as interest at the time of maturity, his matured amount is:",
+    "options": ["₹(500×18 + 570)", "₹(500×19 + 570)", "₹(500×18×19 + 570)", "₹(500×9×19 + 570)"],
+    "answer": 0,
+    "explanation": "Maturity amount = total deposits + interest = 500 × 18 + 570.",
+    "verified": false,
+    "source": "ICSE 2025 MAT QP.pdf"
+  },
+  {
+    "id": "math-028",
+    "question": "Which of the following cannot be the probability of any event?",
+    "options": ["5/4", "0.25", "1/33", "67%"],
+    "answer": 0,
+    "explanation": "Probability cannot exceed 1, and 5/4 = 1.25 > 1.",
+    "verified": false,
+    "source": "ICSE 2025 MAT QP.pdf"
+  },
+  {
+    "id": "math-029",
+    "question": "The equation of the line passing through the origin and parallel to 3x + 4y + 7 = 0 is:",
+    "options": ["3x + 4y + 5 = 0", "4x - 3y - 5 = 0", "4x - 3y = 0", "3x + 4y = 0"],
+    "answer": 3,
+    "explanation": "A parallel line has the same coefficients of x and y. Passing through origin gives 3x + 4y = 0.",
+    "verified": false,
+    "source": "ICSE 2025 MAT QP.pdf"
+  },
+  {
+    "id": "math-030",
+    "question": "If A = [[0,1],[1,0]], then A^2 is equal to:",
+    "options": ["[[1,1],[0,0]]", "[[0,0],[1,1]]", "[[1,0],[0,1]]", "[[0,1],[1,0]]"],
+    "answer": 2,
+    "explanation": "Multiplying A by itself gives the identity matrix [[1,0],[0,1]].",
+    "verified": false,
+    "source": "ICSE 2025 MAT QP.pdf"
+  },
+  {
+    "id": "math-031",
+    "question": "If the volumes of two spheres are in the ratio 27:64, then the ratio of their radii is:",
+    "options": ["3:4", "4:3", "9:16", "16:9"],
+    "answer": 0,
+    "explanation": "Volume ratio is the cube of the radius ratio. Cube root of 27:64 is 3:4.",
+    "verified": false,
+    "source": "ICSE 2025 MAT QP.pdf"
+  },
+  {
+    "id": "math-032",
+    "question": "The marked price of an article is ₹1375. If CGST is charged at 4%, then the price of the article including GST is:",
+    "options": ["55", "110", "1430", "1485"],
+    "answer": 3,
+    "explanation": "CGST 4% means total GST = 8%. Price = 1375 × 1.08 = 1485.",
+    "verified": false,
+    "source": "ICSE 2025 MAT QP.pdf"
+  },
+  {
+    "id": "math-033",
+    "question": "The solution set for 0 < -x/3 < 2, x ∈ Z is:",
+    "options": ["{-5,-4,-3,-2,-1}", "{-6,-5,-4,-3,-2,-1}", "{-5,-4,-3,-2,-1,0}", "{-6,-5,-4,-3,-2,-1,0}"],
+    "answer": 0,
+    "explanation": "Multiply by -3 and reverse signs: 0 > x > -6, so the integers are -5, -4, -3, -2, -1.",
+    "verified": false,
+    "source": "ICSE 2025 MAT QP.pdf"
+  },
+  {
+    "id": "math-034",
+    "question": "Assertion (A): The mean of the first 9 natural numbers is 4.5. Reason (R): Mean = sum of all observations / total number of observations.",
+    "options": ["A is true, R is false", "A is false, R is true", "Both A and R are true and R is the correct reason for A", "Both A and R are true and R is not the correct reason for A"],
+    "answer": 1,
+    "explanation": "Sum of first 9 natural numbers is 45, so mean = 45/9 = 5, not 4.5. The formula in R is true.",
+    "verified": false,
+    "source": "ICSE 2025 MAT QP.pdf"
+  },
+  {
+    "id": "math-035",
+    "question": "(x + 3), 1, (3x - 7) and -5 are in proportion. The value of x is:",
+    "options": ["-1", "1", "-5", "5"],
+    "answer": 0,
+    "explanation": "-5(x + 3) = 1(3x - 7), so -5x - 15 = 3x - 7, giving x = -1.",
+    "verified": false,
+    "source": "511 MAT - QP.pdf"
+  },
+  {
+    "id": "math-036",
+    "question": "The marked price of a refrigerator is ₹12000 and GST paid by the customer is ₹2160. The rate of GST is:",
+    "options": ["5%", "12%", "18%", "28%"],
+    "answer": 2,
+    "explanation": "GST rate = 2160/12000 × 100% = 18%.",
+    "verified": false,
+    "source": "511 MAT - QP.pdf"
+  },
+  {
+    "id": "math-037",
+    "question": "Rakhi's mobile number has the integers 1, 6, 9, 8, 9, 1, 7, 8, 9. The mode of the data is:",
+    "options": ["1", "6", "8", "9"],
+    "answer": 3,
+    "explanation": "9 occurs three times, more often than any other number.",
+    "verified": false,
+    "source": "511 MAT - QP.pdf"
+  },
+  {
+    "id": "math-038",
+    "question": "Find the equation of a line whose y-intercept is 6 and is parallel to the x-axis.",
+    "options": ["y = 6", "x = 6", "x + y = 6", "y - x = 6"],
+    "answer": 0,
+    "explanation": "A line parallel to the x-axis is horizontal and has equation y = 6.",
+    "verified": false,
+    "source": "511 MAT - QP.pdf"
+  },
+  {
+    "id": "math-039",
+    "question": "Asha buys ₹20 shares of a company which pays 9% dividend at such a price that she gets a return of 12% on her investment. At what price did she buy each share?",
+    "options": ["20", "15", "25", "18"],
+    "answer": 1,
+    "explanation": "Dividend per share = 9% of 20 = 1.8. If 12% of price = 1.8, price = 15.",
+    "verified": false,
+    "source": "511 MAT - QP.pdf"
+  },
+  {
+    "id": "math-040",
+    "question": "The total surface area of a solid sphere S1 and a solid hemisphere S2 are equal. The ratio of radii R and r is:",
+    "options": ["1:1", "2:1", "√3:2", "2:√3"],
+    "answer": 2,
+    "explanation": "4πR^2 = 3πr^2, so R^2/r^2 = 3/4 and R:r = √3:2.",
+    "verified": false,
+    "source": "511 MAT - QP.pdf"
+  },
+  {
+    "id": "math-041",
+    "question": "The nature of roots of the quadratic equation 3x^2 - 6x - 3 = 0 are:",
+    "options": ["real and equal", "real, distinct and rational", "real, distinct and irrational", "no real roots"],
+    "answer": 2,
+    "explanation": "Discriminant = 36 + 36 = 72 > 0 but not a perfect square, so roots are real, distinct and irrational.",
+    "verified": false,
+    "source": "511 MAT - QP.pdf"
+  },
+  {
+    "id": "math-042",
+    "question": "Assertion (A): If a die is rolled, the probability of getting a number greater than 6 is 1/6. Reason (R): There are six possible outcomes when rolling a die, {1,2,3,4,5,6}.",
+    "options": ["A is true and R is false", "A is false and R is true", "Both A and R are true and R is the correct explanation of A", "Both A and R are true but R is not the correct explanation of A"],
+    "answer": 1,
+    "explanation": "No outcome is greater than 6, so probability is 0; R is true.",
+    "verified": false,
+    "source": "511 MAT - QP.pdf"
+  },
+  {
+    "id": "math-043",
+    "question": "If the areas of two similar triangles are in the ratio 9:64, then the ratio of their corresponding altitudes is:",
+    "options": ["3:8", "2:1", "9:64", "8:3"],
+    "answer": 0,
+    "explanation": "Altitude ratio equals the square root of the area ratio: sqrt(9:64) = 3:8.",
+    "verified": false,
+    "source": "511 MAT - QP.pdf"
+  },
+  {
+    "id": "math-044",
+    "question": "Assertion (A): The 9th term of the G.P. 6, -12, 24, -48, ... is a positive term. Reason (R): The value of (-2)^8 is always positive.",
+    "options": ["A is true and R is false", "A is false and R is true", "Both A and R are true and R is the correct explanation of A", "Both A and R are true but R is not the correct explanation of A"],
+    "answer": 2,
+    "explanation": "9th term = 6(-2)^8 > 0; R correctly explains why the term is positive.",
+    "verified": false,
+    "source": "511 MAT - QP.pdf"
   }
 ]

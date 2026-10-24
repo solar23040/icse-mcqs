@@ -84,6 +84,21 @@ export function normalizeText(value: string): string {
     .trim();
 }
 
+/**
+ * Normalise an option for duplicate detection while keeping maths symbols.
+ * Stripping signs or operators would make "2" and "-2" or "p^2 = 4qr" and
+ * "p^2 > 4qr" look identical.
+ */
+export function normalizeOption(value: string): string {
+  return value
+    .normalize('NFKC')
+    .toLowerCase()
+    .replace(/\u2212/g, '-')
+    .replace(/[^\p{L}\p{N}+\-=<>≤≥≠^/×÷%±√π\s]/gu, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 function tokenSet(value: string): Set<string> {
   const normalized = normalizeText(value);
   return new Set(normalized === '' ? [] : normalized.split(' '));
@@ -208,7 +223,7 @@ export function validateSubjects(subjects: readonly SubjectData[]): ValidationRe
           } else {
             const seen = new Map<string, number>();
             entry.options.forEach((option, optionIndex) => {
-              const normalized = normalizeText(option);
+              const normalized = normalizeOption(option);
               if (normalized === '') return;
               const first = seen.get(normalized);
               if (first !== undefined) {
