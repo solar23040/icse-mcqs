@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { DELETE, GET, POST } from '../../api/poll';
+import { DELETE, GET, POST, POLL_OPTION_IDS } from '../../api/poll';
+import { POLL_OPTIONS } from './poll';
 
 type Command = (string | number)[];
 
@@ -88,6 +89,10 @@ afterEach(() => {
 });
 
 describe('poll API', () => {
+  it('keeps the API option ids in sync with the poll UI', () => {
+    expect([...POLL_OPTION_IDS]).toEqual(POLL_OPTIONS.map((option) => option.id));
+  });
+
   it('returns empty totals for a first-time visitor', async () => {
     const response = await GET(apiRequest('GET'));
 

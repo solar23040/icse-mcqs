@@ -1,4 +1,27 @@
-import { POLL_OPTIONS, isPollOptionId, type PollOptionId } from '../src/lib/poll';
+/**
+ * Kept in sync with POLL_OPTIONS in src/lib/poll.ts by a unit test.
+ * This function is deployed as a single unbundled Node ESM file, so it must
+ * not import from src/ (extensionless imports fail at runtime on Vercel).
+ */
+export const POLL_OPTION_IDS = [
+  'mass-media',
+  'physical-education',
+  'computer-applications',
+  'hindi',
+  'physics',
+  'chemistry',
+  'biology',
+  'commercial-studies',
+  'english-language',
+] as const;
+
+export const config = { runtime: 'nodejs' };
+
+type PollOptionId = (typeof POLL_OPTION_IDS)[number];
+
+function isPollOptionId(value: unknown): value is PollOptionId {
+  return typeof value === 'string' && (POLL_OPTION_IDS as readonly string[]).includes(value);
+}
 
 const HASH_KEY = 'poll:next-subject';
 const VOTE_KEY_PREFIX = 'poll:vote:';
@@ -16,7 +39,7 @@ interface PollPayload {
 }
 
 function emptyTotals(): Record<PollOptionId, number> {
-  return Object.fromEntries(POLL_OPTIONS.map((option) => [option.id, 0])) as Record<
+  return Object.fromEntries(POLL_OPTION_IDS.map((id) => [id, 0])) as Record<
     PollOptionId,
     number
   >;
