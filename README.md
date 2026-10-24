@@ -1,6 +1,6 @@
 # ICSE Class 10 MCQ Practice
 
-A static practice site for ICSE Class 10 multiple-choice questions, covering five subjects: History & Civics, Economics, Geography, Maths, and English Literature. Pick a session length, answer one question at a time, and see explanations at the end. Progress is stored in the browser with `localStorage`; there is no backend, login, or database.
+A static practice site for ICSE Class 10 multiple-choice questions, covering five subjects: History & Civics, Economics, Geography, Maths, and English Literature. Pick a session length, answer one question at a time, and see explanations at the end. Progress is stored in the browser with `localStorage`; there is no login. The optional next-subject poll uses a small Vercel function with free Upstash Redis; without it, the poll falls back to local-only voting.
 
 Built with Astro, Svelte, Tailwind CSS, and TypeScript. The production build is a plain static site in `dist/`.
 
@@ -40,6 +40,39 @@ The build output is written to `dist/`.
 | `english-lit`| English Literature | `src/data/english-lit.json`    | `lit`     |
 
 Each file is a JSON array of question objects. Keep it valid JSON: no comments and no trailing commas.
+
+## Next-subject poll
+
+The `/poll` page asks visitors which subject to add next. Options and ids live in `src/lib/poll.ts`, and the home page and footer link to the page. Visitors can change or remove their vote.
+
+The poll works in two modes:
+
+| Mode | When | Behaviour |
+| --- | --- | --- |
+| Shared | `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` are set | Votes go through the Vercel function in `api/poll.ts`, totals are shared by all visitors, and results appear after voting. |
+| Local | The function is not configured or unreachable | The vote stays in `localStorage` (`icse:poll-next-subject`) on that device. No totals are shown. |
+
+The shared mode uses an anonymous, `HttpOnly` cookie to count one vote per browser. No IP addresses or personal data are stored; Redis only holds the option counters and a random vote token. Changing a vote moves the count from the old option to the new one, and removing it decrements the count.
+
+### Free setup on Vercel
+
+Vercel Hobby and Upstash Redis both have free tiers (Upstash: 256 MB and 500,000 commands per month), which is plenty for this poll.
+
+1. In the Vercel dashboard, open **Storage** (Marketplace) and add **Upstash for Redis**, choosing the free plan. Connect it to this project.
+2. Make sure the project has `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` for Production, Preview, and Development. The older `KV_REST_API_URL` / `KV_REST_API_TOKEN` names are also supported.
+3. Redeploy the project. The poll switches to shared mode automatically.
+
+For local testing with the API function:
+
+```bash
+npx vercel link
+npx vercel env pull .env.local
+npx vercel dev
+```
+
+`npm run dev` serves the Astro site only, so `/api/poll` is unavailable there and the poll uses local mode. `.env.example` lists the variable names; never commit `.env.local`.
+
+Editing `POLL_OPTIONS` is enough to change the list. Never reuse an id for a different subject because existing votes are matched by id.
 
 ## Adding questions
 

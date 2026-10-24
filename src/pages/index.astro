@@ -15,4 +15,11 @@ import { SUBJECTS } from '../lib/subjects';
   </section>
 
   <SubjectGrid client:load subjects={SUBJECTS} />
+
+  <p class="mt-6 text-sm text-slate-600 dark:text-slate-400">
+    Missing a subject?
+    <a href="/poll" class="font-semibold text-indigo-600 underline-offset-4 hover:underline dark:text-indigo-400">
+      Vote on which one we add next →
+    </a>
+  </p>
 </Base>
