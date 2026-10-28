@@ -1,6 +1,6 @@
 # ICSE Class 10 MCQ Practice
 
-A static practice site for ICSE Class 10 multiple-choice questions, covering five subjects: History & Civics, Economics, Geography, Maths, and English Literature. Pick a session length, answer one question at a time, and see explanations at the end. Progress is stored in the browser with `localStorage`; there is no login. The optional next-subject poll uses a small Vercel function with free Upstash Redis; without it, the poll falls back to local-only voting.
+A static practice site for ICSE Class 10 multiple-choice questions, covering six live subjects: History & Civics, Economics, Geography, Maths, English Literature, and Physics. Chemistry has a placeholder page and is next in line. Pick a session length, answer one question at a time, and see explanations at the end. Progress is stored in the browser with `localStorage`; there is no login. The optional next-subject poll uses a small Vercel function with free Upstash Redis; without it, the poll falls back to local-only voting.
 
 Built with Astro, Svelte, Tailwind CSS, and TypeScript. The production build is a plain static site in `dist/`.
 
@@ -38,6 +38,8 @@ The build output is written to `dist/`.
 | `geography`  | Geography          | `src/data/geography.json`      | `geo`     |
 | `maths`      | Maths              | `src/data/maths.json`          | `math`    |
 | `english-lit`| English Literature | `src/data/english-lit.json`    | `lit`     |
+| `physics`    | Physics            | `src/data/physics.json`        | `phy`     |
+| `chemistry`  | Chemistry (coming soon) | `src/data/chemistry.json` | `chem`    |
 
 Each file is a JSON array of question objects. Keep it valid JSON: no comments and no trailing commas.
 

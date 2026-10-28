@@ -59,17 +59,15 @@ afterEach(() => {
 });
 
 describe('poll options', () => {
-  it('lists the nine candidate subjects with unique ids and labels', () => {
-    expect(poll.POLL_OPTIONS).toHaveLength(9);
-    expect(new Set(poll.POLL_OPTIONS.map((option) => option.id)).size).toBe(9);
-    expect(new Set(poll.POLL_OPTIONS.map((option) => option.label)).size).toBe(9);
+  it('lists the seven candidate subjects with unique ids and labels', () => {
+    expect(poll.POLL_OPTIONS).toHaveLength(7);
+    expect(new Set(poll.POLL_OPTIONS.map((option) => option.id)).size).toBe(7);
+    expect(new Set(poll.POLL_OPTIONS.map((option) => option.label)).size).toBe(7);
     expect(poll.POLL_OPTIONS.map((option) => option.label)).toEqual([
       'Mass Media',
       'Physical Education',
       'Computer Applications',
       'Hindi',
-      'Physics',
-      'Chemistry',
       'Biology',
       'Commercial Studies',
       'English Language',
@@ -77,8 +75,8 @@ describe('poll options', () => {
   });
 
   it('resolves labels and rejects unknown ids', () => {
-    expect(poll.pollOptionLabel('chemistry')).toBe('Chemistry');
-    expect(poll.isPollOptionId('chemistry')).toBe(true);
+    expect(poll.pollOptionLabel('biology')).toBe('Biology');
+    expect(poll.isPollOptionId('biology')).toBe(true);
     expect(poll.isPollOptionId('astrology')).toBe(false);
     expect(poll.isPollOptionId(null)).toBe(false);
   });
@@ -90,10 +88,10 @@ describe('poll vote storage', () => {
     vi.stubGlobal('localStorage', fake);
 
     expect(poll.getPollVote()).toBeNull();
-    expect(poll.savePollVote('physics')).toBe(true);
+    expect(poll.savePollVote('biology')).toBe(true);
 
-    expect(poll.getPollVote()).toBe('physics');
-    expect(fake.getItem(poll.POLL_STORAGE_KEY)).toBe('physics');
+    expect(poll.getPollVote()).toBe('biology');
+    expect(fake.getItem(poll.POLL_STORAGE_KEY)).toBe('biology');
 
     poll.clearPollVote();
 

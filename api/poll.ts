@@ -8,8 +8,6 @@ export const POLL_OPTION_IDS = [
   'physical-education',
   'computer-applications',
   'hindi',
-  'physics',
-  'chemistry',
   'biology',
   'commercial-studies',
   'english-language',

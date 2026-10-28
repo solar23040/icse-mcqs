@@ -20,9 +20,9 @@ describe('poll API client', () => {
       vi.fn(async () =>
         response({
           configured: true,
-          totals: { physics: 3, chemistry: '4', biology: -2, unknown: 99 },
+          totals: { biology: 3, hindi: '4', 'mass-media': -2, unknown: 99 },
           total: 999,
-          myVote: 'physics',
+          myVote: 'biology',
         }),
       ) as unknown as typeof fetch,
     );
@@ -30,17 +30,17 @@ describe('poll API client', () => {
     const results = await loadPollResults();
 
     expect(results).not.toBeNull();
-    expect(results?.totals.physics).toBe(3);
-    expect(results?.totals.chemistry).toBe(0);
-    expect(results?.totals.biology).toBe(0);
+    expect(results?.totals.biology).toBe(3);
+    expect(results?.totals.hindi).toBe(0);
+    expect(results?.totals['mass-media']).toBe(0);
     expect(results?.total).toBe(3);
-    expect(results?.myVote).toBe('physics');
+    expect(results?.myVote).toBe('biology');
   });
 
   it('rejects an invalid myVote value', async () => {
     vi.stubGlobal(
       'fetch',
-      vi.fn(async () => response({ totals: { physics: 1 }, myVote: 'astrology' })) as unknown as typeof fetch,
+      vi.fn(async () => response({ totals: { biology: 1 }, myVote: 'astrology' })) as unknown as typeof fetch,
     );
 
     const results = await loadPollResults();

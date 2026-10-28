@@ -100,36 +100,36 @@ describe('poll API', () => {
     const body = await payload(response);
     expect(body.total).toBe(0);
     expect(body.myVote).toBeNull();
-    expect((body.totals as Record<string, number>).physics).toBe(0);
+    expect((body.totals as Record<string, number>).biology).toBe(0);
   });
 
   it('counts a new vote and sets an anonymous cookie', async () => {
-    const response = await POST(apiRequest('POST', { body: { option: 'physics' } }));
+    const response = await POST(apiRequest('POST', { body: { option: 'biology' } }));
 
     expect(response.status).toBe(200);
     const body = await payload(response);
     expect(body.total).toBe(1);
-    expect(body.myVote).toBe('physics');
-    expect((body.totals as Record<string, number>).physics).toBe(1);
+    expect(body.myVote).toBe('biology');
+    expect((body.totals as Record<string, number>).biology).toBe(1);
 
     const token = cookieToken(response);
     expect(token).toMatch(/^[a-f0-9-]{36}$/i);
-    expect(redis.votes.get(`poll:vote:${token}`)).toBe('physics');
+    expect(redis.votes.get(`poll:vote:${token}`)).toBe('biology');
   });
 
   it('moves a vote when the same browser changes its choice', async () => {
-    const first = await POST(apiRequest('POST', { body: { option: 'physics' } }));
+    const first = await POST(apiRequest('POST', { body: { option: 'biology' } }));
     const token = cookieToken(first);
 
     const second = await POST(
-      apiRequest('POST', { body: { option: 'chemistry' }, cookie: token }),
+      apiRequest('POST', { body: { option: 'hindi' }, cookie: token }),
     );
     const body = await payload(second);
 
     expect(body.total).toBe(1);
-    expect(body.myVote).toBe('chemistry');
-    expect((body.totals as Record<string, number>).physics).toBe(0);
-    expect((body.totals as Record<string, number>).chemistry).toBe(1);
+    expect(body.myVote).toBe('hindi');
+    expect((body.totals as Record<string, number>).biology).toBe(0);
+    expect((body.totals as Record<string, number>).hindi).toBe(1);
   });
 
   it('keeps the same vote if it is submitted again', async () => {
@@ -194,7 +194,7 @@ describe('poll API', () => {
 
   it('rejects cross-origin votes', async () => {
     const response = await POST(
-      apiRequest('POST', { body: { option: 'physics' }, origin: 'https://evil.example' }),
+      apiRequest('POST', { body: { option: 'biology' }, origin: 'https://evil.example' }),
     );
 
     expect(response.status).toBe(403);

@@ -9,8 +9,6 @@ export const POLL_OPTIONS = [
   { id: 'physical-education', label: 'Physical Education' },
   { id: 'computer-applications', label: 'Computer Applications' },
   { id: 'hindi', label: 'Hindi' },
-  { id: 'physics', label: 'Physics' },
-  { id: 'chemistry', label: 'Chemistry' },
   { id: 'biology', label: 'Biology' },
   { id: 'commercial-studies', label: 'Commercial Studies' },
   { id: 'english-language', label: 'English Language' },

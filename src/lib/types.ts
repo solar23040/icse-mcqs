@@ -1,4 +1,11 @@
-export type Subject = 'history' | 'economics' | 'geography' | 'maths' | 'english-lit';
+export type Subject =
+  | 'history'
+  | 'economics'
+  | 'geography'
+  | 'maths'
+  | 'english-lit'
+  | 'physics'
+  | 'chemistry';
 
 export interface Question {
   id: string;

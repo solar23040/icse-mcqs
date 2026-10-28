@@ -1,0 +1,902 @@
+[
+  {
+    "id": "phy-001",
+    "question": "The point of action on a rigid body is",
+    "options": ["Fixed point on a rigid body", "Fixed point but can be transferred anywhere along the line of action of force", "Fixed point but can be transferred anywhere opposite to the direction of force", "Fixed point but can be transferred anywhere along the direction of force"],
+    "answer": 1,
+    "explanation": "A force may be shifted along its line of action without changing its effect on a rigid body.",
+    "verified": false,
+    "source": "icse-class-10-pre-board-physics-science-p1-221225-2026 (1).pdf"
+  },
+  {
+    "id": "phy-002",
+    "question": "Which of the following is the correct relation?",
+    "options": ["Power = Force / Velocity", "Power = Force × Velocity", "Power = Force / acceleration", "Power = Force × acceleration"],
+    "answer": 1,
+    "explanation": "Power is the rate of doing work, so P = Fv.",
+    "verified": false,
+    "source": "icse-class-10-pre-board-physics-science-p1-221225-2026 (1).pdf"
+  },
+  {
+    "id": "phy-003",
+    "question": "A radiation P is focused by a proper device on the bulb of a thermometer. Mercury in the thermometer shows a rapid increase. The radiation P is",
+    "options": ["X-rays", "Visible light", "Ultraviolet radiation", "Infrared radiations"],
+    "answer": 3,
+    "explanation": "Infrared radiation produces a heating effect and raises the thermometer reading rapidly.",
+    "verified": false,
+    "source": "icse-class-10-pre-board-physics-science-p1-221225-2026 (1).pdf"
+  },
+  {
+    "id": "phy-004",
+    "question": "The focal length of a lens depends on",
+    "options": ["refractive index of the material of the prism", "the radius of curvature of the two surfaces of lens", "both the refractive index of the material and the radius of curvature of the two surfaces", "none of these"],
+    "answer": 2,
+    "explanation": "Lens focal length depends on the material's refractive index and the radii of curvature of its surfaces.",
+    "verified": false,
+    "source": "icse-class-10-pre-board-physics-science-p1-221225-2026 (1).pdf"
+  },
+  {
+    "id": "phy-005",
+    "question": "If the speed of rotation of the coil of a generator is increased, the EMF produced in the generator",
+    "options": ["is zero", "increased", "decreases", "first increases and then decreases"],
+    "answer": 1,
+    "explanation": "A faster rotating coil cuts magnetic flux at a greater rate, so induced EMF increases.",
+    "verified": false,
+    "source": "icse-class-10-pre-board-physics-science-p1-221225-2026 (1).pdf"
+  },
+  {
+    "id": "phy-006",
+    "question": "The image formed by a concave lens is always",
+    "options": ["virtual, inverted and diminished", "virtual, upright and diminished", "virtual, inverted and enlarged", "virtual, upright and enlarged"],
+    "answer": 1,
+    "explanation": "A concave lens always forms a virtual, erect and diminished image.",
+    "verified": false,
+    "source": "icse-class-10-pre-board-physics-science-p1-221225-2026 (1).pdf"
+  },
+  {
+    "id": "phy-007",
+    "question": "It is given that the power rating of an electrical appliance is 200 W - 220 V. The value of resistance of the electrical appliance is",
+    "options": ["242 Ω", "484 Ω", "380 Ω", "749 Ω"],
+    "answer": 0,
+    "explanation": "Using P = V²/R gives R = 220²/200 = 242 Ω.",
+    "verified": false,
+    "source": "icse-class-10-pre-board-physics-science-p1-221225-2026 (1).pdf"
+  },
+  {
+    "id": "phy-008",
+    "question": "The magnetic field line gives the direction of",
+    "options": ["South-North", "A compass needle", "A bar magnet", "Magnetic field"],
+    "answer": 3,
+    "explanation": "The tangent to a magnetic field line gives the direction of the magnetic field at that point.",
+    "verified": false,
+    "source": "icse-class-10-pre-board-physics-science-p1-221225-2026 (1).pdf"
+  },
+  {
+    "id": "phy-009",
+    "question": "Lenz's law is based on which conservation law?",
+    "options": ["charge", "mass", "momentum", "energy"],
+    "answer": 3,
+    "explanation": "Lenz's law follows from conservation of energy in electromagnetic induction.",
+    "verified": false,
+    "source": "icse-class-10-pre-board-physics-science-p1-221225-2026 (1).pdf"
+  },
+  {
+    "id": "phy-010",
+    "question": "What is the relation between specific heat capacity and heat capacity of a body of mass m?",
+    "options": ["Specific heat capacity = heat capacity / mass", "Heat capacity = mass × specific heat capacity", "Specific heat capacity = mass × heat capacity", "Heat capacity = mass / specific heat capacity"],
+    "answer": 1,
+    "explanation": "Heat capacity equals mass multiplied by specific heat capacity.",
+    "verified": false,
+    "source": "icse-class-10-pre-board-physics-science-p1-221225-2026 (1).pdf"
+  },
+  {
+    "id": "phy-011",
+    "question": "The current in a wire is directed towards east and the wire is placed in a magnetic field towards north. The force on the wire is",
+    "options": ["due to east", "due to south", "vertically downwards", "vertically upwards"],
+    "answer": 3,
+    "explanation": "Using Fleming's left-hand rule, east current and north field give an upward force.",
+    "verified": false,
+    "source": "icse-class-10-pre-board-physics-science-p1-221225-2026 (1).pdf"
+  },
+  {
+    "id": "phy-012",
+    "question": "When a fuse is rated 9 A, it means",
+    "options": ["it will not work if the current is less than 9 A", "it has a resistance of 9 Ω", "it will work only if current is 9 A", "it will burn if the current exceeds 9 A"],
+    "answer": 3,
+    "explanation": "A fuse melts and breaks the circuit when current exceeds its rated value.",
+    "verified": false,
+    "source": "icse-class-10-pre-board-physics-science-p1-221225-2026 (1).pdf"
+  },
+  {
+    "id": "phy-013",
+    "question": "Which of the following radiations suffers maximum deflection in a magnetic field?",
+    "options": ["α-particles", "β-particles", "X-rays", "γ-rays"],
+    "answer": 1,
+    "explanation": "Beta particles have the largest charge-to-mass ratio, so they deflect most.",
+    "verified": false,
+    "source": "icse-class-10-pre-board-physics-science-p1-221225-2026 (1).pdf"
+  },
+  {
+    "id": "phy-014",
+    "question": "Four strings are stretched equally. Which one will produce the sound of highest pitch on plucking?",
+    "options": ["Thick string of length 10 m", "Thin string of length 1 m", "Thin string of length 10 m", "Thick string of length 1 m"],
+    "answer": 1,
+    "explanation": "A thin, short string has the highest frequency and hence the highest pitch.",
+    "verified": false,
+    "source": "icse-class-10-pre-board-physics-science-p1-220126-2026 (1).pdf"
+  },
+  {
+    "id": "phy-015",
+    "question": "Which of the following is not true for free vibrations?",
+    "options": ["its amplitude is constant", "its frequency is constant", "it takes place in a frictionless medium", "it has an external force of constant magnitude acting on it"],
+    "answer": 3,
+    "explanation": "Free vibrations occur without a continuous external periodic force.",
+    "verified": false,
+    "source": "icse-class-10-pre-board-physics-science-p1-220126-2026 (1).pdf"
+  },
+  {
+    "id": "phy-016",
+    "question": "The radiations used in remote control of TV sets are",
+    "options": ["Ultraviolet", "Radio waves", "Microwaves", "Infrared"],
+    "answer": 3,
+    "explanation": "Infrared radiation is used in most TV remote controls.",
+    "verified": false,
+    "source": "icse-class-10-pre-board-physics-science-p1-220126-2026 (1).pdf"
+  },
+  {
+    "id": "phy-017",
+    "question": "Assertion (A): A thicker convex lens has smaller focal length than a thinner convex lens of same material. Reason (R): A thicker lens bends light less than a thinner lens.",
+    "options": ["Both A and R are true and R is the correct explanation for A", "Both A and R are true but R is not the correct explanation of A", "A is true but R is false", "A is false but R is true"],
+    "answer": 2,
+    "explanation": "A thicker convex lens has more power and smaller focal length, but it bends light more, not less.",
+    "verified": false,
+    "source": "icse-class-10-pre-board-physics-science-p1-220126-2026 (1).pdf"
+  },
+  {
+    "id": "phy-018",
+    "question": "The direction of force experienced by a conductor carrying current, when placed in a magnetic field, is given by",
+    "options": ["Clock rule", "Lenz's law", "Fleming's left hand rule", "Fleming's right hand rule"],
+    "answer": 2,
+    "explanation": "Fleming's left-hand rule gives the direction of force on a current-carrying conductor in a magnetic field.",
+    "verified": false,
+    "source": "icse-class-10-pre-board-physics-science-p1-220126-2026 (1).pdf"
+  },
+  {
+    "id": "phy-019",
+    "question": "If a radioactive element is placed in an evacuated chamber, then the rate of radioactive decay will",
+    "options": ["decrease", "increase", "remains unchanged", "depends on the surrounding temperature"],
+    "answer": 2,
+    "explanation": "Radioactive decay is a nuclear process and is not affected by external physical conditions.",
+    "verified": false,
+    "source": "icse-class-10-pre-board-physics-science-p1-220126-2026 (1).pdf"
+  },
+  {
+    "id": "phy-020",
+    "question": "The moment of a force about a given axis depends",
+    "options": ["only on the magnitude of force", "only on the perpendicular distance of force from the axis", "neither on the force nor on the perpendicular distance of force from the axis", "on both the force and its perpendicular distance from the axis"],
+    "answer": 3,
+    "explanation": "Moment of force equals force multiplied by perpendicular distance from the axis.",
+    "verified": false,
+    "source": "icse-class-10-first-term-physics-050725-2026 (1).pdf"
+  },
+  {
+    "id": "phy-021",
+    "question": "Which of the following quantities remains constant in a uniform circular motion?",
+    "options": ["velocity", "speed", "acceleration", "both velocity and speed"],
+    "answer": 1,
+    "explanation": "In uniform circular motion, speed is constant while velocity changes direction.",
+    "verified": false,
+    "source": "icse-class-10-first-term-physics-050725-2026 (1).pdf"
+  },
+  {
+    "id": "phy-022",
+    "question": "A man standing near building construction with a heavy toolbox in his hand: the work done by the man is",
+    "options": ["Maximum", "Zero", "Minimum", "all of the above"],
+    "answer": 1,
+    "explanation": "No displacement occurs in the direction of the applied force, so work done is zero.",
+    "verified": false,
+    "source": "icse-class-10-first-term-physics-050725-2026 (1).pdf"
+  },
+  {
+    "id": "phy-023",
+    "question": "Clockwise moment produced by a force about a fulcrum is considered to be",
+    "options": ["Positive", "Negative", "Zero", "None of these"],
+    "answer": 1,
+    "explanation": "By convention, anticlockwise moment is positive and clockwise moment is negative.",
+    "verified": false,
+    "source": "icse-class-10-first-term-physics-050725-2026 (1).pdf"
+  },
+  {
+    "id": "phy-024",
+    "question": "When the speed of a moving object is doubled, then its kinetic energy",
+    "options": ["remains the same", "decreases", "is doubled", "becomes four times"],
+    "answer": 3,
+    "explanation": "Kinetic energy is proportional to v², so doubling speed makes it four times.",
+    "verified": false,
+    "source": "icse-class-10-first-term-physics-050725-2026 (1).pdf"
+  },
+  {
+    "id": "phy-025",
+    "question": "Class II levers are designed to have",
+    "options": ["M.A. = V.R.", "M.A. > V.R", "M.A. > 1", "M.A. < 1"],
+    "answer": 2,
+    "explanation": "In Class II levers the load arm is shorter than the effort arm, so mechanical advantage is greater than 1.",
+    "verified": false,
+    "source": "icse-class-10-first-term-physics-050725-2026 (1).pdf"
+  },
+  {
+    "id": "phy-026",
+    "question": "Assertion (A): When a force retards the motion of a body, the work done by the body is zero. Reason (R): Work done depends on the angle between force and displacement.",
+    "options": ["Both A and R are true", "Both A and R are false", "A is false but R is true", "A is true but R is false"],
+    "answer": 2,
+    "explanation": "A retarding force does negative work, so A is false; work does depend on the angle, so R is true.",
+    "verified": false,
+    "source": "icse-class-10-first-term-physics-050725-2026 (1).pdf"
+  },
+  {
+    "id": "phy-027",
+    "question": "The principle of working of a physical balance is",
+    "options": ["equality of moments", "long arm of balance", "equality of forces", "equal weights in the pans"],
+    "answer": 0,
+    "explanation": "A physical balance works on the principle of moments being equal on both sides.",
+    "verified": false,
+    "source": "icse-class-10-first-term-physics-050725-2026 (1).pdf"
+  },
+  {
+    "id": "phy-028",
+    "question": "Rain droplets drizzling with uniform speed are under",
+    "options": ["static equilibrium", "dynamic equilibrium", "rotational equilibrium", "None of these"],
+    "answer": 1,
+    "explanation": "The droplets move with constant velocity, so they are in dynamic equilibrium.",
+    "verified": false,
+    "source": "icse-class-10-first-term-physics-050725-2026 (1).pdf"
+  },
+  {
+    "id": "phy-029",
+    "question": "The CG of a body depends on",
+    "options": ["mass of the body", "shape of the body", "material of the body", "height above the Earth"],
+    "answer": 1,
+    "explanation": "The centre of gravity depends on the shape and mass distribution of the body.",
+    "verified": false,
+    "source": "icse-class-10-first-term-physics-050725-2026 (1).pdf"
+  },
+  {
+    "id": "phy-030",
+    "question": "A ball of mass m is thrown vertically up with an initial velocity so as to reach a height h. The correct statement is",
+    "options": ["Potential energy of the ball at the ground is mgh", "Kinetic energy of the ball at the ground is zero", "Kinetic energy of the ball at the highest point is mgh", "Potential energy of the ball at the highest point is mgh"],
+    "answer": 3,
+    "explanation": "At the highest point, all kinetic energy is converted to potential energy mgh.",
+    "verified": false,
+    "source": "icse-class-10-first-term-physics-050725-2026 (1).pdf"
+  },
+  {
+    "id": "phy-031",
+    "question": "A body has kinetic energy 160 J. If the mass of the body is 5 kg, then its momentum is",
+    "options": ["40 kg m s⁻¹", "60 kg m s⁻¹", "80 kg m s⁻¹", "20 kg m s⁻¹"],
+    "answer": 0,
+    "explanation": "Using p = √(2mK), p = √(2×5×160) = 40 kg m s⁻¹.",
+    "verified": false,
+    "source": "icse-class-10-first-term-physics-050725-2026 (1).pdf"
+  },
+  {
+    "id": "phy-032",
+    "question": "A movable pulley is used as",
+    "options": ["a force multiplier", "a speed multiplier", "a device to change the direction of effort", "an energy multiplier"],
+    "answer": 0,
+    "explanation": "A single movable pulley multiplies force, giving mechanical advantage about 2.",
+    "verified": false,
+    "source": "icse-class-10-first-term-physics-050725-2026 (1).pdf"
+  },
+  {
+    "id": "phy-033",
+    "question": "The moment of force changes with",
+    "options": ["axis of rotation", "the magnitude of the force", "point of application of force", "all of these"],
+    "answer": 3,
+    "explanation": "Moment depends on force magnitude, perpendicular distance, and choice of axis.",
+    "verified": false,
+    "source": "icse-class-10-first-term-physics-050725-2026 (1).pdf"
+  },
+  {
+    "id": "phy-034",
+    "question": "S.I. unit of moment is",
+    "options": ["kgf.m", "Nm", "gf.m", "Ncm"],
+    "answer": 1,
+    "explanation": "The SI unit of moment of force is newton metre, N m.",
+    "verified": false,
+    "source": "icse-class-10-specimen-physics-science-p1-t23-521-2023.pdf"
+  },
+  {
+    "id": "phy-035",
+    "question": "Which of the following is the correct expression for gain in kinetic energy, if initial velocity is not zero?",
+    "options": ["k = 1/2 m v²", "k = m v²/4", "k = m v²/(2t)", "k = 1/2 m(v² - u²)"],
+    "answer": 3,
+    "explanation": "Gain in kinetic energy is final KE minus initial KE, 1/2 m(v² - u²).",
+    "verified": false,
+    "source": "icse-class-10-specimen-physics-science-p1-t23-521-2023.pdf"
+  },
+  {
+    "id": "phy-036",
+    "question": "The energy conversion, when an oscillating pendulum moves from mean to extreme position, is",
+    "options": ["Kinetic to potential", "Potential to kinetic", "Potential to kinetic to potential", "Kinetic to potential to kinetic"],
+    "answer": 0,
+    "explanation": "As the pendulum rises from mean to extreme, kinetic energy changes into potential energy.",
+    "verified": false,
+    "source": "icse-class-10-specimen-physics-science-p1-t23-521-2023.pdf"
+  },
+  {
+    "id": "phy-037",
+    "question": "Which of the following nuclear radiations can be stopped by a sheet of paper?",
+    "options": ["Alpha", "Beta", "Gamma", "None of these"],
+    "answer": 0,
+    "explanation": "Alpha particles have low penetrating power and are stopped by a sheet of paper.",
+    "verified": false,
+    "source": "icse-class-10-specimen-physics-science-p1-t23-521-2023.pdf"
+  },
+  {
+    "id": "phy-038",
+    "question": "When seven spectral colours pass through a glass block from air, which statement is correct?",
+    "options": ["In the glass block, speed of blue light > speed of yellow light", "In the glass block, speed of green light > speed of orange light", "In the glass block, speed of violet light > speed of red light", "In the glass block, speed of orange light > speed of indigo light"],
+    "answer": 3,
+    "explanation": "In glass, lower-frequency colours travel faster, so orange travels faster than indigo.",
+    "verified": false,
+    "source": "icse-class-10-specimen-physics-science-p1-t23-521-2023.pdf"
+  },
+  {
+    "id": "phy-039",
+    "question": "The characteristic of sound which enables differentiation between two sounds of different intensity is",
+    "options": ["Quality", "Amplitude", "Pitch", "Loudness"],
+    "answer": 3,
+    "explanation": "Intensity determines loudness, which distinguishes sounds of different intensity.",
+    "verified": false,
+    "source": "icse-class-10-specimen-physics-science-p1-t23-521-2023.pdf"
+  },
+  {
+    "id": "phy-040",
+    "question": "Which of the following is the correct colour code of the three wires live, neutral and earth?",
+    "options": ["Live: Green, Neutral: Red, Earth: Yellow", "Live: Brown, Neutral: Red, Earth: Blue", "Live: Brown, Neutral: Blue, Earth: Yellow", "Live: Blue, Neutral: Brown, Earth: Green"],
+    "answer": 2,
+    "explanation": "The new convention uses brown for live, blue for neutral, and yellow for earth.",
+    "verified": false,
+    "source": "icse-class-10-specimen-physics-science-p1-t23-521-2023.pdf"
+  },
+  {
+    "id": "phy-041",
+    "question": "Latent heat absorbed",
+    "options": ["is independent of the mass of the substance", "is directly proportional to the increase in the temperature of the substance", "is directly proportional to the specific heat capacity of the substance", "is directly proportional to the specific latent heat of the substance"],
+    "answer": 3,
+    "explanation": "Latent heat Q = mL, so it is directly proportional to specific latent heat.",
+    "verified": false,
+    "source": "icse-class-10-specimen-physics-science-p1-t23-521-2023.pdf"
+  },
+  {
+    "id": "phy-042",
+    "question": "Which of the following liquids is most suitable for radiators in cars?",
+    "options": ["Liquid P with specific heat capacity 4000 J kg⁻¹ K⁻¹", "Liquid Q with specific heat capacity 2000 J kg⁻¹ K⁻¹", "Liquid R with specific heat capacity 1500 J kg⁻¹ K⁻¹", "Liquid S with specific heat capacity 2100 J kg⁻¹ K⁻¹"],
+    "answer": 0,
+    "explanation": "A coolant should have high specific heat capacity to carry more heat per degree rise.",
+    "verified": false,
+    "source": "icse-class-10-specimen-physics-science-p1-t23-521-2023.pdf"
+  },
+  {
+    "id": "phy-043",
+    "question": "While entering from medium A to medium B, if light slows down then",
+    "options": ["∠i < ∠r", "∠i = ∠r", "∠i > ∠r", "∠i ≤ ∠r"],
+    "answer": 2,
+    "explanation": "When light slows down it bends towards the normal, so angle of incidence is greater than angle of refraction.",
+    "verified": false,
+    "source": "icse-class-10-specimen-physics-science-p1-t23-521-2023.pdf"
+  },
+  {
+    "id": "phy-044",
+    "question": "The phenomenon of light that causes the diamond to glitter is",
+    "options": ["Refraction", "Total internal reflection", "Reflection", "Absorption"],
+    "answer": 1,
+    "explanation": "Diamond sparkles due to repeated total internal reflection of light inside it.",
+    "verified": false,
+    "source": "icse-class-10-specimen-physics-science-p1-t23-521-2023.pdf"
+  },
+  {
+    "id": "phy-045",
+    "question": "Speed of blue light in water is",
+    "options": ["more than green light", "more than orange light", "more than violet light", "more than red light"],
+    "answer": 2,
+    "explanation": "In water, blue light travels faster than violet light but slower than red.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t23-521-2023.pdf"
+  },
+  {
+    "id": "phy-046",
+    "question": "When a body vibrates under a periodic force, the vibrations of the body are always",
+    "options": ["natural vibrations", "damped vibrations", "forced vibrations", "resonant vibrations"],
+    "answer": 2,
+    "explanation": "Vibrations produced under an external periodic force are forced vibrations.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t23-521-2023.pdf"
+  },
+  {
+    "id": "phy-047",
+    "question": "Two notes are produced from two different musical instruments, such that they have same loudness and same pitch. The produced notes differ in their",
+    "options": ["Waveform", "Frequency", "Wavelength", "Speed"],
+    "answer": 0,
+    "explanation": "Same loudness and pitch but different instruments means different quality, i.e. waveform.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t23-521-2023.pdf"
+  },
+  {
+    "id": "phy-048",
+    "question": "When a current I flows through a wire of resistance R for time t, then the electrical energy produced is given by",
+    "options": ["I²Rt", "IR²t", "IRt", "IRt²"],
+    "answer": 0,
+    "explanation": "Electrical energy dissipated is I²Rt by Joule's law.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t23-521-2023.pdf"
+  },
+  {
+    "id": "phy-049",
+    "question": "Choose the correct relation for e.m.f. (ε) and terminal voltage V.",
+    "options": ["ε = V always", "V > ε always", "V < ε when the cell is in use", "None of these"],
+    "answer": 2,
+    "explanation": "When a cell supplies current, terminal voltage is less than emf due to internal resistance.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t23-521-2023.pdf"
+  },
+  {
+    "id": "phy-050",
+    "question": "If the strength of the current flowing through a wire is increased, the strength of the magnetic field produced by it",
+    "options": ["decreases", "increases", "remains the same", "first increases then decreases"],
+    "answer": 1,
+    "explanation": "Magnetic field due to a wire increases with current.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t23-521-2023.pdf"
+  },
+  {
+    "id": "phy-051",
+    "question": "Specific latent heat of a substance",
+    "options": ["is directly proportional to the mass", "is directly proportional to the change in the temperature", "depends on the material", "is inversely proportional to the mass"],
+    "answer": 2,
+    "explanation": "Specific latent heat is a characteristic property of the material.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t23-521-2023.pdf"
+  },
+  {
+    "id": "phy-052",
+    "question": "Specific heat capacity of a substance X is 1900 J kg⁻¹ °C⁻¹ means",
+    "options": ["Substance X absorbs 1900 J for 1 °C rise in temperature", "1 kg of substance X absorbs 1900 J heat for 1 °C rise in temperature", "1 kg of substance X absorbs 1900 J heat to increase the temperature", "1 kg of substance X absorbs 1900 J heat to cool down by 1 °C"],
+    "answer": 1,
+    "explanation": "Specific heat capacity is heat needed per unit mass per degree rise in temperature.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t23-521-2023.pdf"
+  },
+  {
+    "id": "phy-053",
+    "question": "When a ray of light travels normal to the given surface, then the angle of refraction is",
+    "options": ["180°", "90°", "0°", "45°"],
+    "answer": 2,
+    "explanation": "A ray incident normally goes undeviated, so the angle of refraction is 0°.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t23-521-2023.pdf"
+  },
+  {
+    "id": "phy-054",
+    "question": "Small air bubbles rising up in a fish tank appear silvery when viewed from some particular angle. This is due to",
+    "options": ["reflection", "refraction", "dispersion", "total internal reflection"],
+    "answer": 3,
+    "explanation": "Light striking the air bubble can undergo total internal reflection, making it appear silvery.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t23-521-2023.pdf"
+  },
+  {
+    "id": "phy-055",
+    "question": "When a bell fixed on a cycle rings, then the energy conversion that takes place is",
+    "options": ["gravitational potential energy to sound energy", "kinetic energy to sound energy", "sound energy to electrical energy", "sound energy to mechanical energy"],
+    "answer": 1,
+    "explanation": "The moving bell mechanism has kinetic energy, which is converted partly into sound.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-paper-1-t24-521-2024.pdf"
+  },
+  {
+    "id": "phy-056",
+    "question": "A door lock is opened by turning the lever (handle) of length 0.2 m. If the moment of force produced is 1 N m, then the minimum force required is",
+    "options": ["5 N", "10 N", "20 N", "0.2 N"],
+    "answer": 0,
+    "explanation": "Moment = force × perpendicular distance, so F = 1/0.2 = 5 N.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-paper-1-t24-521-2024.pdf"
+  },
+  {
+    "id": "phy-057",
+    "question": "A force F moves a load from A to C. For calculating work done, which length is used as displacement?",
+    "options": ["3 m", "4 m", "5 m", "7 m"],
+    "answer": 2,
+    "explanation": "Work uses displacement along the force direction, which is AC = 5 m.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-paper-1-t24-521-2024.pdf"
+  },
+  {
+    "id": "phy-058",
+    "question": "A radioactive nucleus containing 128 nucleons emits a β-particle. After β-emission the number of nucleons present in the nucleus will be",
+    "options": ["128", "129", "124", "127"],
+    "answer": 0,
+    "explanation": "Beta emission does not change the mass number, so nucleon number remains 128.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-paper-1-t24-521-2024.pdf"
+  },
+  {
+    "id": "phy-059",
+    "question": "Assertion (A): Ultraviolet radiations are scattered more as compared to microwave radiations. Reason (R): Wavelength of ultraviolet radiation is more than the wavelength of microwave radiation.",
+    "options": ["Both A and R are true", "A is true but R is false", "A is false but R is true", "Both A and R are false"],
+    "answer": 1,
+    "explanation": "UV is scattered more because its wavelength is shorter, not longer, than microwaves.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-paper-1-t24-521-2024.pdf"
+  },
+  {
+    "id": "phy-060",
+    "question": "When the stem of a vibrating tuning fork is pressed on a table, the tabletop starts vibrating. These vibrations are an example of",
+    "options": ["resonance", "natural vibrations", "forced vibrations", "damped vibrations"],
+    "answer": 2,
+    "explanation": "The table is forced to vibrate by the tuning fork, so these are forced vibrations.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-paper-1-t24-521-2024.pdf"
+  },
+  {
+    "id": "phy-061",
+    "question": "Which of the following is a class III lever?",
+    "options": ["Pair of scissors", "Wheelbarrow", "Crowbar", "Human forearm"],
+    "answer": 3,
+    "explanation": "The human forearm has the effort between fulcrum and load, so it is a Class III lever.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-paper-1-t24-521-2024.pdf"
+  },
+  {
+    "id": "phy-062",
+    "question": "The specific resistance of a conductor depends on its",
+    "options": ["length", "material", "area of cross section", "radius"],
+    "answer": 1,
+    "explanation": "Resistivity is a characteristic property of the material.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-paper-1-t24-521-2024.pdf"
+  },
+  {
+    "id": "phy-063",
+    "question": "The potential difference between terminals of a cell in a closed electric circuit is",
+    "options": ["terminal voltage", "electro motive force", "voltage drop", "none of these"],
+    "answer": 0,
+    "explanation": "In a closed circuit, the potential difference across the cell terminals is terminal voltage.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-paper-1-t24-521-2024.pdf"
+  },
+  {
+    "id": "phy-064",
+    "question": "During melting of ice at 0 °C, the",
+    "options": ["energy is released and temperature remains constant", "energy is absorbed and temperature remains constant", "energy is released and temperature decreases", "energy is absorbed and temperature increases"],
+    "answer": 1,
+    "explanation": "Melting absorbs latent heat while temperature remains constant.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-paper-1-t24-521-2024.pdf"
+  },
+  {
+    "id": "phy-065",
+    "question": "Linear magnification (m) produced by a concave lens is",
+    "options": ["m < 1", "m > 1", "m = 1", "m = 2"],
+    "answer": 0,
+    "explanation": "A concave lens always produces a diminished image, so |m| < 1.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-paper-1-t24-521-2024.pdf"
+  },
+  {
+    "id": "phy-066",
+    "question": "The graph shows heat energy supplied against change in temperature when no energy is lost to the surroundings. The slope of this graph gives",
+    "options": ["Specific heat capacity", "Latent heat of fusion", "Latent heat of vaporization", "Heat capacity"],
+    "answer": 3,
+    "explanation": "Slope = heat supplied/temperature change = heat capacity.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-paper-1-t24-521-2024.pdf"
+  },
+  {
+    "id": "phy-067",
+    "question": "A body is acted upon by two equal and opposite forces that are not along the same straight line. The body will",
+    "options": ["remain stationary", "have only rotational motion", "have only rectilinear motion", "have both rectilinear and rotational motion"],
+    "answer": 1,
+    "explanation": "Two equal, opposite, non-collinear forces form a couple, producing rotation only.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t25-521-2025.pdf"
+  },
+  {
+    "id": "phy-068",
+    "question": "Which among the following is a vector quantity?",
+    "options": ["work", "power", "energy", "moment of couple"],
+    "answer": 3,
+    "explanation": "Moment of couple has both magnitude and direction, so it is a vector.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t25-521-2025.pdf"
+  },
+  {
+    "id": "phy-069",
+    "question": "When a ray of light passes from one optical medium to another, which physical quantity does not change?",
+    "options": ["Amplitude of the wave", "Frequency of the wave", "Wavelength of the wave", "Speed of the wave"],
+    "answer": 1,
+    "explanation": "Frequency is determined by the source and remains constant across media.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t25-521-2025.pdf"
+  },
+  {
+    "id": "phy-070",
+    "question": "Which combination is the correct ascending order of electromagnetic waves in terms of wavelength?",
+    "options": ["gamma-rays, visible light, microwaves", "microwaves, visible light, gamma-rays", "gamma-rays, microwaves, visible light", "microwaves, gamma-rays, visible light"],
+    "answer": 0,
+    "explanation": "Wavelength increases from gamma rays to visible light to microwaves.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t25-521-2025.pdf"
+  },
+  {
+    "id": "phy-071",
+    "question": "For a lever, a graph is plotted with load on Y-axis and effort on X-axis. Which represents the slope of the graph?",
+    "options": ["Mechanical advantage", "Velocity ratio", "1 / Velocity ratio", "1 / Mechanical advantage"],
+    "answer": 0,
+    "explanation": "Slope = load/effort = mechanical advantage.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t25-521-2025.pdf"
+  },
+  {
+    "id": "phy-072",
+    "question": "For a real image formed by a convex lens, the ratio of image height to object height is 2:5. The object is",
+    "options": ["between O and F", "beyond 2F", "at F", "between F and 2F"],
+    "answer": 1,
+    "explanation": "A diminished real image is formed when the object is beyond 2F.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t25-521-2025.pdf"
+  },
+  {
+    "id": "phy-073",
+    "question": "A ray of light is incident normally on a face of an equilateral prism. The ray gets totally reflected at the second refracting surface. The total deviation produced in the path of the ray is",
+    "options": ["30°", "60°", "90°", "120°"],
+    "answer": 3,
+    "explanation": "For an equilateral prism with normal incidence and total internal reflection at the second face, total deviation is 120°.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t25-521-2025.pdf"
+  },
+  {
+    "id": "phy-074",
+    "question": "In a closed circuit containing a bulb and a cell, the electromotive force (ε) and terminal voltage (V) are related as (I is current and r is internal resistance)",
+    "options": ["V = ε + Ir", "V = ε - Ir", "V = ε ÷ Ir", "V = ε × Ir"],
+    "answer": 1,
+    "explanation": "Terminal voltage equals emf minus the potential drop across internal resistance.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t25-521-2025.pdf"
+  },
+  {
+    "id": "phy-075",
+    "question": "A metal piece of mass 5 g has thermal capacity 2.5 J K⁻¹. If the mass of the metal is tripled, then its specific heat capacity will be",
+    "options": ["7.5 J K⁻¹", "2.5 J K⁻¹", "1.5 J g⁻¹ K⁻¹", "0.5 J g⁻¹ K⁻¹"],
+    "answer": 3,
+    "explanation": "Specific heat capacity is C/m = 2.5/5 = 0.5 J g⁻¹ K⁻¹ and does not change with mass.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t25-521-2025.pdf"
+  },
+  {
+    "id": "phy-076",
+    "question": "As the level of water in a tall measuring cylinder kept under a running tap rises, the pitch of sound gradually increases. Reason (R): Frequency of sound is inversely proportional to the length of the water column.",
+    "options": ["Both (A) and (R) are true and (R) is the correct explanation of (A)", "Both (A) and (R) are true and (R) is not the correct explanation of (A)", "(A) is true but (R) is false", "(A) is false but (R) is true"],
+    "answer": 2,
+    "explanation": "Pitch increases as the air column shortens; frequency depends inversely on air-column length, not water-column length.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t25-521-2025.pdf"
+  },
+  {
+    "id": "phy-077",
+    "question": "In circuits Y and Z, the resistors R1 and R2 are connected in",
+    "options": ["series in both the circuits", "parallel in both the circuits", "parallel in Y and series in Z", "series in Y and parallel in Z"],
+    "answer": 3,
+    "explanation": "Circuit Y has resistors in series; circuit Z has resistors in parallel.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t25-521-2025.pdf"
+  },
+  {
+    "id": "phy-078",
+    "question": "A radioactive element P emits one α-particle and transforms to a new element Q. What will be the position of Q in the periodic table?",
+    "options": ["One group to the left of P", "One group to the right of P", "Two groups to the right of P", "Two groups to the left of P"],
+    "answer": 3,
+    "explanation": "Alpha emission decreases atomic number by 2, moving the element two groups to the left.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t25-521-2025.pdf"
+  },
+  {
+    "id": "phy-079",
+    "question": "Each of the substances is supplied with the same amount of heat. Which one will attain the highest temperature? (Specific heat capacities in cal/g°C: Lead 0.031, Aluminium 0.21, Copper 0.095, Iron 0.115)",
+    "options": ["Aluminium", "Copper", "Iron", "Lead"],
+    "answer": 3,
+    "explanation": "Lead has the lowest specific heat capacity, so it shows the greatest temperature rise.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t25-521-2025.pdf"
+  },
+  {
+    "id": "phy-080",
+    "question": "An object is thrown vertically up. It reaches the highest point and then comes down. The work done by the force of gravity on the object is",
+    "options": ["positive for both the way up and way down", "negative for both the way up and way down", "negative for the way up and positive for the way down", "positive for the way up and negative for the way down"],
+    "answer": 2,
+    "explanation": "Gravity opposes upward motion and assists downward motion.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t25-521i-2025.pdf"
+  },
+  {
+    "id": "phy-081",
+    "question": "10 eV is",
+    "options": ["1.6 × 10⁻¹⁸ J", "1.6 × 10⁻¹⁹ J", "6.25 × 10¹⁹ J", "6.25 × 10¹⁸ J"],
+    "answer": 0,
+    "explanation": "1 eV = 1.6 × 10⁻¹⁹ J, so 10 eV = 1.6 × 10⁻¹⁸ J.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t25-521i-2025.pdf"
+  },
+  {
+    "id": "phy-082",
+    "question": "A crowbar of length 1.0 m has its fulcrum at a distance of 0.2 m from the load. The mechanical advantage of the crowbar is",
+    "options": ["5", "4", "3", "2"],
+    "answer": 1,
+    "explanation": "Load arm = 0.2 m, effort arm = 0.8 m, so MA = 0.8/0.2 = 4.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t25-521i-2025.pdf"
+  },
+  {
+    "id": "phy-083",
+    "question": "Which value can represent the magnification of a simple microscope?",
+    "options": ["+1", "-1", "+2", "-2"],
+    "answer": 2,
+    "explanation": "A simple microscope forms a virtual, erect and magnified image, so magnification is positive and greater than 1.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t25-521i-2025.pdf"
+  },
+  {
+    "id": "phy-084",
+    "question": "An object placed at 30 cm in front of a lens produces a clear inverted image at 60 cm. If the object is placed at 60 cm from the lens, the image is formed at",
+    "options": ["20 cm", "30 cm", "60 cm", "90 cm"],
+    "answer": 1,
+    "explanation": "By lens formula f = 20 cm; for u = 60 cm, v = 30 cm.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t25-521i-2025.pdf"
+  },
+  {
+    "id": "phy-085",
+    "question": "Assertion (A): Quartz prism is used to study ultraviolet spectrum. Reason (R): Quartz does not absorb ultraviolet radiations.",
+    "options": ["Both (A) and (R) are true and (R) is the correct explanation of (A)", "Both (A) and (R) are true and (R) is not the correct explanation of (A)", "(A) is true but (R) is false", "(A) is false and (R) is true"],
+    "answer": 0,
+    "explanation": "Quartz transmits UV, so it is used for UV spectroscopy; the reason correctly explains the assertion.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t25-521i-2025.pdf"
+  },
+  {
+    "id": "phy-086",
+    "question": "The amplitude of a sound wave is reduced from 2 mm to 1 mm. The intensity of the sound will",
+    "options": ["become four times the initial", "remain the same", "become half of the initial", "become one fourth of the initial"],
+    "answer": 3,
+    "explanation": "Intensity is proportional to amplitude squared, so halving amplitude makes intensity one fourth.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t25-521i-2025.pdf"
+  },
+  {
+    "id": "phy-087",
+    "question": "An alloy constantan has resistivity 5 × 10⁻⁷ Ω m at 25 °C. If the temperature is increased to 50 °C, its resistivity will be",
+    "options": ["2.5 × 10⁻⁷ Ω m", "5 × 10⁻⁷ Ω m", "10 × 10⁻⁶ Ω m", "20 × 10⁻⁶ Ω m"],
+    "answer": 1,
+    "explanation": "Constantan has nearly zero temperature coefficient of resistance, so its resistivity remains almost unchanged.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t25-521i-2025.pdf"
+  },
+  {
+    "id": "phy-088",
+    "question": "A piece of cake and a watermelon of the same mass are taken out of the freezer at the same time. Which statement is correct?",
+    "options": ["Cake and watermelon will attain room temperature at the same time", "Watermelon will attain room temperature faster", "Cake will attain room temperature faster", "Which one comes to room temperature first depends on atmospheric pressure"],
+    "answer": 2,
+    "explanation": "Watermelon has high water content and higher specific heat capacity, so it warms more slowly than cake.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t25-521i-2025.pdf"
+  },
+  {
+    "id": "phy-089",
+    "question": "During β emission the parent and daughter nuclei will be",
+    "options": ["isomers", "isotopes", "isotones", "isobars"],
+    "answer": 3,
+    "explanation": "Beta emission changes atomic number but not mass number, so parent and daughter are isobars.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t25-521i-2025.pdf"
+  },
+  {
+    "id": "phy-090",
+    "question": "For a body to be in dynamic equilibrium, its",
+    "options": ["momentum should be zero", "acceleration should be zero", "kinetic energy should be zero", "velocity should be zero"],
+    "answer": 1,
+    "explanation": "Dynamic equilibrium means constant velocity, so acceleration is zero.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t26-521-2026.pdf"
+  },
+  {
+    "id": "phy-091",
+    "question": "The energy transformation taking place during photosynthesis in plants is",
+    "options": ["heat to chemical", "chemical to light", "light to chemical", "chemical to heat"],
+    "answer": 2,
+    "explanation": "Plants convert light energy into chemical energy during photosynthesis.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t26-521-2026.pdf"
+  },
+  {
+    "id": "phy-092",
+    "question": "From the figure, the refractive index of medium B with respect to medium A (μ_B/μ_A) is",
+    "options": ["sin 45° / sin 30°", "sin 30° / sin 45°", "sin 45° / sin 60°", "sin 60° / sin 45°"],
+    "answer": 0,
+    "explanation": "By Snell's law, n_B/n_A = sin i / sin r = sin 45°/sin 30°.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t26-521-2026.pdf"
+  },
+  {
+    "id": "phy-093",
+    "question": "When a blackened bulb thermometer is moved beyond the red region of the visible spectrum, there is a rapid rise in temperature. This is due to the presence of",
+    "options": ["Infrared radiations", "Ultraviolet radiations", "X-rays", "Radio waves"],
+    "answer": 0,
+    "explanation": "Infrared radiation lies beyond the red end and has a strong heating effect.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t26-521-2026.pdf"
+  },
+  {
+    "id": "phy-094",
+    "question": "A fast-moving cyclist stops pedalling on reaching a hilly track. If he continues to move with the acquired energy, then assuming no loss of energy",
+    "options": ["his kinetic energy remains constant at all times", "his potential energy remains constant at all times", "his total mechanical energy continuously increases", "his total mechanical energy remains constant"],
+    "answer": 3,
+    "explanation": "With no energy loss, total mechanical energy remains constant during the motion.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t26-521-2026.pdf"
+  },
+  {
+    "id": "phy-095",
+    "question": "The distance (V) of a virtual image formed by a lens of focal length 15 cm never exceeds a certain finite value. This value will be",
+    "options": ["less than 15 cm", "between 15 cm to 30 cm", "less than or equal to 30 cm", "less than or equal to 15 cm"],
+    "answer": 3,
+    "explanation": "A concave lens forms a virtual image between the lens and its focus, so image distance is at most 15 cm.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t26-521-2026.pdf"
+  },
+  {
+    "id": "phy-096",
+    "question": "Equal volumes of water are added to three cylindrical jars A, B and C of the same height and radii rA, rB and rC respectively with rB < rA < rC. If you blow air into the mouth of these jars, which tube will produce the shrillest note?",
+    "options": ["A", "B", "C", "All will produce notes of same shrillness"],
+    "answer": 1,
+    "explanation": "The jar with the smallest radius has the shortest air column, giving the highest frequency and shrillest note.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t26-521-2026.pdf"
+  },
+  {
+    "id": "phy-097",
+    "question": "A metallic wire is stretched such that its new length becomes twice the original length. How does its specific heat capacity change?",
+    "options": ["becomes double", "becomes 4 times", "becomes 1/4", "remains the same"],
+    "answer": 3,
+    "explanation": "Specific heat capacity is a material property and does not change with dimensions.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t26-521-2026.pdf"
+  },
+  {
+    "id": "phy-098",
+    "question": "The correct formula to calculate the equivalent resistance of two resistors R1 and R2 when connected in parallel is",
+    "options": ["(R1 + R2)/(R1R2)", "R1R2/(R1 + R2)", "(R1 - R2)/(R1R2)", "R1R2/(R1 - R2)"],
+    "answer": 1,
+    "explanation": "For parallel resistors, 1/R = 1/R1 + 1/R2, so R = R1R2/(R1 + R2).",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t26-521-2026.pdf"
+  },
+  {
+    "id": "phy-099",
+    "question": "Three substances A, B and C of the same mass are present at their respective melting points. On heating, they melt completely in 5 minutes, 7 minutes and 3 minutes respectively. Which substance has the highest specific latent heat? (Heat is absorbed at the same rate.)",
+    "options": ["Substance A", "Substance B", "Substance C", "All substances have same specific latent heat"],
+    "answer": 1,
+    "explanation": "For the same mass and heating rate, the substance taking the longest time has the highest latent heat; B takes 7 minutes.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t26-521-2026.pdf"
+  },
+  {
+    "id": "phy-100",
+    "question": "An atom of lithium contains 3 electrons, 3 protons and 4 neutrons. Its mass number is",
+    "options": ["3", "4", "7", "10"],
+    "answer": 2,
+    "explanation": "Mass number equals protons plus neutrons: 3 + 4 = 7.",
+    "verified": false,
+    "source": "icse-class-10-physics-science-p1-t26-521-2026.pdf"
+  }
+]

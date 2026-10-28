@@ -6,6 +6,7 @@
   interface SubjectInfo {
     slug: Subject;
     title: string;
+    placeholder?: boolean;
   }
 
   interface Stats {
@@ -22,6 +23,8 @@
       geography: { attempted: 0, correct: 0 },
       maths: { attempted: 0, correct: 0 },
       'english-lit': { attempted: 0, correct: 0 },
+      physics: { attempted: 0, correct: 0 },
+      chemistry: { attempted: 0, correct: 0 },
     };
   }
 
@@ -59,24 +62,35 @@
       >
         <h2 class="text-lg font-semibold tracking-tight">{subject.title}</h2>
 
-        <dl class="mt-4 grid grid-cols-2 gap-3 text-sm">
-          <div class="rounded-xl bg-slate-100 p-3 dark:bg-slate-800/70">
-            <dt class="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Attempted</dt>
-            <dd class="mt-1 text-xl font-semibold">{stats[subject.slug].attempted}</dd>
-          </div>
-          <div class="rounded-xl bg-slate-100 p-3 dark:bg-slate-800/70">
-            <dt class="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Accuracy</dt>
-            <dd class="mt-1 text-xl font-semibold">{accuracy(stats[subject.slug])}%</dd>
-          </div>
-        </dl>
+        {#if subject.placeholder}
+          <p class="mt-4 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+            Questions are being written. This subject is coming soon.
+          </p>
+          <span
+            class="mt-5 inline-flex items-center justify-center rounded-lg border border-dashed border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-500 dark:border-slate-700 dark:text-slate-400"
+          >
+            Coming soon
+          </span>
+        {:else}
+          <dl class="mt-4 grid grid-cols-2 gap-3 text-sm">
+            <div class="rounded-xl bg-slate-100 p-3 dark:bg-slate-800/70">
+              <dt class="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Attempted</dt>
+              <dd class="mt-1 text-xl font-semibold">{stats[subject.slug].attempted}</dd>
+            </div>
+            <div class="rounded-xl bg-slate-100 p-3 dark:bg-slate-800/70">
+              <dt class="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Accuracy</dt>
+              <dd class="mt-1 text-xl font-semibold">{accuracy(stats[subject.slug])}%</dd>
+            </div>
+          </dl>
 
-        <a
-          href={`/${subject.slug}`}
-          class="mt-5 inline-flex items-center justify-center gap-1 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:text-slate-950"
-          aria-label={`Start ${subject.title} practice`}
-        >
-          Start practice <span aria-hidden="true">→</span>
-        </a>
+          <a
+            href={`/${subject.slug}`}
+            class="mt-5 inline-flex items-center justify-center gap-1 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:text-slate-950"
+            aria-label={`Start ${subject.title} practice`}
+          >
+            Start practice <span aria-hidden="true">→</span>
+          </a>
+        {/if}
       </article>
     </li>
   {/each}

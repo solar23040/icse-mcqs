@@ -259,12 +259,12 @@ describe('project files', () => {
     });
   });
 
-  it('validates the five shipped data files', () => {
+  it('validates every shipped data file', () => {
     const projectRoot = fileURLToPath(new URL('..', import.meta.url));
     const report = validateProject(projectRoot);
 
     expect(report.errors).toEqual([]);
-    expect(report.total).toBe(247);
-    expect(report.counts.map((item) => item.count)).toEqual([74, 60, 37, 44, 32]);
+    expect(report.total).toBe(347);
+    expect(report.counts.map((item) => item.count)).toEqual([74, 60, 37, 44, 32, 100, 0]);
   });
 });

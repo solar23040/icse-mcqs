@@ -9,6 +9,8 @@ export const SUBJECTS = [
   { slug: 'geography', title: 'Geography' },
   { slug: 'maths', title: 'Maths' },
   { slug: 'english-lit', title: 'English Literature' },
+  { slug: 'physics', title: 'Physics' },
+  { slug: 'chemistry', title: 'Chemistry' },
 ] as const;
 
 export type SubjectSlug = (typeof SUBJECTS)[number]['slug'];
