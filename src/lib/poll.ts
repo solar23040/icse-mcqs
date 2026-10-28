@@ -6,8 +6,6 @@ export interface PollOption {
 /** Options shown on /poll. Order is the order visitors see. */
 export const POLL_OPTIONS = [
   { id: 'mass-media', label: 'Mass Media' },
-  { id: 'physical-education', label: 'Physical Education' },
-  { id: 'computer-applications', label: 'Computer Applications' },
   { id: 'hindi', label: 'Hindi' },
   { id: 'biology', label: 'Biology' },
   { id: 'commercial-studies', label: 'Commercial Studies' },

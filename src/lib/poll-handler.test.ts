@@ -155,7 +155,7 @@ describe('poll API', () => {
   });
 
   it('removes a vote and clears the cookie', async () => {
-    const first = await POST(apiRequest('POST', { body: { option: 'physical-education' } }));
+    const first = await POST(apiRequest('POST', { body: { option: 'hindi' } }));
     const token = cookieToken(first);
 
     const response = await DELETE(apiRequest('DELETE', { cookie: token }));

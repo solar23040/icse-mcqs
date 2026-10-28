@@ -15,4 +15,6 @@ export const SUBJECTS: SubjectInfo[] = [
   { slug: 'english-lit', title: 'English Literature' },
   { slug: 'physics', title: 'Physics' },
   { slug: 'chemistry', title: 'Chemistry', placeholder: true },
+  { slug: 'computer-applications', title: 'Computer Applications', placeholder: true },
+  { slug: 'physical-education', title: 'Physical Education' },
 ];

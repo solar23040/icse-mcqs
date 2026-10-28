@@ -5,8 +5,6 @@
  */
 export const POLL_OPTION_IDS = [
   'mass-media',
-  'physical-education',
-  'computer-applications',
   'hindi',
   'biology',
   'commercial-studies',

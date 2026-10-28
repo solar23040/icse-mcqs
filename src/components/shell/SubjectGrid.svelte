@@ -25,6 +25,8 @@
       'english-lit': { attempted: 0, correct: 0 },
       physics: { attempted: 0, correct: 0 },
       chemistry: { attempted: 0, correct: 0 },
+      'computer-applications': { attempted: 0, correct: 0 },
+      'physical-education': { attempted: 0, correct: 0 },
     };
   }
 

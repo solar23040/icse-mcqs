@@ -5,7 +5,9 @@ export type Subject =
   | 'maths'
   | 'english-lit'
   | 'physics'
-  | 'chemistry';
+  | 'chemistry'
+  | 'computer-applications'
+  | 'physical-education';
 
 export interface Question {
   id: string;

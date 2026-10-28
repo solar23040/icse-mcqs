@@ -59,14 +59,12 @@ afterEach(() => {
 });
 
 describe('poll options', () => {
-  it('lists the seven candidate subjects with unique ids and labels', () => {
-    expect(poll.POLL_OPTIONS).toHaveLength(7);
-    expect(new Set(poll.POLL_OPTIONS.map((option) => option.id)).size).toBe(7);
-    expect(new Set(poll.POLL_OPTIONS.map((option) => option.label)).size).toBe(7);
+  it('lists the five candidate subjects with unique ids and labels', () => {
+    expect(poll.POLL_OPTIONS).toHaveLength(5);
+    expect(new Set(poll.POLL_OPTIONS.map((option) => option.id)).size).toBe(5);
+    expect(new Set(poll.POLL_OPTIONS.map((option) => option.label)).size).toBe(5);
     expect(poll.POLL_OPTIONS.map((option) => option.label)).toEqual([
       'Mass Media',
-      'Physical Education',
-      'Computer Applications',
       'Hindi',
       'Biology',
       'Commercial Studies',
@@ -142,9 +140,9 @@ describe('poll vote storage', () => {
   it('works when localStorage does not exist', () => {
     vi.stubGlobal('localStorage', undefined);
 
-    poll.savePollVote('computer-applications');
+    poll.savePollVote('biology');
 
-    expect(poll.getPollVote()).toBe('computer-applications');
+    expect(poll.getPollVote()).toBe('biology');
 
     poll.clearPollVote();
 
