@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import {
   SUBJECTS,
+  checkIdsSnapshot,
   formatReport,
   jaccardSimilarity,
   normalizeOption,
@@ -266,5 +267,31 @@ describe('project files', () => {
     expect(report.errors).toEqual([]);
     expect(report.total).toBe(510);
     expect(report.counts.map((item) => item.count)).toEqual([74, 60, 37, 44, 32, 100, 95, 0, 68]);
+  });
+});
+
+describe('progress-key id rules', () => {
+  it('warns without failing when an id does not match the prefix-number format', () => {
+    const report = validateOne([makeQuestion({ id: 'not a progress key' })]);
+
+    expect(report.errors).toEqual([]);
+    expect(report.idWarnings).toHaveLength(1);
+    expect(formatReport(report)).toContain('id-format warning');
+  });
+
+  it('fails on duplicate ids across subjects', () => {
+    const report = validateSubjects([
+      makeSubject([makeQuestion({ id: 'hist-001' })], 'history'),
+      makeSubject([makeQuestion({ id: 'hist-001' })], 'economics'),
+    ]);
+
+    expect(report.errors.some((error) => error.message.includes('duplicate id'))).toBe(true);
+  });
+
+  it('reports ids that disappeared from the snapshot', () => {
+    expect(checkIdsSnapshot(['hist-001', 'hist-002'], ['hist-001', 'hist-003'])).toEqual([
+      'hist-003',
+    ]);
+    expect(checkIdsSnapshot(['hist-001'], ['hist-001'])).toEqual([]);
   });
 });

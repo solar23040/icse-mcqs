@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import HomeGamePanel from '../components/game/HomeGamePanel.svelte';
 import SubjectGrid from '../components/shell/SubjectGrid.svelte';
 import { SUBJECTS } from '../lib/subjects';
 ---
@@ -13,6 +14,8 @@ import { SUBJECTS } from '../lib/subjects';
       saved in this browser.
     </p>
   </section>
+
+  <HomeGamePanel client:load />
 
   <SubjectGrid client:load subjects={SUBJECTS} />
 

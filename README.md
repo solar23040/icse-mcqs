@@ -278,6 +278,31 @@ GitHub Pages needs two things that other hosts do not: a `base` path for project
 
 If you deploy from a `gh-pages` branch instead of Actions, add an empty `.nojekyll` file to the published output so GitHub Pages does not ignore Astro's `_astro/` directory.
 
+## Gamification
+
+Progress is stored locally under `icse:game:v1`. It is separate from seen questions and accuracy, so resetting seen questions never clears XP, levels, streaks or badges. Use **Reset game progress** on the home page to clear game state only.
+
+| Rule | Value |
+| --- | --- |
+| Correct answer | 10 XP |
+| Combo | x1 for 1-2 in a row, x1.5 from 3, x2 from 6 (cap x2) |
+| Missed-question bonus | +5 XP the first time you get a previously missed question right |
+| Wrong answer | 0 XP (never negative) |
+| Session completion | +20 XP |
+| Level | `floor(sqrt(xp / 50)) + 1` |
+| Streak | Counts a day when you complete a session or hit your daily goal |
+| Streak gap | One missed day is free; longer gaps spend one freeze per missed day |
+| Freezes | Earn one every 7 streak days, maximum 2 |
+| Daily goal | 10, 20 or 30 answers, chosen on the home page |
+
+## Question ids and the ids snapshot
+
+Question `id`s are the keys for seen and mastery progress. Never rename or remove one. `npm run validate` fails if any id in `scripts/ids.snapshot.json` disappears, and warns (without failing) when an id does not look like `prefix-001`. When you add questions, append new ids and refresh the snapshot after reviewing the diff:
+
+```bash
+npm run validate
+```
+
 ## Before going live
 
 - Replace all 25 `PLACEHOLDER:` questions with reviewed content.

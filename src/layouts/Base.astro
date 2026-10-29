@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import HeaderGame from '../components/game/HeaderGame.svelte';
 import ThemeToggle from '../components/shell/ThemeToggle.svelte';
 
 interface Props {
@@ -54,7 +55,10 @@ const pageTitle = title ? `${title} | ICSE 10 MCQs` : 'ICSE Class 10 MCQ Practic
           </span>
           <span>ICSE MCQs</span>
         </a>
-        <ThemeToggle client:load />
+        <div class="flex items-center gap-2">
+          <HeaderGame client:load />
+          <ThemeToggle client:load />
+        </div>
       </div>
     </header>
 

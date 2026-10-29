@@ -18,6 +18,8 @@ export const SUBJECTS = [
 export type SubjectSlug = (typeof SUBJECTS)[number]['slug'];
 
 export const DUPLICATES_REPORT = 'dupes-report.txt';
+export const IDS_SNAPSHOT = 'scripts/ids.snapshot.json';
+export const ID_PATTERN = /^[a-z-]+-\d+$/;
 export const NEAR_DUPLICATE_THRESHOLD = 0.9;
 
 const REQUIRED_FIELDS = ['id', 'question', 'options', 'answer', 'explanation', 'verified'] as const;
@@ -62,6 +64,10 @@ export interface SubjectCount {
 export interface ValidationReport {
   errors: ValidationError[];
   warnings: NearDuplicate[];
+  /** Non-fatal id-format warnings. */
+  idWarnings: string[];
+  /** Every valid question id, in file order. */
+  ids: string[];
   counts: SubjectCount[];
   total: number;
 }
@@ -151,6 +157,8 @@ export function validateSubjects(subjects: readonly SubjectData[]): ValidationRe
   const questions: QuestionRef[] = [];
   const firstId = new Map<string, { subject: string; index: number }>();
   const firstQuestion = new Map<string, { subject: string; index: number; id: string }>();
+  const idWarnings: string[] = [];
+  const ids: string[] = [];
   let total = 0;
 
   const addError = (subject: SubjectData, index: number | null, message: string, id?: string): void => {
@@ -270,6 +278,14 @@ export function validateSubjects(subjects: readonly SubjectData[]): ValidationRe
       }
 
       if (validId !== null) {
+        ids.push(validId);
+        if (!ID_PATTERN.test(validId)) {
+          idWarnings.push(
+            `[${subject.slug}] ${subject.file} ${formatIndex(index)}: id "${validId}" does not match ` +
+              `the expected prefix-number format (for example "hist-001")`,
+          );
+        }
+
         const previous = firstId.get(validId);
         if (previous !== undefined) {
           addError(
@@ -316,6 +332,8 @@ export function validateSubjects(subjects: readonly SubjectData[]): ValidationRe
   return {
     errors,
     warnings: findNearDuplicates(questions),
+    idWarnings,
+    ids,
     counts,
     total,
   };
@@ -454,6 +472,11 @@ export function formatReport(report: ValidationReport, reportPath: string = DUPL
     for (const error of report.errors) lines.push(formatError(error));
   }
 
+  if (report.idWarnings.length > 0) {
+    lines.push(`WARN: ${report.idWarnings.length} id-format warning(s), not failures:`);
+    for (const warning of report.idWarnings) lines.push(`  ${warning}`);
+  }
+
   if (report.warnings.length === 0) {
     lines.push(`Near-duplicates: none (report: ${reportPath}).`);
   } else {
@@ -475,9 +498,69 @@ export function formatReport(report: ValidationReport, reportPath: string = DUPL
   return lines.join('\n');
 }
 
+/**
+ * Question ids are progress keys. Any id that shipped before must keep
+ * existing, otherwise stored seen/mastery data silently detaches.
+ */
+export function checkIdsSnapshot(ids: readonly string[], snapshot: readonly string[]): string[] {
+  const present = new Set(ids);
+  return snapshot.filter((id) => !present.has(id));
+}
+
+function applyIdsSnapshot(report: ValidationReport, projectRoot: string): void {
+  const snapshotPath = join(projectRoot, IDS_SNAPSHOT);
+  let raw: string;
+
+  try {
+    raw = readFileSync(snapshotPath, 'utf8');
+  } catch {
+    return; // No snapshot yet: nothing to protect.
+  }
+
+  let snapshot: unknown;
+  try {
+    snapshot = JSON.parse(raw) as unknown;
+  } catch (error) {
+    report.errors.push({
+      file: IDS_SNAPSHOT,
+      subject: 'snapshot',
+      index: null,
+      message: `invalid snapshot JSON: ${describeError(error)}`,
+    });
+    return;
+  }
+
+  const ids = Array.isArray(snapshot)
+    ? snapshot
+    : isRecord(snapshot) && Array.isArray(snapshot.ids)
+      ? snapshot.ids
+      : null;
+
+  if (ids === null || !ids.every((id): id is string => typeof id === 'string')) {
+    report.errors.push({
+      file: IDS_SNAPSHOT,
+      subject: 'snapshot',
+      index: null,
+      message: 'snapshot must be a JSON array of id strings or { "ids": [...] }',
+    });
+    return;
+  }
+
+  for (const id of checkIdsSnapshot(report.ids, ids)) {
+    report.errors.push({
+      file: IDS_SNAPSHOT,
+      subject: 'snapshot',
+      index: null,
+      id,
+      message: `question id "${id}" existed in the snapshot but is missing from the data files`,
+    });
+  }
+}
+
 /** Run the full validation and print a human-readable summary. Returns the exit code. */
 export function runValidation(projectRoot: string = process.cwd()): number {
   const report = validateProject(projectRoot);
+  applyIdsSnapshot(report, projectRoot);
   const reportPath = join(projectRoot, DUPLICATES_REPORT);
 
   try {

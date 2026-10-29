@@ -1,13 +1,27 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
   import { buildSession } from '../../lib/engine';
+  import { localDay } from '../../lib/date';
   import {
+    applyAnswer,
+    applySession,
+    defaultGameState,
+    levelFromXp,
+    type GameEvent,
+    type GameState
+  } from '../../lib/gamification';
+  import {
+    getGame,
     getSeen,
     markSeen,
     recordAnswer,
-    resetSeen
+    resetSeen,
+    saveGame
   } from '../../lib/storage';
   import type { Question, SessionQuestion, Subject } from '../../lib/types';
+  import ComboBadge from '../game/ComboBadge.svelte';
+  import EventStack from '../game/EventStack.svelte';
+  import XpBar from '../game/XpBar.svelte';
   import {
     isTypingTarget,
     optionIndexFromKey,
@@ -43,6 +57,11 @@
   let poolExhausted = false;
   let startError = '';
   let liveMessage = '';
+  let game: GameState = defaultGameState();
+  let gameEvents: GameEvent[] = [];
+  let today = '';
+  let sessionXp = 0;
+  let sessionBadges: string[] = [];
 
   let current: SessionQuestion | null = null;
   let answered = false;
@@ -72,7 +91,22 @@
 
   onMount(() => {
     refreshPool();
+    game = getGame();
+    today = localDay(new Date());
   });
+
+  function currentDay(): string {
+    return today === '' ? localDay(new Date()) : today;
+  }
+
+  function recordGameEvents(events: GameEvent[]): void {
+    gameEvents = events;
+    sessionXp += events.reduce((sum, event) => (event.type === 'xp' ? sum + event.amount : sum), 0);
+    sessionBadges = [
+      ...sessionBadges,
+      ...events.filter((event) => event.type === 'badge').map((event) => event.id)
+    ];
+  }
 
   function refreshPool(): void {
     totalCount = questions.length;
@@ -100,6 +134,9 @@
     missed = [];
     startError = '';
     liveMessage = '';
+    gameEvents = [];
+    sessionXp = 0;
+    sessionBadges = [];
   }
 
   function startQuestions(nextQuestions: SessionQuestion[], retry: boolean): void {
@@ -113,6 +150,9 @@
     retryMode = retry;
     startError = '';
     liveMessage = '';
+    gameEvents = [];
+    sessionXp = 0;
+    sessionBadges = [];
     stage = 'quiz';
     void tick().then(() => questionHeading?.focus());
   }
@@ -165,6 +205,23 @@
     } catch {
       // A storage failure must not break the quiz.
     }
+
+    if (!retryMode) {
+      try {
+        const result = applyAnswer(game, {
+          questionId: question.id,
+          subject,
+          correct,
+          combo: correct ? streak : 0,
+          today: currentDay()
+        });
+        game = result.state;
+        saveGame(game);
+        recordGameEvents(result.events);
+      } catch {
+        // Gamification is fail-soft; the quiz itself keeps working.
+      }
+    }
   }
 
   function handleNext(): void {
@@ -182,7 +239,22 @@
   }
 
   function finishSession(): void {
-    if (!retryMode) refreshPool();
+    if (!retryMode) {
+      try {
+        const result = applySession(game, {
+          subject,
+          total: session.length,
+          correct: correctCount,
+          today: currentDay()
+        });
+        game = result.state;
+        saveGame(game);
+        recordGameEvents(result.events);
+      } catch {
+        // Gamification is fail-soft; results still render.
+      }
+      refreshPool();
+    }
     stage = 'results';
     liveMessage = retryMode
       ? `Retry complete. You scored ${correctCount} out of ${session.length}.`
@@ -314,6 +386,7 @@
   class="mx-auto w-full max-w-2xl rounded-3xl border border-slate-200 bg-white p-5 text-slate-900 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 sm:p-8"
 >
   <div class="sr-only" aria-live="polite" aria-atomic="true">{liveMessage}</div>
+  <EventStack events={gameEvents} />
 
   {#if stage === 'start'}
     <div class="space-y-7">
@@ -419,9 +492,9 @@
             Question {index + 1} of {session.length}
           </p>
           <div
-            class="flex items-center gap-2 text-sm font-semibold"
+            class="flex flex-wrap items-center gap-2 text-sm font-semibold"
             role="group"
-            aria-label="Session score and streak"
+            aria-label="Session score, streak and level"
           >
             <span class="rounded-full bg-slate-100 px-3 py-1 dark:bg-slate-800">
               Score <span class="text-indigo-600 dark:text-indigo-400">{correctCount}</span>
@@ -429,6 +502,13 @@
             <span class="rounded-full bg-slate-100 px-3 py-1 dark:bg-slate-800">
               Streak <span class="text-amber-600 dark:text-amber-400">{streak}</span>
             </span>
+            <span class="rounded-full bg-slate-100 px-3 py-1 dark:bg-slate-800">
+              Lv {levelFromXp(game.xp)}
+            </span>
+            <span class="rounded-full bg-slate-100 px-3 py-1 dark:bg-slate-800">
+              {game.xp} XP
+            </span>
+            <ComboBadge combo={streak} />
           </div>
         </div>
 
@@ -603,6 +683,34 @@
           Best streak: {bestStreak}
         </p>
       </div>
+
+      {#if !retryMode}
+        <div class="space-y-3 rounded-3xl border border-indigo-200 bg-indigo-50/60 p-5 dark:border-indigo-500/40 dark:bg-indigo-950/30">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <h3 class="text-lg font-bold">Progress</h3>
+            <p class="rounded-full bg-white px-3 py-1 text-sm font-bold text-indigo-700 dark:bg-slate-900 dark:text-indigo-300">
+              +{sessionXp} XP this session
+            </p>
+          </div>
+          <XpBar xp={game.xp} />
+          <p class="text-sm text-slate-700 dark:text-slate-200">
+            <span aria-hidden="true">🔥</span>
+            {game.streak.count}-day streak · best {game.streak.best} · freezes {game.streak.freezes}/2
+          </p>
+          {#if sessionBadges.length > 0}
+            <div>
+              <p class="text-sm font-semibold">New badges</p>
+              <ul class="mt-1 flex flex-wrap gap-2">
+                {#each sessionBadges as badge (badge)}
+                  <li class="rounded-full bg-amber-100 px-3 py-1 text-sm font-semibold text-amber-900 dark:bg-amber-500/20 dark:text-amber-200">
+                    {badge}
+                  </li>
+                {/each}
+              </ul>
+            </div>
+          {/if}
+        </div>
+      {/if}
 
       {#if poolExhausted}
         <div
