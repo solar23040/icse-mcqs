@@ -78,6 +78,10 @@ function statsKey(subject: Subject): string {
   return `mcq:${subject}:stats`;
 }
 
+function wrongKey(subject: Subject): string {
+  return `mcq:${subject}:wrong`;
+}
+
 function emptyStats(): Stats {
   return { attempted: 0, correct: 0 };
 }
@@ -117,6 +121,11 @@ export function getSeen(subject: Subject): string[] {
   return raw === null ? [] : parseSeen(raw);
 }
 
+export function getWrong(subject: Subject): string[] {
+  const raw = readRaw(wrongKey(subject));
+  return raw === null ? [] : parseSeen(raw);
+}
+
 export function markSeen(subject: Subject, id: string): void {
   const seen = getSeen(subject);
   if (seen.includes(id)) return;
@@ -127,6 +136,31 @@ export function markSeen(subject: Subject, id: string): void {
 
 export function resetSeen(subject: Subject): void {
   removeRaw(seenKey(subject));
+}
+
+export function markWrong(subject: Subject, id: string): void {
+  const wrong = getWrong(subject);
+  if (wrong.includes(id)) return;
+
+  wrong.push(id);
+  writeRaw(wrongKey(subject), JSON.stringify(wrong));
+}
+
+export function unmarkWrong(subject: Subject, id: string): void {
+  const wrong = getWrong(subject);
+  if (!wrong.includes(id)) return;
+
+  const remaining = wrong.filter((value) => value !== id);
+  if (remaining.length === 0) {
+    removeRaw(wrongKey(subject));
+    return;
+  }
+
+  writeRaw(wrongKey(subject), JSON.stringify(remaining));
+}
+
+export function resetWrong(subject: Subject): void {
+  removeRaw(wrongKey(subject));
 }
 
 export function getStats(subject: Subject): Stats {
@@ -141,3 +175,12 @@ export function recordAnswer(subject: Subject, correct: boolean): void {
 
   writeRaw(statsKey(subject), JSON.stringify(stats));
 }
+
+/* Friendly aliases for callers that prefer the plural/question wording. */
+export const getWrongIds = getWrong;
+export const getWrongQuestions = getWrong;
+export const addWrong = markWrong;
+export const recordWrong = markWrong;
+export const removeWrong = unmarkWrong;
+export const resetWrongQuestions = resetWrong;
+export const clearWrong = resetWrong;
