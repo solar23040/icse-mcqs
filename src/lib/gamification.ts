@@ -5,6 +5,7 @@ import {
   COMBO_TIER_3,
   DAILY_GOAL_OPTIONS,
   XP_CORRECT_BASE,
+  XP_MASTERED_CAP,
   XP_MISSED_BONUS,
   XP_SESSION_COMPLETE,
   type DailyGoal,
@@ -212,12 +213,19 @@ export function applyAnswer(state: GameState, input: AnswerInput): GameResult {
   next.daily = { day: today, answered: next.daily.answered + 1 };
 
   const wasMissed = next.missed[questionId] === true;
-  const gained = answerXp(correct, combo, wasMissed);
+  const previousBox = next.boxes[questionId] ?? 0;
+  let gained = answerXp(correct, combo, wasMissed);
+  if (correct && previousBox === 3) gained = Math.min(gained, XP_MASTERED_CAP);
 
+  let masteredNow = false;
   if (correct) {
     delete next.missed[questionId];
+    const nextBox = Math.min(previousBox + 1, 3) as 0 | 1 | 2 | 3;
+    next.boxes[questionId] = nextBox;
+    masteredNow = nextBox === 3 && previousBox < 3;
   } else {
     next.missed[questionId] = true;
+    next.boxes[questionId] = 0;
   }
 
   if (gained > 0) {
@@ -228,6 +236,8 @@ export function applyAnswer(state: GameState, input: AnswerInput): GameResult {
     const newLevel = levelFromXp(next.xp);
     if (newLevel > oldLevel) events.push({ type: 'levelUp', level: newLevel });
   }
+
+  if (masteredNow) events.push({ type: 'mastered', questionId });
 
   const beforeStreak = next.streak.count;
   next = touchStreak(next, today);
@@ -266,6 +276,29 @@ export function applySession(state: GameState, input: SessionInput): GameResult 
   }
 
   return { state: next, events };
+}
+
+export type Rank = 'Beginner' | 'Learner' | 'Scholar' | 'Topper';
+
+/** Percentage of a subject's questions sitting in Leitner box 3 (mastered). */
+export function masteryPercent(
+  subjectQuestions: readonly { id: string }[],
+  boxes: Record<string, 0 | 1 | 2 | 3>,
+): number {
+  if (subjectQuestions.length === 0) return 0;
+  const mastered = subjectQuestions.reduce(
+    (count, question) => count + (boxes[question.id] === 3 ? 1 : 0),
+    0,
+  );
+  return Math.round((mastered / subjectQuestions.length) * 100);
+}
+
+export function rankFor(percent: number): Rank {
+  const safe = Number.isFinite(percent) ? percent : 0;
+  if (safe < 25) return 'Beginner';
+  if (safe < 50) return 'Learner';
+  if (safe < 75) return 'Scholar';
+  return 'Topper';
 }
 
 export function evaluateBadges(_state: GameState): string[] {

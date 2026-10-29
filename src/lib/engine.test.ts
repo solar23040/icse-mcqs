@@ -160,3 +160,52 @@ describe('buildSession', () => {
     expect(seen).toEqual(['q2']);
   });
 });
+
+describe('review mode', () => {
+  const pool = makePool(6);
+  const boxes = { q1: 0, q2: 1, q3: 2, q4: 3 } as const;
+  const seen = ['q1', 'q2', 'q3', 'q4'];
+
+  it('draws boxes 0-1, then box 2, then unseen', () => {
+    const result = buildSession(pool, seen, 'all', { mode: 'review', boxes, rng: () => 0 });
+
+    expect(result.questions).toHaveLength(5);
+    expect(ids(result.questions).slice(0, 2).sort()).toEqual(['q1', 'q2']);
+    expect(ids(result.questions)[2]).toBe('q3');
+    expect(ids(result.questions).slice(3).sort()).toEqual(['q5', 'q6']);
+  });
+
+  it('honours the requested length and still shuffles options', () => {
+    const result = buildSession(pool, seen, 2, { mode: 'review', boxes, rng: () => 0 });
+
+    expect(result.questions).toHaveLength(2);
+    for (const question of result.questions) {
+      const original = pool.find((item) => item.id === question.id);
+      expect(question).toBeDefined();
+      expect(question.options).toHaveLength(4);
+      expect(question.correctIndex).toBeGreaterThanOrEqual(0);
+      expect(question.correctIndex).toBeLessThan(4);
+      expect(question.options[question.correctIndex]).toBe(original!.options[original!.answer]);
+    }
+  });
+
+  it('falls back to an empty exhausted session when nothing is due', () => {
+    const allSeen = makePool(3);
+    const result = buildSession(allSeen, ['q1', 'q2', 'q3'], 10, {
+      mode: 'review',
+      boxes: { q1: 3, q2: 3, q3: 3 },
+    });
+
+    expect(result.questions).toEqual([]);
+    expect(result.unseenCount).toBe(0);
+    expect(result.poolExhausted).toBe(true);
+  });
+
+  it('keeps unseen mode as the unchanged default', () => {
+    const defaultResult = buildSession(pool, seen, 'all', { rng: () => 0 });
+    const explicit = buildSession(pool, seen, 'all', { mode: 'unseen', rng: () => 0 });
+
+    expect(ids(defaultResult.questions)).toEqual(ids(explicit.questions));
+    expect(ids(defaultResult.questions).sort()).toEqual(['q5', 'q6']);
+  });
+});

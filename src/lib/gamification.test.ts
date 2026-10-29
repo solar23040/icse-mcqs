@@ -5,6 +5,8 @@ import {
   applySession,
   defaultGameState,
   levelFromXp,
+  masteryPercent,
+  rankFor,
   touchStreak,
   xpForLevel,
   type GameState,
@@ -290,5 +292,104 @@ describe('defaultGameState', () => {
     first.boxes.q1 = 1;
     expect(second.xp).toBe(0);
     expect(second.boxes.q1).toBeUndefined();
+  });
+});
+
+describe('Leitner boxes', () => {
+  it('moves correct answers up and wrong answers back to box 0', () => {
+    const first = applyAnswer(defaultGameState(), {
+      questionId: 'q1',
+      subject: 'maths',
+      correct: true,
+      combo: 1,
+      today: '2026-01-01',
+    });
+    expect(first.state.boxes.q1).toBe(1);
+
+    const second = applyAnswer(first.state, {
+      questionId: 'q1',
+      subject: 'maths',
+      correct: true,
+      combo: 2,
+      today: '2026-01-01',
+    });
+    expect(second.state.boxes.q1).toBe(2);
+
+    const wrong = applyAnswer(second.state, {
+      questionId: 'q1',
+      subject: 'maths',
+      correct: false,
+      combo: 0,
+      today: '2026-01-01',
+    });
+    expect(wrong.state.boxes.q1).toBe(0);
+    expect(wrong.state.missed.q1).toBe(true);
+  });
+
+  it('emits mastered once when reaching box 3', () => {
+    let state = defaultGameState();
+    let events: ReturnType<typeof applyAnswer>['events'] = [];
+
+    for (let combo = 1; combo <= 3; combo += 1) {
+      const result = applyAnswer(state, {
+        questionId: 'q1',
+        subject: 'maths',
+        correct: true,
+        combo,
+        today: '2026-01-01',
+      });
+      state = result.state;
+      events = result.events;
+    }
+
+    expect(state.boxes.q1).toBe(3);
+    expect(events).toContainEqual({ type: 'mastered', questionId: 'q1' });
+
+    const fourth = applyAnswer(state, {
+      questionId: 'q1',
+      subject: 'maths',
+      correct: true,
+      combo: 4,
+      today: '2026-01-01',
+    });
+    expect(fourth.events.some((event) => event.type === 'mastered')).toBe(false);
+  });
+
+  it('caps XP at 2 for a question already in box 3', () => {
+    const state = defaultGameState();
+    state.boxes.q1 = 3;
+    state.xp = 100;
+
+    const result = applyAnswer(state, {
+      questionId: 'q1',
+      subject: 'maths',
+      correct: true,
+      combo: 9,
+      today: '2026-01-01',
+    });
+
+    expect(result.state.xp).toBe(102);
+    expect(result.events).toContainEqual({ type: 'xp', amount: 2 });
+  });
+});
+
+describe('mastery and ranks', () => {
+  it('computes mastered percentage', () => {
+    const questions = [{ id: 'q1' }, { id: 'q2' }, { id: 'q3' }, { id: 'q4' }];
+    expect(masteryPercent(questions, {})).toBe(0);
+    expect(masteryPercent(questions, { q1: 3 })).toBe(25);
+    expect(masteryPercent(questions, { q1: 3, q2: 3, q3: 3 })).toBe(75);
+    expect(masteryPercent([], {})).toBe(0);
+  });
+
+  it('maps percentages to rank titles', () => {
+    expect(rankFor(0)).toBe('Beginner');
+    expect(rankFor(24)).toBe('Beginner');
+    expect(rankFor(25)).toBe('Learner');
+    expect(rankFor(49)).toBe('Learner');
+    expect(rankFor(50)).toBe('Scholar');
+    expect(rankFor(74)).toBe('Scholar');
+    expect(rankFor(75)).toBe('Topper');
+    expect(rankFor(100)).toBe('Topper');
   });
 });

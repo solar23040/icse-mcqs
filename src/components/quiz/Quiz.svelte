@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
-  import { buildSession } from '../../lib/engine';
+  import { buildSession, type SessionMode } from '../../lib/engine';
   import { localDay } from '../../lib/date';
   import {
     applyAnswer,
@@ -44,6 +44,8 @@
 
   let stage: Stage = 'start';
   let selectedLength: SessionLength = 10;
+  let selectedMode: SessionMode = 'unseen';
+  let answerHint = '';
   let session: SessionQuestion[] = [];
   let index = 0;
   let choice: number | null = null;
@@ -68,6 +70,7 @@
   let isLast = false;
   let progressPercent = 0;
   let scorePercentValue = 0;
+  let reviewableCount = 0;
 
   let questionHeading: HTMLHeadingElement | null = null;
   let resultsHeading: HTMLHeadingElement | null = null;
@@ -79,6 +82,7 @@
   $: isLast = session.length > 0 && index >= session.length - 1;
   $: progressPercent = session.length > 0 ? ((index + 1) / session.length) * 100 : 0;
   $: scorePercentValue = scorePercent(correctCount, session.length);
+  $: reviewableCount = Object.values(game.boxes).filter((box) => box < 3).length;
 
   let activeSubject = subject;
   $: if (subject !== activeSubject) {
@@ -93,6 +97,9 @@
     refreshPool();
     game = getGame();
     today = localDay(new Date());
+    if (new URLSearchParams(window.location.search).get('mode') === 'review') {
+      selectedMode = 'review';
+    }
   });
 
   function currentDay(): string {
@@ -137,6 +144,7 @@
     gameEvents = [];
     sessionXp = 0;
     sessionBadges = [];
+    answerHint = '';
   }
 
   function startQuestions(nextQuestions: SessionQuestion[], retry: boolean): void {
@@ -153,6 +161,7 @@
     gameEvents = [];
     sessionXp = 0;
     sessionBadges = [];
+    answerHint = '';
     stage = 'quiz';
     void tick().then(() => questionHeading?.focus());
   }
@@ -162,7 +171,10 @@
     let nextSession: ReturnType<typeof buildSession>;
 
     try {
-      nextSession = buildSession(questions, getSeen(subject), selectedLength);
+      nextSession = buildSession(questions, getSeen(subject), selectedLength, {
+        mode: selectedMode,
+        boxes: game.boxes
+      });
     } catch {
       startError = 'The session could not start. Please try again.';
       return;
@@ -171,6 +183,9 @@
     if (nextSession.poolExhausted || nextSession.questions.length === 0) {
       refreshPool();
       stage = 'start';
+      if (selectedMode === 'review') {
+        startError = 'Nothing to review yet. Answer some questions first.';
+      }
       return;
     }
 
@@ -206,7 +221,9 @@
       // A storage failure must not break the quiz.
     }
 
+    answerHint = '';
     if (!retryMode) {
+      const previousBox = game.boxes[question.id] ?? 0;
       try {
         const result = applyAnswer(game, {
           questionId: question.id,
@@ -218,6 +235,14 @@
         game = result.state;
         saveGame(game);
         recordGameEvents(result.events);
+
+        if (result.events.some((event) => event.type === 'mastered')) {
+          answerHint = 'Mastered!';
+        } else if (!correct) {
+          answerHint = 'Added to review';
+        } else if (previousBox <= 1) {
+          answerHint = `Box ${game.boxes[question.id] ?? 1} of 3`;
+        }
       } catch {
         // Gamification is fail-soft; the quiz itself keeps working.
       }
@@ -230,6 +255,7 @@
     if (index < session.length - 1) {
       index += 1;
       choice = null;
+      answerHint = '';
       liveMessage = '';
       void tick().then(() => questionHeading?.focus());
       return;
@@ -274,6 +300,20 @@
     if (missed.length === 0) return;
     const retryQuestions = missed.map((item) => item.question);
     startQuestions(retryQuestions, true);
+  }
+
+  function handleReviewSession(): void {
+    try {
+      const nextSession = buildSession(questions, getSeen(subject), selectedLength, {
+        mode: 'review',
+        boxes: game.boxes
+      });
+      if (nextSession.questions.length === 0) return;
+      selectedMode = 'review';
+      startQuestions(nextSession.questions, false);
+    } catch {
+      startError = 'The review session could not start. Please try again.';
+    }
   }
 
   function handleReset(): void {
@@ -446,6 +486,45 @@
             <strong class="text-2xl font-bold">{totalCount}</strong>
             <span> questions</span>
           </p>
+        </div>
+
+        <div class="space-y-2">
+          <p id="session-mode-label" class="text-sm font-semibold">Question mode</p>
+          <div role="group" aria-labelledby="session-mode-label" class="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              aria-pressed={selectedMode === 'unseen'}
+              on:click={() => (selectedMode = 'unseen')}
+              class="min-h-12 rounded-xl px-3 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 {selectedMode ===
+              'unseen'
+                ? 'bg-indigo-600 text-white shadow-sm'
+                : 'border border-slate-300 bg-white text-slate-700 hover:border-indigo-400 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200'}"
+            >
+              New questions
+            </button>
+            <button
+              type="button"
+              aria-pressed={selectedMode === 'review'}
+              disabled={reviewableCount === 0}
+              aria-describedby={reviewableCount === 0 ? 'review-disabled-note' : undefined}
+              on:click={() => (selectedMode = 'review')}
+              class="min-h-12 rounded-xl border px-3 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-offset-slate-900 {selectedMode ===
+              'review'
+                ? 'border-indigo-600 bg-indigo-600 text-white shadow-sm'
+                : 'border-slate-300 bg-white text-slate-700 hover:border-indigo-400 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200'}"
+            >
+              Review weak spots
+            </button>
+          </div>
+          {#if reviewableCount === 0}
+            <p id="review-disabled-note" class="text-xs text-slate-500 dark:text-slate-400">
+              No boxed questions yet. Answer some questions to build your review list.
+            </p>
+          {:else}
+            <p class="text-xs text-slate-500 dark:text-slate-400">
+              {reviewableCount} question{reviewableCount === 1 ? '' : 's'} in your review boxes.
+            </p>
+          {/if}
         </div>
 
         <div class="space-y-2">
@@ -622,6 +701,10 @@
           </p>
           <p id="answer-explanation" class="text-slate-700 dark:text-slate-200">{current.explanation}</p>
 
+          {#if answerHint}
+            <p class="text-sm font-semibold text-indigo-700 dark:text-indigo-300">{answerHint}</p>
+          {/if}
+
           <button
             type="button"
             bind:this={nextButton}
@@ -782,6 +865,15 @@
           New session
         </button>
       </div>
+
+      <button
+        type="button"
+        on:click={handleReviewSession}
+        disabled={reviewableCount === 0}
+        class="min-h-12 w-full rounded-2xl border border-indigo-300 bg-indigo-50 px-5 text-base font-semibold text-indigo-800 transition-colors hover:border-indigo-400 hover:bg-indigo-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-indigo-500/50 dark:bg-indigo-950/40 dark:text-indigo-200 dark:focus-visible:ring-offset-slate-900"
+      >
+        Review weak spots ({reviewableCount} due)
+      </button>
 
       {#if retryMode}
         <p class="text-center text-xs text-slate-500 dark:text-slate-400">

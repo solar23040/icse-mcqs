@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import SubjectTabs from '../components/shell/SubjectTabs.astro';
+import SubjectMastery from '../components/game/SubjectMastery.svelte';
 import Quiz from '../components/quiz/Quiz.svelte';
 import { SUBJECTS } from '../lib/subjects';
 import type { Question, Subject } from '../lib/types';
@@ -39,6 +40,7 @@ const comingSoon = placeholder || questions.length === 0;
         ? 'Questions for this subject are being written and checked right now. Check back soon.'
         : 'Choose a session length, then work through each question at your own pace.'}
     </p>
+    {!comingSoon && <SubjectMastery client:load questions={questions} />}
   </section>
 
   {

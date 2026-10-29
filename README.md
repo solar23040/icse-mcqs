@@ -295,6 +295,12 @@ Progress is stored locally under `icse:game:v1`. It is separate from seen questi
 | Freezes | Earn one every 7 streak days, maximum 2 |
 | Daily goal | 10, 20 or 30 answers, chosen on the home page |
 
+### Mastery and ranks
+
+Each question sits in a Leitner box. A wrong answer sends it to box 0 (and onto the review list); each correct answer moves it up one box, to a maximum of box 3. Box 3 questions count as mastered. Answering an already-mastered question gives only 2 XP, so repeating mastered questions cannot farm XP.
+
+**Review weak spots** draws box 0-1 questions first, then box 2, then unseen questions. Mastery percentage per subject is `mastered / total questions`. Ranks are: below 25% Beginner, below 50% Learner, below 75% Scholar, 75% or more Topper. Placeholder subjects never show a rank.
+
 ## Question ids and the ids snapshot
 
 Question `id`s are the keys for seen and mastery progress. Never rename or remove one. `npm run validate` fails if any id in `scripts/ids.snapshot.json` disappears, and warns (without failing) when an id does not look like `prefix-001`. When you add questions, append new ids and refresh the snapshot after reviewing the diff:

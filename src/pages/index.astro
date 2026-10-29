@@ -3,6 +3,15 @@ import Base from '../layouts/Base.astro';
 import HomeGamePanel from '../components/game/HomeGamePanel.svelte';
 import SubjectGrid from '../components/shell/SubjectGrid.svelte';
 import { SUBJECTS } from '../lib/subjects';
+import type { Question } from '../lib/types';
+
+const modules = import.meta.glob<Question>('../data/*.json', { eager: true, import: 'default' });
+const questionIds = Object.fromEntries(
+  SUBJECTS.map(({ slug }) => [
+    slug,
+    (modules[`../data/${slug}.json`] ?? []).map((question) => question.id),
+  ]),
+);
 ---
 
 <Base>
@@ -17,7 +26,7 @@ import { SUBJECTS } from '../lib/subjects';
 
   <HomeGamePanel client:load />
 
-  <SubjectGrid client:load subjects={SUBJECTS} />
+  <SubjectGrid client:load subjects={SUBJECTS} questionIds={questionIds} />
 
   <p class="mt-6 text-sm text-slate-600 dark:text-slate-400">
     Missing a subject?
