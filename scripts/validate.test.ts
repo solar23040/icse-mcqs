@@ -264,7 +264,7 @@ describe('project files', () => {
     const report = validateProject(projectRoot);
 
     expect(report.errors).toEqual([]);
-    expect(report.total).toBe(415);
-    expect(report.counts.map((item) => item.count)).toEqual([74, 60, 37, 44, 32, 100, 0, 0, 68]);
+    expect(report.total).toBe(510);
+    expect(report.counts.map((item) => item.count)).toEqual([74, 60, 37, 44, 32, 100, 95, 0, 68]);
   });
 });

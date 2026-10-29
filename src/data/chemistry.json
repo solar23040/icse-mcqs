@@ -1,1 +1,1332 @@
-[]
+[
+  {
+    "id": "chem-001",
+    "question": "The element with highest ionization potential is:",
+    "options": [
+      "Hydrogen",
+      "Caesium",
+      "Radon",
+      "Helium"
+    ],
+    "answer": 3,
+    "explanation": "Helium has a stable noble-gas configuration, so removing an electron requires the most energy among the listed elements.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-220922-2020.pdf"
+  },
+  {
+    "id": "chem-002",
+    "question": "The inert electrode used in the electrolysis of acidified water is:",
+    "options": [
+      "Nickel",
+      "Platinum",
+      "Copper",
+      "Silver"
+    ],
+    "answer": 1,
+    "explanation": "Platinum is inert and does not react with the products formed during electrolysis of acidified water.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-220922-2020.pdf"
+  },
+  {
+    "id": "chem-003",
+    "question": "A compound with low boiling point is:",
+    "options": [
+      "Sodium chloride",
+      "Calcium chloride",
+      "Potassium chloride",
+      "Carbon tetrachloride"
+    ],
+    "answer": 3,
+    "explanation": "Carbon tetrachloride is a covalent compound with weak intermolecular forces, so it has a low boiling point.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-220922-2020.pdf"
+  },
+  {
+    "id": "chem-004",
+    "question": "The acid which can produce carbon from cane sugar is:",
+    "options": [
+      "Concentrated Hydrochloric acid",
+      "Concentrated Nitric acid",
+      "Concentrated Sulphuric acid",
+      "Concentrated Acetic acid"
+    ],
+    "answer": 2,
+    "explanation": "Concentrated sulphuric acid is a dehydrating agent and removes water from cane sugar, leaving carbon.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-220922-2020.pdf"
+  },
+  {
+    "id": "chem-005",
+    "question": "The organic compound having a triple carbon-carbon covalent bond is:",
+    "options": [
+      "C3H4",
+      "C3H6",
+      "C3H8",
+      "C4H10"
+    ],
+    "answer": 0,
+    "explanation": "C3H4 is propyne, which contains a carbon-carbon triple bond.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-220922-2020.pdf"
+  },
+  {
+    "id": "chem-006",
+    "question": "An element in period 3, whose electron affinity is zero:",
+    "options": [
+      "Neon",
+      "Sulphur",
+      "Sodium",
+      "Argon"
+    ],
+    "answer": 3,
+    "explanation": "Argon is a noble gas in period 3 with a stable octet, so its electron affinity is zero.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t23-522-2023.pdf"
+  },
+  {
+    "id": "chem-007",
+    "question": "An element with the largest atomic radius among the following is:",
+    "options": [
+      "Carbon",
+      "Nitrogen",
+      "Lithium",
+      "Beryllium"
+    ],
+    "answer": 2,
+    "explanation": "Atomic radius decreases across a period; lithium is farthest left among these elements, so it has the largest radius.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t23-522-2023.pdf"
+  },
+  {
+    "id": "chem-008",
+    "question": "The compound that is not an ore of aluminium:",
+    "options": [
+      "Cryolite",
+      "Corundum",
+      "Fluorspar",
+      "Bauxite"
+    ],
+    "answer": 2,
+    "explanation": "Fluorspar is calcium fluoride and is not an aluminium ore; bauxite, corundum, and cryolite are aluminium-containing minerals.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t23-522-2023.pdf"
+  },
+  {
+    "id": "chem-009",
+    "question": "The vapour density of CH3OH is:",
+    "options": [
+      "32",
+      "18",
+      "16",
+      "34"
+    ],
+    "answer": 2,
+    "explanation": "Molar mass of CH3OH is 32, so vapour density = molecular mass / 2 = 16.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t23-522-2023.pdf"
+  },
+  {
+    "id": "chem-010",
+    "question": "Which of the following reactions takes place at the anode during the electroplating of an article with silver?",
+    "options": [
+      "Ag - 1e- -> Ag1+",
+      "Ag + 1e- -> Ag1+",
+      "Ag - 1e- -> Ag",
+      "None of the above"
+    ],
+    "answer": 0,
+    "explanation": "At the anode, silver metal is oxidised and dissolves as Ag+ ions.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t23-522-2023.pdf"
+  },
+  {
+    "id": "chem-011",
+    "question": "The metallic hydroxide which forms a deep inky blue solution with excess ammonium hydroxide solution is:",
+    "options": [
+      "Fe(OH)2",
+      "Cu(OH)2",
+      "Ca(OH)2",
+      "Fe(OH)3"
+    ],
+    "answer": 1,
+    "explanation": "Copper(II) hydroxide dissolves in excess ammonium hydroxide to form a deep blue complex.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t23-522-2023.pdf"
+  },
+  {
+    "id": "chem-012",
+    "question": "An example of a cyclic organic compound is:",
+    "options": [
+      "Propene",
+      "Pentene",
+      "Butene",
+      "Benzene"
+    ],
+    "answer": 3,
+    "explanation": "Benzene has a ring structure and is a cyclic organic compound.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t23-522-2023.pdf"
+  },
+  {
+    "id": "chem-013",
+    "question": "In the laboratory preparation, HCl gas is dried by passing through:",
+    "options": [
+      "dilute nitric acid",
+      "concentrated sulphuric acid",
+      "dilute sulphuric acid",
+      "acidified water"
+    ],
+    "answer": 1,
+    "explanation": "Concentrated sulphuric acid is used as a drying agent for HCl gas.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t23-522-2023.pdf"
+  },
+  {
+    "id": "chem-014",
+    "question": "The nitrate which on thermal decomposition leaves behind a residue which is yellow when hot and white when cold:",
+    "options": [
+      "Lead nitrate",
+      "Ammonium nitrate",
+      "Copper nitrate",
+      "Zinc nitrate"
+    ],
+    "answer": 3,
+    "explanation": "Zinc nitrate decomposes to zinc oxide, which is yellow when hot and white when cold.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t23-522-2023.pdf"
+  },
+  {
+    "id": "chem-015",
+    "question": "The salt formed when concentrated sulphuric acid reacts with KNO3 above 200 degrees C:",
+    "options": [
+      "K2SO4",
+      "K2SO3",
+      "KHSO4",
+      "KHSO3"
+    ],
+    "answer": 0,
+    "explanation": "Above 200 degrees C, potassium sulphate is formed along with nitric acid.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t23-522-2023.pdf"
+  },
+  {
+    "id": "chem-016",
+    "question": "The property exhibited by concentrated sulphuric acid when it is used to prepare hydrogen chloride gas from potassium chloride:",
+    "options": [
+      "Dehydrating property",
+      "Drying property",
+      "Oxidizing property",
+      "Non-volatile acid property"
+    ],
+    "answer": 3,
+    "explanation": "Concentrated sulphuric acid is non-volatile and displaces volatile HCl from potassium chloride.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t23-522-2023.pdf"
+  },
+  {
+    "id": "chem-017",
+    "question": "The hydrocarbon formed when sodium propanoate and soda lime are heated together:",
+    "options": [
+      "Methane",
+      "Ethane",
+      "Ethene",
+      "Propane"
+    ],
+    "answer": 1,
+    "explanation": "Sodium propanoate with soda lime undergoes decarboxylation to form ethane.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t23-522-2023.pdf"
+  },
+  {
+    "id": "chem-018",
+    "question": "The acid which does not form acid salt by a basic radical:",
+    "options": [
+      "H2CO3",
+      "H3PO4",
+      "H2SO4",
+      "CH3COOH"
+    ],
+    "answer": 3,
+    "explanation": "Acetic acid is monobasic, so it cannot form an acid salt.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t23-522-2023.pdf"
+  },
+  {
+    "id": "chem-019",
+    "question": "The general formula of hydrocarbons with single covalent bonds is:",
+    "options": [
+      "CnH2n+2",
+      "CnH2n",
+      "CnH2n-2",
+      "CnH2n-6"
+    ],
+    "answer": 0,
+    "explanation": "Alkanes contain only single bonds and have the general formula CnH2n+2.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t23-522-2023.pdf"
+  },
+  {
+    "id": "chem-020",
+    "question": "The indicator which changes to pink colour in an alkaline solution is:",
+    "options": [
+      "Blue Litmus",
+      "Methyl Orange",
+      "Red Litmus",
+      "Phenolphthalein"
+    ],
+    "answer": 3,
+    "explanation": "Phenolphthalein is colourless in acidic and neutral solutions and pink in alkaline solution.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t23-522-2023.pdf"
+  },
+  {
+    "id": "chem-021",
+    "question": "Unsaturated hydrocarbons undergo:",
+    "options": [
+      "Addition reaction",
+      "Substitution reaction",
+      "Oxidation reaction",
+      "Redox reaction"
+    ],
+    "answer": 0,
+    "explanation": "Unsaturated hydrocarbons contain double or triple bonds and typically undergo addition reactions.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t24-522-2024.pdf"
+  },
+  {
+    "id": "chem-022",
+    "question": "In the 2nd period Neon has maximum Ionization Potential because:",
+    "options": [
+      "It has unstable electronic configuration.",
+      "It easily accepts electrons.",
+      "It easily loses electrons.",
+      "The outer most shell is completely filled."
+    ],
+    "answer": 3,
+    "explanation": "Neon has a stable complete octet, so its ionization potential is very high.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t24-522-2024.pdf"
+  },
+  {
+    "id": "chem-023",
+    "question": "Copper, Zinc and Tin are the metals alloyed to form:",
+    "options": [
+      "Duralumin",
+      "Brass",
+      "Bronze",
+      "Solder"
+    ],
+    "answer": 2,
+    "explanation": "Bronze is an alloy mainly of copper and tin, often with zinc.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t24-522-2024.pdf"
+  },
+  {
+    "id": "chem-024",
+    "question": "The metal hydroxide which reacts with both acids and alkalis to form salt and water is:",
+    "options": [
+      "Calcium hydroxide",
+      "Magnesium hydroxide",
+      "Aluminium hydroxide",
+      "Ferric hydroxide"
+    ],
+    "answer": 2,
+    "explanation": "Aluminium hydroxide is amphoteric and reacts with both acids and alkalis.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t24-522-2024.pdf"
+  },
+  {
+    "id": "chem-025",
+    "question": "Reaction of an alcohol with a carboxylic acid in the presence of concentrated H2SO4 is termed as:",
+    "options": [
+      "Halogenation",
+      "Esterification",
+      "Hydrogenation",
+      "Dehydrohalogenation"
+    ],
+    "answer": 1,
+    "explanation": "Alcohol and carboxylic acid react in the presence of concentrated sulphuric acid to form an ester; this is esterification.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t24-522-2024.pdf"
+  },
+  {
+    "id": "chem-026",
+    "question": "Conversion of Ethanol to Ethene by the action of concentrated sulphuric acid involves:",
+    "options": [
+      "Dehydration",
+      "Dehydrogenation",
+      "Dehydrohalogenation",
+      "Hydrolysis"
+    ],
+    "answer": 0,
+    "explanation": "Concentrated sulphuric acid removes water from ethanol, so the reaction is dehydration.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t24-522-2024.pdf"
+  },
+  {
+    "id": "chem-027",
+    "question": "The oxidizing agent in the equation S + 2H2SO4 -> 3SO2 + 2H2O is:",
+    "options": [
+      "Sulphur",
+      "Sulphuric acid",
+      "Sulphur dioxide",
+      "Water"
+    ],
+    "answer": 1,
+    "explanation": "Sulphuric acid is reduced while sulphur is oxidised, so sulphuric acid is the oxidizing agent.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t24-522-2024.pdf"
+  },
+  {
+    "id": "chem-028",
+    "question": "Electron Affinity is maximum in:",
+    "options": [
+      "Mg",
+      "Ar",
+      "Li",
+      "Br"
+    ],
+    "answer": 3,
+    "explanation": "Bromine is a halogen and halogens generally have high electron affinity.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t24-522-2024.pdf"
+  },
+  {
+    "id": "chem-029",
+    "question": "The compound that is not a constituent of the electrolytic mixture used in the Hall-Heroult's process is:",
+    "options": [
+      "Al2O3",
+      "NaAlO2",
+      "Na3AlF6",
+      "CaF2"
+    ],
+    "answer": 1,
+    "explanation": "The Hall-Heroult electrolyte uses alumina, cryolite, and fluorspar; sodium aluminate is not a constituent.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t24-522-2024.pdf"
+  },
+  {
+    "id": "chem-030",
+    "question": "On passing ammonia gas over heated copper oxide for some time, a reddish-brown residue is left behind. What property of ammonia is demonstrated here?",
+    "options": [
+      "Basic property",
+      "Oxidising property",
+      "Reducing property",
+      "Acidic property"
+    ],
+    "answer": 2,
+    "explanation": "Ammonia reduces copper(II) oxide to copper, so it acts as a reducing agent.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t24-522-2024.pdf"
+  },
+  {
+    "id": "chem-031",
+    "question": "Rotten egg smell is due to the liberation of:",
+    "options": [
+      "HCl gas",
+      "H2S gas",
+      "Cl2 gas",
+      "SO2 gas"
+    ],
+    "answer": 1,
+    "explanation": "Hydrogen sulphide gas has the characteristic smell of rotten eggs.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t24-522-2024.pdf"
+  },
+  {
+    "id": "chem-032",
+    "question": "In the molecule of water, oxygen atom has:",
+    "options": [
+      "One shared pair of electrons.",
+      "Three shared pairs of electrons.",
+      "Two lone pairs of electrons.",
+      "One lone pair of electrons."
+    ],
+    "answer": 2,
+    "explanation": "Oxygen in water has two bonding pairs and two lone pairs of electrons.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t24-522-2024.pdf"
+  },
+  {
+    "id": "chem-033",
+    "question": "A mineral from which the metal can be extracted economically and conveniently is known as:",
+    "options": [
+      "Matrix",
+      "Ore",
+      "Flux",
+      "Alloy"
+    ],
+    "answer": 1,
+    "explanation": "An ore is a mineral from which a metal can be extracted economically.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t24-522-2024.pdf"
+  },
+  {
+    "id": "chem-034",
+    "question": "Which gas decolourises potassium permanganate (KMnO4) solution?",
+    "options": [
+      "Sulphur dioxide",
+      "Ammonia",
+      "Hydrogen chloride",
+      "Carbon dioxide"
+    ],
+    "answer": 0,
+    "explanation": "Sulphur dioxide is a reducing agent and decolourises acidified potassium permanganate solution.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t25-522-2025.pdf"
+  },
+  {
+    "id": "chem-035",
+    "question": "Which formula represents a saturated hydrocarbon?",
+    "options": [
+      "C4H8",
+      "C5H12",
+      "C4H6",
+      "C5H10"
+    ],
+    "answer": 1,
+    "explanation": "C5H12 fits CnH2n+2, so it is a saturated alkane.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t25-522-2025.pdf"
+  },
+  {
+    "id": "chem-036",
+    "question": "The metal whose oxide can be reduced by common reducing agents:",
+    "options": [
+      "Copper",
+      "Sodium",
+      "Aluminium",
+      "Potassium"
+    ],
+    "answer": 0,
+    "explanation": "Copper is low in the reactivity series, so its oxide can be reduced by common reducing agents such as hydrogen or carbon.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t25-522-2025.pdf"
+  },
+  {
+    "id": "chem-037",
+    "question": "Which of the following options has all the compounds which are members of the same homologous series?",
+    "options": [
+      "CH4, C2H6, C3H8",
+      "CH4, C2H6, C3H6",
+      "C3H4, C3H6, C3H8",
+      "C2H4, C3H6, C4H10"
+    ],
+    "answer": 0,
+    "explanation": "CH4, C2H6, and C3H8 are all alkanes and belong to the same homologous series.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t25-522-2025.pdf"
+  },
+  {
+    "id": "chem-038",
+    "question": "In the Contact Process SO3 gas is not directly dissolved in water to obtain sulphuric acid. Reason (R): Dense fog or misty droplets of sulphuric acid are formed which is difficult to condense.",
+    "options": [
+      "Both (A) and (R) are true, and (R) is the correct explanation of (A).",
+      "Both (A) and (R) are true, and (R) is not the correct explanation of (A).",
+      "(A) is true but (R) is false.",
+      "(A) is false but (R) is true."
+    ],
+    "answer": 0,
+    "explanation": "SO3 reacts with water to form a fine mist of sulphuric acid, so it is absorbed in concentrated sulphuric acid instead.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t25-522-2025.pdf"
+  },
+  {
+    "id": "chem-039",
+    "question": "Given the ions Cl-, Li+, Al3+, and K+, identify the pair of ions which have the same electronic configuration.",
+    "options": [
+      "Cl- & Li+",
+      "Al3+ & K+",
+      "Cl- & K+",
+      "Li+ & K+"
+    ],
+    "answer": 2,
+    "explanation": "Cl- and K+ both have 18 electrons, so they are isoelectronic.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t25-522-2025.pdf"
+  },
+  {
+    "id": "chem-040",
+    "question": "Which pair of reactants can be best used to produce lead(II) sulphate?",
+    "options": [
+      "Sulphuric acid + Lead",
+      "Sulphuric acid + Lead hydroxide",
+      "Sodium sulphate + Lead nitrate",
+      "Potassium sulphate + Lead oxide"
+    ],
+    "answer": 2,
+    "explanation": "Lead(II) sulphate is insoluble and is best prepared by precipitation using lead nitrate and sodium sulphate solutions.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t25-522-2025.pdf"
+  },
+  {
+    "id": "chem-041",
+    "question": "Aqueous copper(II) sulphate is electrolysed using copper electrodes. Which statement about the electrolysis is not correct?",
+    "options": [
+      "An oxidation reaction occurs at the positive electrode.",
+      "The current is carried through the electrolyte by ions.",
+      "The positive electrode loses mass.",
+      "The number of copper(II) ions in the electrolyte decreases."
+    ],
+    "answer": 3,
+    "explanation": "With copper electrodes, copper dissolves at the anode and is deposited at the cathode, so the concentration of Cu2+ ions remains approximately constant.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t25-522-2025.pdf"
+  },
+  {
+    "id": "chem-042",
+    "question": "X, Y and Z are three metallic atoms in successive order belonging to the same group such that atomic radii of X is the smallest. Which of the three atoms is the best reducing agent?",
+    "options": [
+      "X",
+      "Y",
+      "Z",
+      "All three have the same reducing power."
+    ],
+    "answer": 2,
+    "explanation": "Reducing power increases down a group, so Z, with the largest atomic radius, is the best reducing agent.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t25-522-2025.pdf"
+  },
+  {
+    "id": "chem-043",
+    "question": "40 cm3 of methane (CH4) is reacted with 60 cm3 of oxygen according to CH4 + 2O2 -> CO2 + 2H2O. All volumes are measured at room temperature. What is the total volume of the gases remaining at the end of the reaction?",
+    "options": [
+      "60 cm3",
+      "40 cm3",
+      "45 cm3",
+      "50 cm3"
+    ],
+    "answer": 1,
+    "explanation": "Oxygen is limiting: 60 cm3 O2 reacts with 30 cm3 CH4, forming 30 cm3 CO2 and leaving 10 cm3 CH4; total remaining gas = 40 cm3.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t25-522-2025.pdf"
+  },
+  {
+    "id": "chem-044",
+    "question": "Read the statements: I - Copper is a component in the alloy that is used to make medals. II - Aluminium is used in making the alloy stainless steel. III - Copper is a common component of both duralumin and brass. Which statements are correct?",
+    "options": [
+      "I & II",
+      "I & III",
+      "II & III",
+      "I, II & III"
+    ],
+    "answer": 1,
+    "explanation": "Copper is present in bronze used for medals and in both duralumin and brass; aluminium is not a constituent of stainless steel.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t25-522i-2025.pdf"
+  },
+  {
+    "id": "chem-045",
+    "question": "Sodium hydroxide can react with which acid to form an acid salt?",
+    "options": [
+      "Nitric acid",
+      "Hydrochloric acid",
+      "Acetic acid",
+      "Sulphuric acid"
+    ],
+    "answer": 3,
+    "explanation": "Sulphuric acid is dibasic and can form the acid salt sodium hydrogen sulphate with sodium hydroxide.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t25-522i-2025.pdf"
+  },
+  {
+    "id": "chem-046",
+    "question": "How many moles are present in 10 g of CaCO3?",
+    "options": [
+      "10 moles",
+      "1 mole",
+      "0.1 mole",
+      "0.11 mole"
+    ],
+    "answer": 2,
+    "explanation": "Molar mass of CaCO3 is 100 g/mol, so 10 g is 0.1 mole.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t25-522i-2025.pdf"
+  },
+  {
+    "id": "chem-047",
+    "question": "A white precipitate is formed when dilute hydrochloric acid reacts with X. The white precipitate is soluble in excess of NH4OH and insoluble in dilute HNO3. Identify X.",
+    "options": [
+      "AgNO3",
+      "NH4Cl",
+      "AgCl",
+      "CaCl2"
+    ],
+    "answer": 0,
+    "explanation": "Silver nitrate solution with dilute HCl gives white AgCl, which dissolves in excess ammonium hydroxide and is insoluble in dilute nitric acid.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t25-522i-2025.pdf"
+  },
+  {
+    "id": "chem-048",
+    "question": "Assertion (A): In a solution containing equal concentration of Cu2+ ions and Ca2+ ions, Cu2+ ions will be discharged in preference to Ca2+ ions. Reason (R): Ca2+ ions are placed above Cu2+ ions in the electrochemical series.",
+    "options": [
+      "Both (A) and (R) are true, and (R) is the correct explanation of (A).",
+      "Both (A) and (R) are true, and (R) is not the correct explanation of (A).",
+      "(A) is true but (R) is false.",
+      "(A) is false but (R) is true."
+    ],
+    "answer": 0,
+    "explanation": "Ions lower in the electrochemical series are discharged preferentially; Ca is above Cu, so Cu2+ is discharged first.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t25-522i-2025.pdf"
+  },
+  {
+    "id": "chem-049",
+    "question": "Assertion (A): Hydraulic washing is a method to separate impurities from the ore. Reason (R): In hydraulic washing, denser particles float and lighter particles settle down.",
+    "options": [
+      "Both (A) and (R) are true, and (R) is the correct explanation of (A).",
+      "Both (A) and (R) are true, and (R) is not the correct explanation of (A).",
+      "(A) is true but (R) is false.",
+      "(A) is false but (R) is true."
+    ],
+    "answer": 2,
+    "explanation": "Hydraulic washing is used to remove gangue, but denser ore particles settle while lighter impurities float; so R is false.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t25-522i-2025.pdf"
+  },
+  {
+    "id": "chem-050",
+    "question": "The oxide which reacts with both dilute hydrochloric acid and sodium hydroxide solution to form salt and water is:",
+    "options": [
+      "Basic oxide",
+      "Amphoteric oxide",
+      "Acidic oxide",
+      "Neutral oxide"
+    ],
+    "answer": 1,
+    "explanation": "Amphoteric oxides react with both acids and alkalis to form salts and water.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t25-522i-2025.pdf"
+  },
+  {
+    "id": "chem-051",
+    "question": "Which of the following will occupy the volume 2.8 litres at S.T.P.?",
+    "options": [
+      "2 moles of carbon dioxide",
+      "7.1 g of chlorine",
+      "8 g of sulphur dioxide",
+      "56 g of carbon monoxide"
+    ],
+    "answer": 2,
+    "explanation": "2.8 L at STP is 0.125 mol; 8 g SO2 (molar mass 64) is 0.125 mol.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t25-522i-2025.pdf"
+  },
+  {
+    "id": "chem-052",
+    "question": "A salt solution which gives a reddish-brown precipitate with NaOH and a white precipitate with BaCl2 solution is:",
+    "options": [
+      "CuSO4",
+      "Ca(NO3)2",
+      "Fe2(SO4)3",
+      "FeCl3"
+    ],
+    "answer": 2,
+    "explanation": "Fe3+ gives a reddish-brown precipitate with NaOH, and sulphate gives a white precipitate with BaCl2.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t25-522i-2025.pdf"
+  },
+  {
+    "id": "chem-053",
+    "question": "An alkane with molecular mass 44 is:",
+    "options": [
+      "CH4",
+      "C3H8",
+      "C4H10",
+      "C2H6"
+    ],
+    "answer": 1,
+    "explanation": "C3H8 has molecular mass 44 and is an alkane.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t25-522i-2025.pdf"
+  },
+  {
+    "id": "chem-054",
+    "question": "Which gas is evolved when ammonia gas is passed over buff yellow PbO?",
+    "options": [
+      "N2O",
+      "NO",
+      "N2",
+      "NO2"
+    ],
+    "answer": 2,
+    "explanation": "Ammonia reduces lead(II) oxide to lead and is itself oxidised to nitrogen gas.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t25-522i-2025.pdf"
+  },
+  {
+    "id": "chem-055",
+    "question": "Three different solutions X (sodium chloride solution), Y (acetic acid) and Z (sugar solution) were used for electrolysis by a student. When the circuit was completed, he noticed that the bulb glowed in the electrolytic cell containing:",
+    "options": [
+      "X & Y",
+      "Y & Z",
+      "Z & X",
+      "X, Y & Z"
+    ],
+    "answer": 0,
+    "explanation": "Sodium chloride and acetic acid are electrolytes and conduct electricity; sugar solution is a non-electrolyte.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t25-522i-2025.pdf"
+  },
+  {
+    "id": "chem-056",
+    "question": "An element X has an electronic configuration 2, 2. The compound formed when X combines with oxygen is most likely to be:",
+    "options": [
+      "a compound with a low melting point.",
+      "a gas that dissolves in water to form an electrolyte.",
+      "a good conductor in both solid and molten state.",
+      "an ionic solid."
+    ],
+    "answer": 3,
+    "explanation": "X is a metal with two valence electrons; its oxide is an ionic solid.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t25-522i-2025.pdf"
+  },
+  {
+    "id": "chem-057",
+    "question": "If an element has a low ionisation potential, it is most likely to be a:",
+    "options": [
+      "metal",
+      "non-metal",
+      "metalloid",
+      "inert gas"
+    ],
+    "answer": 0,
+    "explanation": "Metals have low ionisation potentials and tend to lose electrons easily.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t25-522i-2025.pdf"
+  },
+  {
+    "id": "chem-058",
+    "question": "A non-metal which reacts with concentrated sulphuric acid to form two gases which turn lime water milky is:",
+    "options": [
+      "Sulphur",
+      "Carbon",
+      "Oxygen",
+      "Nitrogen"
+    ],
+    "answer": 1,
+    "explanation": "Carbon reacts with concentrated sulphuric acid to form CO2 and SO2, both of which can turn lime water milky.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t26-522-2026.pdf"
+  },
+  {
+    "id": "chem-059",
+    "question": "Which of the following element pairs will form an ionic bond?",
+    "options": [
+      "Elements of Group 1 & Group 2",
+      "Elements of Group 14 & Group 16",
+      "Elements of Group 2 & Group 17",
+      "Elements of Group 15 & Group 18"
+    ],
+    "answer": 2,
+    "explanation": "A Group 2 metal and a Group 17 halogen form an ionic bond by electron transfer.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t26-522-2026.pdf"
+  },
+  {
+    "id": "chem-060",
+    "question": "The electronic configuration of an element is 2,8,2. The hydroxide of this element can produce how many hydroxyl ions per molecule?",
+    "options": [
+      "3",
+      "2",
+      "1",
+      "0"
+    ],
+    "answer": 1,
+    "explanation": "The element is magnesium; its hydroxide is Mg(OH)2, which gives two hydroxyl ions per formula unit.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t26-522-2026.pdf"
+  },
+  {
+    "id": "chem-061",
+    "question": "With respect to the electrolysis of copper(II) sulphate solution using copper electrodes, which statement is correct?",
+    "options": [
+      "Copper metal is deposited at the negative electrode.",
+      "Oxygen gas is produced at the positive electrode.",
+      "The positive electrode increases in mass.",
+      "The negative electrode decreases in mass."
+    ],
+    "answer": 0,
+    "explanation": "Copper ions are reduced and deposited at the cathode (negative electrode).",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t26-522-2026.pdf"
+  },
+  {
+    "id": "chem-062",
+    "question": "Identify the equation that shows the reaction of ethane with chlorine in the presence of ultraviolet light.",
+    "options": [
+      "C2H6 + Cl2 -> C2H6Cl2",
+      "C2H6 + Cl2 -> C2H4Cl2 + H2",
+      "C2H6 + Cl2 -> C2H5Cl + HCl",
+      "C2H6 + Cl2 -> 2CH3Cl"
+    ],
+    "answer": 2,
+    "explanation": "Alkanes undergo substitution with chlorine in UV light, giving chloroethane and HCl.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t26-522-2026.pdf"
+  },
+  {
+    "id": "chem-063",
+    "question": "The method which cannot be used for the preparation of copper salts is:",
+    "options": [
+      "bases",
+      "carbonates",
+      "metals",
+      "sulphites"
+    ],
+    "answer": 2,
+    "explanation": "Copper is below hydrogen in the reactivity series, so it does not displace hydrogen from dilute acids; copper salts are usually made from oxides/carbonates/hydroxides.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t26-522-2026.pdf"
+  },
+  {
+    "id": "chem-064",
+    "question": "The compound that has the highest melting point amongst the following is:",
+    "options": [
+      "Methane",
+      "Sodium chloride",
+      "Ammonia",
+      "Ethanol"
+    ],
+    "answer": 1,
+    "explanation": "Sodium chloride is an ionic solid with strong electrostatic forces, so it has the highest melting point.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t26-522-2026.pdf"
+  },
+  {
+    "id": "chem-065",
+    "question": "Assertion (A): Dilute Sulphuric acid is a stronger electrolyte than concentrated Sulphuric acid. Reason (R): Dilute Sulphuric acid has a higher concentration of mobile ions.",
+    "options": [
+      "(A) is true but (R) is false.",
+      "(A) is false but (R) is true.",
+      "Both (A) and (R) are true and (R) is the correct explanation of (A).",
+      "Both (A) and (R) are true, but (R) is not the correct explanation of (A)."
+    ],
+    "answer": 2,
+    "explanation": "Dilute sulphuric acid ionises more fully, giving more mobile ions, so it is a stronger electrolyte.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t26-522-2026.pdf"
+  },
+  {
+    "id": "chem-066",
+    "question": "What volume of carbon dioxide is produced at STP when 5 litres of propane is burnt completely according to C3H8 + 5O2 -> 3CO2 + 4H2O?",
+    "options": [
+      "10 litres",
+      "15 litres",
+      "20 litres",
+      "25 litres"
+    ],
+    "answer": 1,
+    "explanation": "One volume of propane gives three volumes of CO2, so 5 L propane gives 15 L CO2.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t26-522-2026.pdf"
+  },
+  {
+    "id": "chem-067",
+    "question": "An unsaturated hydrocarbon with three atoms of carbon and six atoms of hydrogen is:",
+    "options": [
+      "propyne",
+      "propane",
+      "propene",
+      "propanol"
+    ],
+    "answer": 2,
+    "explanation": "C3H6 is propene, an unsaturated hydrocarbon with a double bond.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t26-522-2026.pdf"
+  },
+  {
+    "id": "chem-068",
+    "question": "In the electrolysis of molten aluminium oxide for extraction of aluminium, the following reactions take place: 1. Al3+ + 3e- -> Al; 2. 2O2- -> O2 + 4e-; 3. C + O2 -> CO2; 4. Al2O3 -> 2Al3+ + 3O2-. The reaction that takes place at the negative electrode is:",
+    "options": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "answer": 0,
+    "explanation": "At the negative electrode (cathode), Al3+ ions are reduced to aluminium metal.",
+    "verified": false,
+    "source": "icse-class-10-chemistry-science-p2-t26-522-2026.pdf"
+  },
+  {
+    "id": "chem-069",
+    "question": "A weak electrolyte is:",
+    "options": [
+      "Alcohol",
+      "Potassium hydroxide",
+      "Ammonium hydroxide",
+      "Glucose"
+    ],
+    "answer": 2,
+    "explanation": "Ammonium hydroxide is a weak base and ionises only partially in water.",
+    "verified": false,
+    "source": "icse-class-10-model-paper-chemistry-science-220922-2023.pdf"
+  },
+  {
+    "id": "chem-071",
+    "question": "The main components of bronze are:",
+    "options": [
+      "Copper and tin",
+      "Copper and iron",
+      "Copper and lead",
+      "Copper and zinc"
+    ],
+    "answer": 0,
+    "explanation": "Bronze is mainly an alloy of copper and tin.",
+    "verified": false,
+    "source": "icse-class-10-model-paper-chemistry-science-220922-2023.pdf"
+  },
+  {
+    "id": "chem-072",
+    "question": "A polar covalent compound is:",
+    "options": [
+      "Methane",
+      "Ammonia",
+      "Nitrogen",
+      "Chlorine"
+    ],
+    "answer": 1,
+    "explanation": "Ammonia has polar N-H bonds and an unsymmetrical shape, so it is a polar covalent molecule.",
+    "verified": false,
+    "source": "icse-class-10-model-paper-chemistry-science-220922-2023.pdf"
+  },
+  {
+    "id": "chem-073",
+    "question": "An acid which has two replaceable hydrogen ions:",
+    "options": [
+      "Acetic acid",
+      "Hydrochloric acid",
+      "Phosphoric acid",
+      "Carbonic acid"
+    ],
+    "answer": 3,
+    "explanation": "Carbonic acid, H2CO3, is dibasic and has two replaceable hydrogen ions.",
+    "verified": false,
+    "source": "icse-class-10-model-paper-chemistry-science-220922-2023.pdf"
+  },
+  {
+    "id": "chem-074",
+    "question": "The hydroxide which is soluble in excess of NaOH is:",
+    "options": [
+      "Ferric hydroxide",
+      "Lead hydroxide",
+      "Copper hydroxide",
+      "Calcium hydroxide"
+    ],
+    "answer": 1,
+    "explanation": "Lead hydroxide is amphoteric and dissolves in excess sodium hydroxide to form plumbite.",
+    "verified": false,
+    "source": "icse-class-10-model-paper-chemistry-science-220922-2023.pdf"
+  },
+  {
+    "id": "chem-075",
+    "question": "If the RMM of carbon dioxide is 44, then its vapour density is:",
+    "options": [
+      "22",
+      "32",
+      "44",
+      "88"
+    ],
+    "answer": 0,
+    "explanation": "Vapour density = molecular mass / 2 = 44 / 2 = 22.",
+    "verified": false,
+    "source": "icse-class-10-model-paper-chemistry-science-220922-2023.pdf"
+  },
+  {
+    "id": "chem-076",
+    "question": "Drying agent used to dry Hydrogen chloride gas:",
+    "options": [
+      "Concentrated Sulphuric acid",
+      "Calcium oxide",
+      "Sulphurous acid",
+      "Calcium hydroxide"
+    ],
+    "answer": 0,
+    "explanation": "Concentrated sulphuric acid is used because it does not react with hydrogen chloride.",
+    "verified": false,
+    "source": "icse-class-10-model-paper-chemistry-science-220922-2023.pdf"
+  },
+  {
+    "id": "chem-077",
+    "question": "The catalyst used in the Haber's Process is:",
+    "options": [
+      "Molybdenum",
+      "Platinum",
+      "Nickel",
+      "Finely divided Iron"
+    ],
+    "answer": 3,
+    "explanation": "Haber's process uses finely divided iron as the catalyst.",
+    "verified": false,
+    "source": "icse-class-10-model-paper-chemistry-science-220922-2023.pdf"
+  },
+  {
+    "id": "chem-078",
+    "question": "An aqueous compound which turns colourless phenolphthalein to pink:",
+    "options": [
+      "Ammonium hydroxide",
+      "Nitric acid",
+      "Anhydrous calcium chloride",
+      "Sulphuric acid"
+    ],
+    "answer": 0,
+    "explanation": "Ammonium hydroxide is alkaline and turns phenolphthalein pink.",
+    "verified": false,
+    "source": "icse-class-10-model-paper-chemistry-science-220922-2023.pdf"
+  },
+  {
+    "id": "chem-079",
+    "question": "The gas formed when carbon reacts with concentrated sulphuric acid:",
+    "options": [
+      "Hydrogen",
+      "Sulphur trioxide",
+      "Sulphur dioxide",
+      "Oxygen"
+    ],
+    "answer": 2,
+    "explanation": "Carbon reduces concentrated sulphuric acid, producing sulphur dioxide gas.",
+    "verified": false,
+    "source": "icse-class-10-model-paper-chemistry-science-220922-2023.pdf"
+  },
+  {
+    "id": "chem-080",
+    "question": "The organic compound prepared when Ethanol undergoes dehydration:",
+    "options": [
+      "Methane",
+      "Ethane",
+      "Acetylene",
+      "Ethene"
+    ],
+    "answer": 3,
+    "explanation": "Dehydration of ethanol with concentrated sulphuric acid gives ethene.",
+    "verified": false,
+    "source": "icse-class-10-model-paper-chemistry-science-220922-2023.pdf"
+  },
+  {
+    "id": "chem-081",
+    "question": "The IUPAC name of methyl acetylene is:",
+    "options": [
+      "Propyne",
+      "Ethene",
+      "Propane",
+      "Ethyne"
+    ],
+    "answer": 0,
+    "explanation": "Methyl acetylene has three carbon atoms and a triple bond, so its IUPAC name is propyne.",
+    "verified": false,
+    "source": "icse-class-10-model-paper-chemistry-science-220922-2023.pdf"
+  },
+  {
+    "id": "chem-082",
+    "question": "The product formed at the cathode in electroplating of an article with Nickel is:",
+    "options": [
+      "Hydrogen gas",
+      "Nickel ions",
+      "Nickel atoms",
+      "Oxygen gas"
+    ],
+    "answer": 2,
+    "explanation": "Nickel ions are reduced at the cathode and deposit as nickel atoms.",
+    "verified": false,
+    "source": "icse-class-10-model-paper-chemistry-science-220922-2023.pdf"
+  },
+  {
+    "id": "chem-083",
+    "question": "An alkali metal found in period 3 and group 1 is:",
+    "options": [
+      "Magnesium",
+      "Lithium",
+      "Sodium",
+      "Potassium"
+    ],
+    "answer": 2,
+    "explanation": "Sodium is in group 1 and period 3.",
+    "verified": false,
+    "source": "icse-class-10-model-paper-chemistry-science-220922-2023.pdf"
+  },
+  {
+    "id": "chem-084",
+    "question": "Elements belonging to the same group have similar properties, because:",
+    "options": [
+      "they have similar electronic configuration in valence shell.",
+      "their atomic number increase as we move down a group.",
+      "they are all metallic or non-metallic elements.",
+      "their number of electrons increase steadily."
+    ],
+    "answer": 0,
+    "explanation": "Similar valence-shell electronic configuration gives elements in the same group similar chemical properties.",
+    "verified": false,
+    "source": "icse-class-10-specimen-chemistry-300925-2025.pdf"
+  },
+  {
+    "id": "chem-085",
+    "question": "With the increase in atomic number in a period:",
+    "options": [
+      "the metallic character increases.",
+      "the metallic character decreases.",
+      "the chemical reactivity decreases.",
+      "the chemical reactivity increases."
+    ],
+    "answer": 1,
+    "explanation": "Across a period, metallic character decreases as elements become more non-metallic.",
+    "verified": false,
+    "source": "icse-class-10-specimen-chemistry-300925-2025.pdf"
+  },
+  {
+    "id": "chem-086",
+    "question": "Amongst lithium, sodium and potassium the atomic size of:",
+    "options": [
+      "All of them is same.",
+      "Sodium has largest atomic size.",
+      "Lithium has the largest atomic size.",
+      "Potassium has the largest atomic size."
+    ],
+    "answer": 3,
+    "explanation": "Atomic size increases down a group, so potassium has the largest atomic size among Li, Na, and K.",
+    "verified": false,
+    "source": "icse-class-10-specimen-chemistry-300925-2025.pdf"
+  },
+  {
+    "id": "chem-087",
+    "question": "On moving horizontally across a period, the number of electrons in outermost shell increase from:",
+    "options": [
+      "2 to 8",
+      "1 to 8",
+      "1 to 18",
+      "2 to 18"
+    ],
+    "answer": 1,
+    "explanation": "Across a period, valence electrons increase from 1 to 8 for the main-group elements.",
+    "verified": false,
+    "source": "icse-class-10-specimen-chemistry-300925-2025.pdf"
+  },
+  {
+    "id": "chem-088",
+    "question": "Magnesium atom loses 2 electrons in its valence shell to acquire the stable configuration of nearest noble gas:",
+    "options": [
+      "Neon",
+      "Argon",
+      "Helium",
+      "None of these"
+    ],
+    "answer": 0,
+    "explanation": "Mg (2,8,2) loses two electrons to attain the 2,8 configuration of neon.",
+    "verified": false,
+    "source": "icse-class-10-specimen-chemistry-300925-2025.pdf"
+  },
+  {
+    "id": "chem-089",
+    "question": "A compound of two non-metals which dissolves in water to form an alkali is:",
+    "options": [
+      "methane",
+      "carbon dioxide",
+      "Phosphorous pentaoxide",
+      "Ammonia"
+    ],
+    "answer": 3,
+    "explanation": "Ammonia dissolves in water to form ammonium hydroxide, which is alkaline.",
+    "verified": false,
+    "source": "icse-class-10-specimen-chemistry-300925-2025.pdf"
+  },
+  {
+    "id": "chem-090",
+    "question": "One twelfth mass of carbon atom 6e2 is called:",
+    "options": [
+      "Atomic mass",
+      "Atomic number",
+      "Atomic mass unit",
+      "All of these"
+    ],
+    "answer": 2,
+    "explanation": "One-twelfth of the mass of a carbon-12 atom is defined as the atomic mass unit.",
+    "verified": false,
+    "source": "icse-class-10-specimen-chemistry-300925-2025.pdf"
+  },
+  {
+    "id": "chem-091",
+    "question": "The electrolyte used during silver plating is:",
+    "options": [
+      "silver nitrate solution",
+      "fused silver chloride",
+      "sodium argento cyanide solution",
+      "all of these"
+    ],
+    "answer": 2,
+    "explanation": "Silver plating uses sodium argento cyanide as the electrolyte.",
+    "verified": false,
+    "source": "icse-class-10-specimen-chemistry-300925-2025.pdf"
+  },
+  {
+    "id": "chem-092",
+    "question": "Non-metals are generally:",
+    "options": [
+      "oxidizing agents",
+      "reducing agents",
+      "bleaching agents",
+      "neutral in nature"
+    ],
+    "answer": 0,
+    "explanation": "Non-metals tend to gain electrons, so they generally act as oxidizing agents.",
+    "verified": false,
+    "source": "icse-class-10-specimen-chemistry-300925-2025.pdf"
+  },
+  {
+    "id": "chem-093",
+    "question": "A strong electrolyte from the following is:",
+    "options": [
+      "Acetic acid",
+      "Oxalic acid",
+      "Ammonium hydroxide",
+      "Sodium hydroxide"
+    ],
+    "answer": 3,
+    "explanation": "Sodium hydroxide is a strong base and dissociates completely in water.",
+    "verified": false,
+    "source": "icse-class-10-specimen-chemistry-300925-2025.pdf"
+  },
+  {
+    "id": "chem-094",
+    "question": "The main components of brass are:",
+    "options": [
+      "Copper and zinc",
+      "Copper and lead",
+      "Copper and tin",
+      "Copper and iron"
+    ],
+    "answer": 0,
+    "explanation": "Brass is an alloy mainly of copper and zinc.",
+    "verified": false,
+    "source": "icse-class-10-specimen-chemistry-300925-2025.pdf"
+  },
+  {
+    "id": "chem-095",
+    "question": "The drying agent used to dry NH3 is:",
+    "options": [
+      "P2O5",
+      "conc. H2SO4",
+      "CaCl2",
+      "CaO"
+    ],
+    "answer": 3,
+    "explanation": "Calcium oxide is basic and is used to dry ammonia; the other agents react with ammonia.",
+    "verified": false,
+    "source": "icse-class-10-specimen-chemistry-300925-2025.pdf"
+  },
+  {
+    "id": "chem-096",
+    "question": "The general formula of alkynes is:",
+    "options": [
+      "CnH2n-2",
+      "CnH2n+2",
+      "CnH2n",
+      "CnH2n+2O"
+    ],
+    "answer": 0,
+    "explanation": "Alkynes contain a carbon-carbon triple bond and have the general formula CnH2n-2.",
+    "verified": false,
+    "source": "icse-class-10-specimen-chemistry-300925-2025.pdf"
+  }
+]
