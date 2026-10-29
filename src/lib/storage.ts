@@ -1,3 +1,5 @@
+import { DAILY_GOAL_OPTIONS } from './config';
+import { defaultGameState, type GameState } from './gamification';
 import type { Subject } from './types';
 
 interface Stats {
@@ -140,4 +142,101 @@ export function recordAnswer(subject: Subject, correct: boolean): void {
   if (correct) stats.correct += 1;
 
   writeRaw(statsKey(subject), JSON.stringify(stats));
+}
+
+const GAME_KEY = 'icse:game:v1';
+
+function toDay(value: unknown): string {
+  return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : '';
+}
+
+function parseGame(raw: string): GameState {
+  const fallback = defaultGameState();
+
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    if (typeof parsed !== 'object' || parsed === null) return fallback;
+
+    const record = parsed as Record<string, unknown>;
+    // Unknown versions are migrated to defaults rather than trusted.
+    if (record.v !== 1) return fallback;
+
+    const streakRaw =
+      typeof record.streak === 'object' && record.streak !== null
+        ? (record.streak as Record<string, unknown>)
+        : {};
+    const dailyRaw =
+      typeof record.daily === 'object' && record.daily !== null
+        ? (record.daily as Record<string, unknown>)
+        : {};
+
+    const dailyGoal = DAILY_GOAL_OPTIONS.includes(record.dailyGoal as never)
+      ? (record.dailyGoal as GameState['dailyGoal'])
+      : fallback.dailyGoal;
+
+    const badges: Record<string, string> = {};
+    if (typeof record.badges === 'object' && record.badges !== null) {
+      for (const [key, value] of Object.entries(record.badges as Record<string, unknown>)) {
+        if (typeof value === 'string') badges[key] = value;
+      }
+    }
+
+    const boxes: GameState['boxes'] = {};
+    if (typeof record.boxes === 'object' && record.boxes !== null) {
+      for (const [key, value] of Object.entries(record.boxes as Record<string, unknown>)) {
+        if (value === 0 || value === 1 || value === 2 || value === 3) boxes[key] = value;
+      }
+    }
+
+    const missed: GameState['missed'] = {};
+    if (typeof record.missed === 'object' && record.missed !== null) {
+      for (const [key, value] of Object.entries(record.missed as Record<string, unknown>)) {
+        if (value === true) missed[key] = true;
+      }
+    }
+
+    const counters: Record<string, number> = {};
+    if (typeof record.counters === 'object' && record.counters !== null) {
+      for (const [key, value] of Object.entries(record.counters as Record<string, unknown>)) {
+        counters[key] = toCount(value);
+      }
+    }
+
+    return {
+      v: 1,
+      xp: toCount(record.xp),
+      streak: {
+        count: toCount(streakRaw.count),
+        lastDay: toDay(streakRaw.lastDay),
+        freezes: Math.min(2, toCount(streakRaw.freezes)),
+        best: toCount(streakRaw.best),
+      },
+      dailyGoal,
+      daily: {
+        day: toDay(dailyRaw.day),
+        answered: toCount(dailyRaw.answered),
+      },
+      badges,
+      boxes,
+      missed,
+      counters,
+    };
+  } catch {
+    return fallback;
+  }
+}
+
+export function getGame(): GameState {
+  const raw = readRaw(GAME_KEY);
+  return raw === null ? defaultGameState() : parseGame(raw);
+}
+
+/** Persist game state. Callers own the pure state; this only writes it. */
+export function saveGame(state: GameState): void {
+  writeRaw(GAME_KEY, JSON.stringify(state));
+}
+
+/** Reset game progress only. Seen ids and stats are deliberately untouched. */
+export function resetGame(): void {
+  removeRaw(GAME_KEY);
 }

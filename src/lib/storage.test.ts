@@ -164,6 +164,54 @@ describe('storage fallback', () => {
   });
 });
 
+describe('game storage', () => {
+  it('returns defaults for malformed or unknown-version game JSON', () => {
+    const fake = new FakeStorage();
+    vi.stubGlobal('localStorage', fake);
+
+    expect(storage.getGame().v).toBe(1);
+
+    fake.setItem('icse:game:v1', '{not json');
+    expect(storage.getGame()).toEqual(expect.objectContaining({ v: 1, xp: 0 }));
+
+    fake.setItem('icse:game:v1', JSON.stringify({ v: 99, xp: 999 }));
+    expect(storage.getGame()).toEqual(expect.objectContaining({ v: 1, xp: 0 }));
+  });
+
+  it('round-trips game state and resets it without touching seen or stats', () => {
+    const fake = new FakeStorage();
+    vi.stubGlobal('localStorage', fake);
+
+    storage.markSeen('maths', 'm1');
+    storage.recordAnswer('maths', true);
+    const state = storage.getGame();
+    state.xp = 42;
+    state.dailyGoal = 20;
+    storage.saveGame(state);
+
+    expect(storage.getGame().xp).toBe(42);
+    expect(storage.getGame().dailyGoal).toBe(20);
+
+    storage.resetGame();
+
+    expect(storage.getGame().xp).toBe(0);
+    expect(storage.getSeen('maths')).toEqual(['m1']);
+    expect(storage.getStats('maths')).toEqual({ attempted: 1, correct: 1 });
+  });
+
+  it('keeps game state in memory when localStorage throws', () => {
+    vi.stubGlobal('localStorage', unavailableStorage());
+
+    const state = storage.getGame();
+    state.xp = 7;
+    storage.saveGame(state);
+
+    expect(storage.getGame().xp).toBe(7);
+    storage.resetGame();
+    expect(storage.getGame().xp).toBe(0);
+  });
+});
+
 describe('sessions across storage', () => {
   it('never repeats questions after markSeen between consecutive sessions', () => {
     vi.stubGlobal('localStorage', new FakeStorage());
