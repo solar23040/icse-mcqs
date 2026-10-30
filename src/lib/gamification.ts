@@ -57,6 +57,8 @@ export interface SessionInput {
   correct: number;
   /** Local day as YYYY-MM-DD. */
   today: string;
+  /** Optional: how many questions in the subject are still unseen after this session. */
+  unseenRemaining?: number;
 }
 
 export interface GameResult {
@@ -206,7 +208,7 @@ function resetDailyIfNeeded(state: GameState, today: string): GameState {
 }
 
 export function applyAnswer(state: GameState, input: AnswerInput): GameResult {
-  const { questionId, correct, combo, today } = input;
+  const { questionId, subject, correct, combo, today } = input;
   const events: GameEvent[] = [];
 
   let next = cloneState(resetDailyIfNeeded(state, today));
@@ -249,11 +251,19 @@ export function applyAnswer(state: GameState, input: AnswerInput): GameResult {
     events.push({ type: 'goalReached' });
   }
 
+  next.counters.answered = (next.counters.answered ?? 0) + 1;
+  if (correct) next.counters.correct = (next.counters.correct ?? 0) + 1;
+  next.counters[`subject:${subject}`] = (next.counters[`subject:${subject}`] ?? 0) + 1;
+  if (masteredNow && wasMissed) {
+    next.counters.comeback = (next.counters.comeback ?? 0) + 1;
+  }
+
+  awardBadges(next, today, events);
   return { state: next, events };
 }
 
 export function applySession(state: GameState, input: SessionInput): GameResult {
-  const { total, correct, today } = input;
+  const { subject, total, correct, today, unseenRemaining } = input;
   const events: GameEvent[] = [];
 
   let next = cloneState(resetDailyIfNeeded(state, today));
@@ -267,6 +277,13 @@ export function applySession(state: GameState, input: SessionInput): GameResult 
     if (newLevel > oldLevel) events.push({ type: 'levelUp', level: newLevel });
 
     next.counters.sessions = (next.counters.sessions ?? 0) + 1;
+    next.counters[`subject:${subject}`] = (next.counters[`subject:${subject}`] ?? 0) + 1;
+    if (total >= 10 && correct === total) {
+      next.counters.perfectSessions = (next.counters.perfectSessions ?? 0) + 1;
+    }
+    if (unseenRemaining === 0) {
+      next.counters[`sweep:${subject}`] = 1;
+    }
 
     const beforeStreak = next.streak.count;
     next = addStreakDay(next, today);
@@ -275,6 +292,7 @@ export function applySession(state: GameState, input: SessionInput): GameResult 
     }
   }
 
+  awardBadges(next, today, events);
   return { state: next, events };
 }
 
@@ -301,6 +319,46 @@ export function rankFor(percent: number): Rank {
   return 'Topper';
 }
 
-export function evaluateBadges(_state: GameState): string[] {
-  return [];
+const LIVE_SUBJECTS = [
+  'history',
+  'economics',
+  'geography',
+  'maths',
+  'english-lit',
+  'physics',
+  'chemistry',
+  'physical-education',
+];
+
+function awardBadges(state: GameState, today: string, events: GameEvent[]): void {
+  for (const id of evaluateBadges(state)) {
+    state.badges[id] = today;
+    events.push({ type: 'badge', id });
+  }
+}
+
+export function evaluateBadges(state: GameState): string[] {
+  const counters = state.counters ?? {};
+  const earned: string[] = [];
+  const add = (id: string, condition: boolean): void => {
+    if (condition && !state.badges[id]) earned.push(id);
+  };
+
+  add('first-steps', (counters.answered ?? 0) >= 10);
+  add('perfect-ten', (counters.perfectSessions ?? 0) >= 1);
+  add('week-warrior', Math.max(state.streak.best, state.streak.count) >= 7);
+  add(
+    'subject-sweep',
+    Object.keys(counters).some(
+      (key) =>
+        (key.startsWith('sweep:') && (counters[key] ?? 0) > 0) ||
+        key === 'subject-sweep' ||
+        key === 'subjectSweep',
+    ),
+  );
+  add('comeback', (counters.comeback ?? 0) >= 5);
+  add('all-rounder', LIVE_SUBJECTS.every((subject) => (counters[`subject:${subject}`] ?? 0) > 0));
+  add('century', (counters.correct ?? 0) >= 100);
+
+  return earned;
 }

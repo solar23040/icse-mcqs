@@ -12,6 +12,7 @@ const questionIds = Object.fromEntries(
     (modules[`../data/${slug}.json`] ?? []).map((question) => question.id),
   ]),
 );
+const allQuestionIds = Object.values(questionIds).flat();
 ---
 
 <Base>
@@ -24,7 +25,7 @@ const questionIds = Object.fromEntries(
     </p>
   </section>
 
-  <HomeGamePanel client:load />
+  <HomeGamePanel client:load questionIds={allQuestionIds} />
 
   <SubjectGrid client:load subjects={SUBJECTS} questionIds={questionIds} />
 

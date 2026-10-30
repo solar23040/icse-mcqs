@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { buildSession, shuffle } from './engine';
+import { buildDailyChallenge, buildSession, seededShuffle, shuffle, sprintScore } from './engine';
 import type { Question } from './types';
 
 function makeQuestion(id: string, overrides: Partial<Question> = {}): Question {
@@ -207,5 +207,39 @@ describe('review mode', () => {
 
     expect(ids(defaultResult.questions)).toEqual(ids(explicit.questions));
     expect(ids(defaultResult.questions).sort()).toEqual(['q5', 'q6']);
+  });
+});
+
+describe('seeded shuffle and daily challenge', () => {
+  const pool = makePool(4);
+
+  it('is deterministic for the same seed', () => {
+    const first = seededShuffle(pool, '2026-01-01');
+    const second = seededShuffle(pool, '2026-01-01');
+    expect(first.map((question) => question.id)).toEqual(second.map((question) => question.id));
+  });
+
+  it('changes order for a different seed', () => {
+    const first = seededShuffle(pool, '2026-01-01').map((question) => question.id);
+    const second = seededShuffle(pool, '2026-01-02').map((question) => question.id);
+    expect(first).not.toEqual(second);
+  });
+
+  it('builds the same daily challenge for the same day', () => {
+    const pools = { maths: makePool(8), physics: makePool(8) };
+    const first = buildDailyChallenge(pools, '2026-01-01');
+    const second = buildDailyChallenge(pools, '2026-01-01');
+    expect(first.map((question) => question.id)).toEqual(second.map((question) => question.id));
+    expect(first).toHaveLength(10);
+    expect(first.questions.map((question) => question.id)).toEqual(first.map((question) => question.id));
+  });
+});
+
+describe('sprint score', () => {
+  it('rewards correct answers and speed, penalises wrong ones', () => {
+    expect(sprintScore({ correct: 0, wrong: 0, seconds: 60 })).toBe(0);
+    expect(sprintScore({ correct: 5, wrong: 0, seconds: 60 })).toBe(50);
+    expect(sprintScore({ correct: 5, wrong: 2, seconds: 30 })).toBe(50 - 10 + 30);
+    expect(sprintScore({ correct: 0, wrong: 10, seconds: 10 })).toBe(0);
   });
 });

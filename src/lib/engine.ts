@@ -88,3 +88,126 @@ export function buildSession(
     poolExhausted: candidates.length === 0,
   };
 }
+
+export type DailyChallengeQuestion = SessionQuestion & { subject: string };
+
+function hashSeed(seed: string): number {
+  let hash = 2166136261;
+  for (let index = 0; index < seed.length; index += 1) {
+    hash ^= seed.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+
+/** Deterministic PRNG seeded from a string. */
+export function seededRng(seed: string): () => number {
+  let state = hashSeed(seed) || 1;
+  return () => {
+    state = (state + 0x6d2b79f5) >>> 0;
+    let t = Math.imul(state ^ (state >>> 15), 1 | state);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+export function seededShuffle<T>(items: T[], seed: string): T[];
+export function seededShuffle(seed: string, items: T[]): T[];
+export function seededShuffle(seed: string): <T>(items: T[]) => T[];
+export function seededShuffle<T>(
+  first: T[] | string,
+  second?: string | T[],
+): T[] | ((items: T[]) => T[]) {
+  if (typeof first === 'string') {
+    if (Array.isArray(second)) return seededShuffle(second, first);
+    return (items: T[]) => seededShuffle(items, first);
+  }
+
+  if (Array.isArray(first)) {
+    const seed = typeof second === 'string' ? second : '';
+    return shuffle(first, seededRng(seed));
+  }
+
+  throw new Error('seededShuffle expects an array and a seed');
+}
+
+export interface SubjectPool {
+  subject: string;
+  questions: Question[];
+}
+
+function normalisePools(allSubjects: unknown): SubjectPool[] {
+  if (Array.isArray(allSubjects)) {
+    if (allSubjects.length === 0) return [];
+    if (Array.isArray(allSubjects[0])) {
+      return (allSubjects as Question[][]).map((questions, index) => ({
+        subject: `subject-${index}`,
+        questions,
+      }));
+    }
+    if (typeof allSubjects[0] === 'object' && allSubjects[0] !== null && 'questions' in allSubjects[0]) {
+      return (allSubjects as SubjectPool[]).map((entry) => ({
+        subject: entry.subject,
+        questions: entry.questions,
+      }));
+    }
+    return [{ subject: 'mixed', questions: allSubjects as Question[] }];
+  }
+
+  if (typeof allSubjects === 'object' && allSubjects !== null) {
+    return Object.entries(allSubjects as Record<string, Question[]>).map(([subject, questions]) => ({
+      subject,
+      questions: Array.isArray(questions) ? questions : [],
+    }));
+  }
+
+  return [];
+}
+
+export function buildDailyChallenge(
+  allSubjects: unknown,
+  day: string,
+  length = 10,
+): DailyChallengeQuestion[] & { questions: DailyChallengeQuestion[] } {
+  const pools = normalisePools(allSubjects);
+  const all = pools.flatMap((pool) =>
+    pool.questions.map((question) => ({ question, subject: pool.subject })),
+  );
+  const rng = seededRng(day);
+  const shuffled = shuffle(all, rng);
+  const chosen = shuffled.slice(0, Math.max(0, length));
+
+  const result = chosen.map(({ question, subject }) => ({
+    ...toSessionQuestion(question, rng),
+    subject,
+  })) as DailyChallengeQuestion[] & { questions: DailyChallengeQuestion[] };
+
+  Object.defineProperty(result, 'questions', {
+    value: result,
+    enumerable: true,
+    writable: false,
+  });
+  Object.defineProperty(result, 'day', {
+    value: day,
+    enumerable: true,
+    writable: false,
+  });
+
+  return result;
+}
+
+export function sprintScore({
+  correct,
+  wrong,
+  seconds,
+}: {
+  correct: number;
+  wrong: number;
+  seconds: number;
+}): number {
+  const safeCorrect = Math.max(0, Number.isFinite(correct) ? Math.trunc(correct) : 0);
+  const safeWrong = Math.max(0, Number.isFinite(wrong) ? Math.trunc(wrong) : 0);
+  const safeSeconds = Math.max(0, Number.isFinite(seconds) ? Math.trunc(seconds) : 0);
+  const speedBonus = Math.max(0, 60 - safeSeconds);
+  return Math.max(0, safeCorrect * 10 - safeWrong * 5 + speedBonus);
+}

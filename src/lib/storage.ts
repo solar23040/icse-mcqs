@@ -144,6 +144,17 @@ export function recordAnswer(subject: Subject, correct: boolean): void {
   writeRaw(statsKey(subject), JSON.stringify(stats));
 }
 
+export function saveSeen(subject: Subject, ids: readonly string[]): void {
+  writeRaw(seenKey(subject), JSON.stringify([...ids]));
+}
+
+export function saveStats(subject: Subject, stats: { attempted: number; correct: number }): void {
+  writeRaw(
+    statsKey(subject),
+    JSON.stringify({ attempted: Math.max(0, stats.attempted), correct: Math.max(0, stats.correct) }),
+  );
+}
+
 const GAME_KEY = 'icse:game:v1';
 
 function toDay(value: unknown): string {

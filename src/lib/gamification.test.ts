@@ -4,6 +4,7 @@ import {
   applyAnswer,
   applySession,
   defaultGameState,
+  evaluateBadges,
   levelFromXp,
   masteryPercent,
   rankFor,
@@ -391,5 +392,44 @@ describe('mastery and ranks', () => {
     expect(rankFor(74)).toBe('Scholar');
     expect(rankFor(75)).toBe('Topper');
     expect(rankFor(100)).toBe('Topper');
+  });
+});
+
+describe('badges', () => {
+  it('awards First Steps after ten answers', () => {
+    const state = defaultGameState();
+    state.counters.answered = 10;
+    expect(evaluateBadges(state)).toContain('first-steps');
+  });
+
+  it('awards Perfect Ten after a perfect session', () => {
+    const state = defaultGameState();
+    state.counters.perfectSessions = 1;
+    expect(evaluateBadges(state)).toContain('perfect-ten');
+  });
+
+  it('awards Week Warrior from a 7-day streak', () => {
+    const state = defaultGameState();
+    state.streak.best = 7;
+    expect(evaluateBadges(state)).toContain('week-warrior');
+  });
+
+  it('awards Comeback after five mastered missed questions', () => {
+    const state = defaultGameState();
+    state.counters.comeback = 5;
+    expect(evaluateBadges(state)).toContain('comeback');
+  });
+
+  it('awards Century at 100 correct answers', () => {
+    const state = defaultGameState();
+    state.counters.correct = 100;
+    expect(evaluateBadges(state)).toContain('century');
+  });
+
+  it('is idempotent and never re-awards a badge', () => {
+    const state = defaultGameState();
+    state.counters.answered = 10;
+    state.badges['first-steps'] = '2026-01-01';
+    expect(evaluateBadges(state)).not.toContain('first-steps');
   });
 });

@@ -295,6 +295,19 @@ Progress is stored locally under `icse:game:v1`. It is separate from seen questi
 | Freezes | Earn one every 7 streak days, maximum 2 |
 | Daily goal | 10, 20 or 30 answers, chosen on the home page |
 
+### Badges
+
+Badges are idempotent and never revoked: First Steps (10 answered), Perfect Ten (10/10 session), Week Warrior (7-day streak), Subject Sweep (all questions in a subject seen), Comeback (5 previously missed questions mastered), All-Rounder (attempted every live subject), Century (100 correct).
+
+### Challenge modes
+
+- **Daily Challenge**: ten mixed-subject questions, identical for every user on the same local day. Counts for XP the first time each day; replayable for fun afterwards.
+- **Timed Sprint**: sixty seconds, no pause on tab blur, score `correct * 10 - wrong * 5 + (60 - seconds)` (minimum 0). Time is announced at 30 and 10 seconds; it never auto-submits.
+
+### Progress export and import
+
+Progress can be exported as a base64 code containing game state, seen ids and stats, with a version and checksum. Tampered or unknown-version codes are rejected. Use the settings hook to wire export/import into the UI.
+
 ### Mastery and ranks
 
 Each question sits in a Leitner box. A wrong answer sends it to box 0 (and onto the review list); each correct answer moves it up one box, to a maximum of box 3. Box 3 questions count as mastered. Answering an already-mastered question gives only 2 XP, so repeating mastered questions cannot farm XP.

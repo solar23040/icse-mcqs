@@ -1,10 +1,12 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { DAILY_GOAL_OPTIONS, type DailyGoal } from '../../lib/config';
+  import { DAILY_GOAL_OPTIONS, EXAM_DATE, type DailyGoal } from '../../lib/config';
   import { localDay } from '../../lib/date';
   import { defaultGameState, type GameState } from '../../lib/gamification';
   import { getGame, resetGame, saveGame } from '../../lib/storage';
   import XpBar from './XpBar.svelte';
+
+  let { questionIds = [] }: { questionIds?: string[] } = $props();
 
   let game = $state<GameState>(defaultGameState());
   let today = $state('');
@@ -12,6 +14,12 @@
   let confirmingReset = $state(false);
 
   const answeredToday = $derived(game.daily.day === today ? game.daily.answered : 0);
+  const unseenCount = $derived(questionIds.filter((id) => game.boxes[id] === undefined).length);
+  const examDate = $derived(new Date(`${EXAM_DATE}T00:00:00`));
+  const daysUntilExam = $derived(
+    Math.ceil((examDate.getTime() - new Date(today === '' ? localDay(new Date()) : today).getTime()) / 86_400_000),
+  );
+  const perDay = $derived(daysUntilExam > 0 && unseenCount > 0 ? Math.ceil(unseenCount / daysUntilExam) : 0);
   const goal = $derived(game.dailyGoal);
   const goalPercent = $derived(Math.min(100, Math.round((answeredToday / goal) * 100)));
   const radius = 28;
@@ -124,6 +132,35 @@
       </div>
       <p class="mt-1 text-xs text-slate-600 dark:text-slate-300">Questions per day</p>
     </div>
+  </div>
+
+  {#if mounted && daysUntilExam > 0}
+    <div class="mt-5 rounded-2xl border border-indigo-200 bg-indigo-50/60 p-4 dark:border-indigo-500/40 dark:bg-indigo-950/30">
+      <p class="text-sm font-semibold text-indigo-800 dark:text-indigo-200">
+        {daysUntilExam} day{daysUntilExam === 1 ? '' : 's'} until the exam date.
+      </p>
+      {#if unseenCount > 0}
+        <p class="mt-1 text-sm text-indigo-700 dark:text-indigo-300">
+          {perDay} question{perDay === 1 ? '' : 's'} per day finishes all {unseenCount} unseen questions.
+        </p>
+      {:else}
+        <p class="mt-1 text-sm text-indigo-700 dark:text-indigo-300">
+          You have seen every question. Keep reviewing your weak spots.
+        </p>
+      {/if}
+    </div>
+  {/if}
+
+  <div class="mt-5 flex flex-wrap gap-2">
+    <a href="/daily" class="min-h-10 rounded-lg bg-indigo-600 px-4 text-sm font-semibold text-white transition-colors hover:bg-indigo-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900">
+      Daily challenge
+    </a>
+    <a href="/sprint" class="min-h-10 rounded-lg border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-800 transition-colors hover:border-indigo-400 hover:bg-indigo-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:border-indigo-400 dark:hover:bg-slate-700 dark:focus-visible:ring-offset-slate-900">
+      Timed sprint
+    </a>
+    <a href="/badges" class="min-h-10 rounded-lg border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-800 transition-colors hover:border-indigo-400 hover:bg-indigo-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:border-indigo-400 dark:hover:bg-slate-700 dark:focus-visible:ring-offset-slate-900">
+      Badges
+    </a>
   </div>
 
   <div class="mt-5 border-t border-slate-200 pt-4 dark:border-slate-800">

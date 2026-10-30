@@ -21,6 +21,7 @@
   import type { Question, SessionQuestion, Subject } from '../../lib/types';
   import ComboBadge from '../game/ComboBadge.svelte';
   import EventStack from '../game/EventStack.svelte';
+  import ShareCard from '../game/ShareCard.svelte';
   import XpBar from '../game/XpBar.svelte';
   import {
     isTypingTarget,
@@ -793,6 +794,16 @@
             </div>
           {/if}
         </div>
+      {/if}
+
+      {#if !retryMode}
+        <ShareCard
+          title={`${subject} practice`}
+          correct={correctCount}
+          total={session.length}
+          streak={game.streak.count}
+          level={levelFromXp(game.xp)}
+        />
       {/if}
 
       {#if poolExhausted}

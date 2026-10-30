@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import ChallengeQuiz from '../components/game/ChallengeQuiz.svelte';
+import { SUBJECTS } from '../lib/subjects';
+import type { Question } from '../lib/types';
+
+const modules = import.meta.glob<Question>('../data/*.json', { eager: true, import: 'default' });
+const pools = SUBJECTS.filter(({ placeholder }) => !placeholder).map(({ slug, title }) => ({
+  subject: slug,
+  title,
+  questions: modules[`../data/${slug}.json`] ?? []
+}));
+---
+<Base title="Daily challenge">
+  <ChallengeQuiz client:load mode="daily" pools={pools} />
+</Base>
