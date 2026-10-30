@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import HomeGamePanel from '../components/game/HomeGamePanel.svelte';
+import LeaderboardPanel from '../components/game/LeaderboardPanel.svelte';
 import SubjectGrid from '../components/shell/SubjectGrid.svelte';
 import { SUBJECTS } from '../lib/subjects';
 import type { Question } from '../lib/types';
@@ -26,6 +27,8 @@ const allQuestionIds = Object.values(questionIds).flat();
   </section>
 
   <HomeGamePanel client:load questionIds={allQuestionIds} />
+
+  <LeaderboardPanel client:load />
 
   <SubjectGrid client:load subjects={SUBJECTS} questionIds={questionIds} />
 

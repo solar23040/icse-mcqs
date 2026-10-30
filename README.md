@@ -304,6 +304,18 @@ Badges are idempotent and never revoked: First Steps (10 answered), Perfect Ten 
 - **Daily Challenge**: ten mixed-subject questions, identical for every user on the same local day. Counts for XP the first time each day; replayable for fun afterwards.
 - **Timed Sprint**: sixty seconds, no pause on tab blur, score `correct * 10 - wrong * 5 + (60 - seconds)` (minimum 0). Time is announced at 30 and 10 seconds; it never auto-submits.
 
+### Weekly leaderboard (optional)
+
+The home page has an optional weekly leaderboard. It is **off by default**; joining is a deliberate choice and can be undone with **Leave leaderboard**.
+
+- The server stores an anonymous random id in an `HttpOnly` cookie (`icse_lb_id`). No name, email or IP address is stored, and there is no free-text input.
+- Display names such as "Brave Owl 42" are generated server-side from the anonymous id.
+- Weekly XP is submitted to `api/leaderboard.ts`, which keeps a Redis sorted set per ISO week (`leaderboard:week:<YYYY-Www>`) with a 14-day TTL. The top 10 are public; each caller also sees their own rank and percentile.
+- The server caps each submission at 500 XP and each browser at 2000 XP per day. This blocks casual tampering but the leaderboard is **not cheat-proof**.
+- Leaving removes the caller's entry from the current week and clears the cookie. Entries also expire automatically.
+- Without Upstash configured the page shows an "unavailable" state; the rest of the site keeps working. `npm run dev` serves the Astro site only, so the leaderboard is unavailable locally unless you use `npx vercel dev`.
+- Configuration uses the same `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` variables as the poll (the older `KV_REST_API_URL` / `KV_REST_API_TOKEN` names are also supported).
+
 ### Progress export and import
 
 Progress can be exported as a base64 code containing game state, seen ids and stats, with a version and checksum. Tampered or unknown-version codes are rejected. Use the settings hook to wire export/import into the UI.
