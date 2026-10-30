@@ -71,7 +71,7 @@
     const ids = questionIds[slug] ?? [];
     return ids.filter((id) => {
       const box = game.boxes[id];
-      return box === 0 || box === 1;
+      return box !== undefined && box < 3;
     }).length;
   }
 

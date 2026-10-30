@@ -2,13 +2,14 @@
 import Base from '../layouts/Base.astro';
 import ChallengeQuiz from '../components/game/ChallengeQuiz.svelte';
 import { SUBJECTS } from '../lib/subjects';
+import { toClientQuestions } from '../lib/questions';
 import type { Question } from '../lib/types';
 
 const modules = import.meta.glob<Question>('../data/*.json', { eager: true, import: 'default' });
 const pools = SUBJECTS.filter(({ placeholder }) => !placeholder).map(({ slug, title }) => ({
   subject: slug,
   title,
-  questions: modules[`../data/${slug}.json`] ?? []
+  questions: toClientQuestions(modules[`../data/${slug}.json`] ?? [])
 }));
 ---
 <Base title="Timed sprint">

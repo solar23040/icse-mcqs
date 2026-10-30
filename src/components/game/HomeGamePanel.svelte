@@ -3,21 +3,22 @@
   import { DAILY_GOAL_OPTIONS, EXAM_DATE, type DailyGoal } from '../../lib/config';
   import { localDay } from '../../lib/date';
   import { defaultGameState, type GameState } from '../../lib/gamification';
-  import { getGame, resetGame, saveGame } from '../../lib/storage';
+  import { getGame, getSeen, resetGame, saveGame } from '../../lib/storage';
+  import { SUBJECTS } from '../../lib/subjects';
   import XpBar from './XpBar.svelte';
 
   let { questionIds = [] }: { questionIds?: string[] } = $props();
 
   let game = $state<GameState>(defaultGameState());
+  let seenIds = $state<Set<string>>(new Set());
   let today = $state('');
   let mounted = $state(false);
   let confirmingReset = $state(false);
 
   const answeredToday = $derived(game.daily.day === today ? game.daily.answered : 0);
-  const unseenCount = $derived(questionIds.filter((id) => game.boxes[id] === undefined).length);
-  const examDate = $derived(new Date(`${EXAM_DATE}T00:00:00`));
+  const unseenCount = $derived(questionIds.filter((id) => !seenIds.has(id)).length);
   const daysUntilExam = $derived(
-    Math.ceil((examDate.getTime() - new Date(today === '' ? localDay(new Date()) : today).getTime()) / 86_400_000),
+    Math.round(dayNumber(EXAM_DATE) - dayNumber(today === '' ? localDay(new Date()) : today)),
   );
   const perDay = $derived(daysUntilExam > 0 && unseenCount > 0 ? Math.ceil(unseenCount / daysUntilExam) : 0);
   const goal = $derived(game.dailyGoal);
@@ -26,9 +27,21 @@
   const circumference = 2 * Math.PI * radius;
   const dashOffset = $derived(circumference * (1 - goalPercent / 100));
 
+  function dayNumber(day: string): number {
+    const [year, month, date] = day.split('-').map(Number);
+    return Date.UTC(year ?? 1970, (month ?? 1) - 1, date ?? 1) / 86_400_000;
+  }
+
   function refresh(): void {
     today = localDay(new Date());
     game = getGame();
+
+    const seen = new Set<string>();
+    for (const { slug } of SUBJECTS) {
+      for (const id of getSeen(slug)) seen.add(id);
+    }
+    seenIds = seen;
+
     mounted = true;
   }
 
@@ -39,7 +52,7 @@
 
   function confirmReset(): void {
     resetGame();
-    game = getGame();
+    refresh();
     confirmingReset = false;
   }
 

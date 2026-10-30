@@ -112,7 +112,7 @@ export function seededRng(seed: string): () => number {
 }
 
 export function seededShuffle<T>(items: T[], seed: string): T[];
-export function seededShuffle(seed: string, items: T[]): T[];
+export function seededShuffle<T>(seed: string, items: T[]): T[];
 export function seededShuffle(seed: string): <T>(items: T[]) => T[];
 export function seededShuffle<T>(
   first: T[] | string,

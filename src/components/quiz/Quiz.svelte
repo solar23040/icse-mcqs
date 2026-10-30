@@ -83,7 +83,10 @@
   $: isLast = session.length > 0 && index >= session.length - 1;
   $: progressPercent = session.length > 0 ? ((index + 1) / session.length) * 100 : 0;
   $: scorePercentValue = scorePercent(correctCount, session.length);
-  $: reviewableCount = Object.values(game.boxes).filter((box) => box < 3).length;
+  $: reviewableCount = questions.filter((question) => {
+    const box = game.boxes[question.id];
+    return box !== undefined && box < 3;
+  }).length;
 
   let activeSubject = subject;
   $: if (subject !== activeSubject) {
@@ -268,11 +271,17 @@
   function finishSession(): void {
     if (!retryMode) {
       try {
+        const seen = new Set(getSeen(subject));
+        const unseenRemaining = questions.reduce(
+          (count, question) => count + (seen.has(question.id) ? 0 : 1),
+          0
+        );
         const result = applySession(game, {
           subject,
           total: session.length,
           correct: correctCount,
-          today: currentDay()
+          today: currentDay(),
+          unseenRemaining
         });
         game = result.state;
         saveGame(game);

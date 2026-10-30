@@ -5,7 +5,7 @@
   import { applyAnswer, applySession, defaultGameState, levelFromXp, type GameEvent, type GameState } from '../../lib/gamification';
   import { getGame, markSeen, recordAnswer, saveGame } from '../../lib/storage';
   import { optionIndexFromKey, isTypingTarget } from '../quiz/quiz-utils';
-  import type { Question } from '../../lib/types';
+  import type { Question, Subject } from '../../lib/types';
   import EventStack from './EventStack.svelte';
   import ShareCard from './ShareCard.svelte';
 
@@ -14,14 +14,14 @@
     pools
   }: {
     mode: 'daily' | 'sprint';
-    pools: { subject: string; title: string; questions: Question[] }[];
+    pools: { subject: Subject; title: string; questions: Question[] }[];
   } = $props();
 
   type Stage = 'start' | 'quiz' | 'results';
   let stage: Stage = 'start';
   let game: GameState = defaultGameState();
   let today = '';
-  let questions: (ReturnType<typeof buildDailyChallenge>[number] & { subject: string })[] = [];
+  let questions: (ReturnType<typeof buildDailyChallenge>[number] & { subject: Subject })[] = [];
   let index = 0;
   let choice: number | null = null;
   let correctCount = 0;
@@ -33,6 +33,7 @@
   let dailyAlready = false;
   let timeLeft = 60;
   let timeUp = false;
+  let deadline = 0;
   let timerId: ReturnType<typeof setInterval> | null = null;
   let gameEvents: GameEvent[] = [];
   let sessionXp = 0;
@@ -54,28 +55,43 @@
     sessionBadges = [...sessionBadges, ...events.flatMap((event) => (event.type === 'badge' ? [event.id] : []))];
   }
 
+  const SPRINT_SECONDS = 60;
+
+  function tickTimer(): void {
+    if (deadline === 0) return;
+    const remainingMs = deadline - Date.now();
+    const previous = timeLeft;
+    timeLeft = Math.max(0, Math.ceil(remainingMs / 1000));
+    if (timeLeft !== previous && (timeLeft === 30 || timeLeft === 10)) {
+      liveMessage = `${timeLeft} seconds left`;
+    }
+    if (remainingMs <= 0) {
+      timeLeft = 0;
+      timeUp = true;
+      stopTimer();
+      liveMessage = 'Time is up. Press See results when ready.';
+    }
+  }
+
   function startTimer(): void {
-    timeLeft = 60;
+    stopTimer();
     timeUp = false;
-    if (timerId) clearInterval(timerId);
-    timerId = setInterval(() => {
-      timeLeft -= 1;
-      if (timeLeft === 30 || timeLeft === 10) {
-        liveMessage = `${timeLeft} seconds left`;
-      }
-      if (timeLeft <= 0) {
-        timeLeft = 0;
-        timeUp = true;
-        if (timerId) clearInterval(timerId);
-        timerId = null;
-        liveMessage = 'Time is up. Press See results when ready.';
-      }
-    }, 1000);
+    deadline = Date.now() + SPRINT_SECONDS * 1000;
+    timeLeft = SPRINT_SECONDS;
+    timerId = setInterval(tickTimer, 250);
   }
 
   function stopTimer(): void {
     if (timerId) clearInterval(timerId);
     timerId = null;
+  }
+
+  // The interval can be throttled in background tabs, so answers are also
+  // checked against the real deadline instead of the last rendered second.
+  function sprintLocked(): boolean {
+    if (mode !== 'sprint') return false;
+    tickTimer();
+    return timeUp;
   }
 
   function startSession(): void {
@@ -113,7 +129,7 @@
     const question = current;
     if (stage !== 'quiz' || !question || choice !== null) return;
     if (optionIndex < 0 || optionIndex >= question.options.length) return;
-    if (mode === 'sprint' && timeUp) return;
+    if (sprintLocked()) return;
 
     choice = optionIndex;
     const correct = optionIndex === question.correctIndex;
@@ -149,6 +165,11 @@
           today: currentDay()
         });
         game = result.state;
+        if (mode === 'daily' && !dailyAlready) {
+          // Mark the daily run as used on the first answer so reloading
+          // mid-challenge cannot be used to farm XP a second time.
+          game.counters[`dailyChallenge:${currentDay()}`] = 1;
+        }
         saveGame(game);
         recordEvents(result.events);
       } catch {
@@ -209,7 +230,7 @@
 
     const picked = optionIndexFromKey(event.key, current.options.length);
     if (picked !== null) {
-      if (choice === null && !(mode === 'sprint' && timeUp)) {
+      if (choice === null && !sprintLocked()) {
         event.preventDefault();
         chooseOption(picked);
       }

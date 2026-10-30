@@ -13,7 +13,7 @@
   const due = $derived(
     questions.filter((question) => {
       const box = game.boxes[question.id];
-      return box === 0 || box === 1;
+      return box !== undefined && box < 3;
     }).length,
   );
 

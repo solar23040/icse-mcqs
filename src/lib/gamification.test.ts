@@ -266,6 +266,32 @@ describe('applySession', () => {
     expect(result.events).toEqual([]);
   });
 
+  it('awards Subject Sweep once no unseen questions remain', () => {
+    const result = applySession(defaultGameState(), {
+      subject: 'history',
+      total: 10,
+      correct: 6,
+      today: '2026-01-01',
+      unseenRemaining: 0,
+    });
+
+    expect(result.state.counters['sweep:history']).toBe(1);
+    expect(result.state.badges['subject-sweep']).toBe('2026-01-01');
+    expect(result.events).toContainEqual({ type: 'badge', id: 'subject-sweep' });
+  });
+
+  it('does not award Subject Sweep while questions are still unseen', () => {
+    const result = applySession(defaultGameState(), {
+      subject: 'history',
+      total: 10,
+      correct: 6,
+      today: '2026-01-01',
+      unseenRemaining: 1,
+    });
+
+    expect(result.state.badges['subject-sweep']).toBeUndefined();
+  });
+
   it('does not count the same day twice', () => {
     const first = applySession(defaultGameState(), {
       subject: 'history',

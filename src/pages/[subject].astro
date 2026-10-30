@@ -4,6 +4,7 @@ import SubjectTabs from '../components/shell/SubjectTabs.astro';
 import SubjectMastery from '../components/game/SubjectMastery.svelte';
 import Quiz from '../components/quiz/Quiz.svelte';
 import { SUBJECTS } from '../lib/subjects';
+import { toClientQuestions } from '../lib/questions';
 import type { Question, Subject } from '../lib/types';
 
 export function getStaticPaths() {
@@ -22,7 +23,7 @@ const { title, placeholder } = Astro.props;
 const subject = Astro.params.subject as Subject;
 
 const modules = import.meta.glob<Question>('../data/*.json', { eager: true, import: 'default' });
-const questions = modules[`../data/${subject}.json`] ?? [];
+const questions = toClientQuestions(modules[`../data/${subject}.json`] ?? []);
 const comingSoon = placeholder || questions.length === 0;
 ---
 
