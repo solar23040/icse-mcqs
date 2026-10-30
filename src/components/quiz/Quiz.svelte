@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
-  import { buildSession, type SessionMode } from '../../lib/engine';
+  import { buildSession, buildWrongSession, type SessionMode } from '../../lib/engine';
   import { localDay } from '../../lib/date';
   import {
     applyAnswer,
@@ -13,10 +13,14 @@
   import {
     getGame,
     getSeen,
+    getWrong,
     markSeen,
+    markWrong,
     recordAnswer,
     resetSeen,
-    saveGame
+    saveGame,
+    resetWrong,
+    unmarkWrong
   } from '../../lib/storage';
   import type { Question, SessionQuestion, Subject } from '../../lib/types';
   import ComboBadge from '../game/ComboBadge.svelte';
@@ -55,6 +59,9 @@
   let bestStreak = 0;
   let missed: MissedQuestion[] = [];
   let retryMode = false;
+  let mode: 'new' | 'wrong' = 'new';
+  let wrongMode = false;
+  let wrongIds: string[] = [];
   let totalCount = questions.length;
   let unseenCount = questions.length;
   let poolExhausted = false;
@@ -73,6 +80,10 @@
   let scorePercentValue = 0;
   let reviewableCount = 0;
 
+  $: wrongIdSet = new Set(wrongIds);
+  $: wrongQuestions = questions.filter((question) => wrongIdSet.has(question.id));
+  $: wrongCount = wrongQuestions.length;
+
   let questionHeading: HTMLHeadingElement | null = null;
   let resultsHeading: HTMLHeadingElement | null = null;
   let startHeading: HTMLHeadingElement | null = null;
@@ -87,12 +98,17 @@
     const box = game.boxes[question.id];
     return box !== undefined && box < 3;
   }).length;
+  $: if (stage === 'start' && poolExhausted && wrongCount > 0 && mode === 'new') {
+    mode = 'wrong';
+  }
 
   let activeSubject = subject;
   $: if (subject !== activeSubject) {
     activeSubject = subject;
     stage = 'start';
     retryMode = false;
+    mode = 'new';
+    wrongMode = false;
     clearSession();
     refreshPool();
   }
@@ -133,6 +149,12 @@
       unseenCount = totalCount;
       poolExhausted = false;
     }
+
+    try {
+      wrongIds = getWrong(subject);
+    } catch {
+      wrongIds = [];
+    }
   }
 
   function clearSession(): void {
@@ -143,6 +165,8 @@
     streak = 0;
     bestStreak = 0;
     missed = [];
+    retryMode = false;
+    wrongMode = false;
     startError = '';
     liveMessage = '';
     gameEvents = [];
@@ -151,7 +175,7 @@
     answerHint = '';
   }
 
-  function startQuestions(nextQuestions: SessionQuestion[], retry: boolean): void {
+  function startQuestions(nextQuestions: SessionQuestion[], retry: boolean, wrong = false): void {
     session = nextQuestions;
     index = 0;
     choice = null;
@@ -160,6 +184,7 @@
     bestStreak = 0;
     missed = [];
     retryMode = retry;
+    wrongMode = wrong;
     startError = '';
     liveMessage = '';
     gameEvents = [];
@@ -172,6 +197,38 @@
 
   function handleStart(): void {
     startError = '';
+
+    if (mode === 'wrong') {
+      if (wrongQuestions.length === 0) {
+        startError = 'There are no wrong questions to practice yet.';
+        refreshPool();
+        return;
+      }
+
+      let wrongSession: ReturnType<typeof buildWrongSession>;
+
+      try {
+        wrongSession = buildWrongSession(wrongQuestions, selectedLength);
+      } catch {
+        startError = 'The practice session could not start. Please try again.';
+        return;
+      }
+
+      if (wrongSession.questions.length === 0) {
+        refreshPool();
+        stage = 'start';
+        return;
+      }
+
+      startQuestions(wrongSession.questions, false, true);
+      return;
+    }
+
+    if (poolExhausted) {
+      startError = 'You have seen every question. Reset your progress or practice mistakes.';
+      return;
+    }
+
     let nextSession: ReturnType<typeof buildSession>;
 
     try {
@@ -217,16 +274,24 @@
       }. ${question.explanation}`;
     }
 
-    // A retry is practice only, so it must not double-count saved stats.
     try {
       markSeen(subject, question.id);
-      if (!retryMode) recordAnswer(subject, correct);
+
+      if (correct) {
+        unmarkWrong(subject, question.id);
+      } else {
+        markWrong(subject, question.id);
+      }
+
+      // Practice and retry modes are study aids, so they must not
+      // double-count saved stats.
+      if (!retryMode && !wrongMode) recordAnswer(subject, correct);
     } catch {
       // A storage failure must not break the quiz.
     }
 
     answerHint = '';
-    if (!retryMode) {
+    if (!retryMode && !wrongMode) {
       const previousBox = game.boxes[question.id] ?? 0;
       try {
         const result = applyAnswer(game, {
@@ -269,7 +334,7 @@
   }
 
   function finishSession(): void {
-    if (!retryMode) {
+    if (!retryMode && !wrongMode) {
       try {
         const seen = new Set(getSeen(subject));
         const unseenRemaining = questions.reduce(
@@ -289,19 +354,21 @@
       } catch {
         // Gamification is fail-soft; results still render.
       }
-      refreshPool();
     }
+    refreshPool();
     stage = 'results';
-    liveMessage = retryMode
-      ? `Retry complete. You scored ${correctCount} out of ${session.length}.`
-      : `Session complete. You scored ${correctCount} out of ${session.length}.`;
+    liveMessage = wrongMode
+      ? `Practice complete. You scored ${correctCount} out of ${session.length}.`
+      : retryMode
+        ? `Retry complete. You scored ${correctCount} out of ${session.length}.`
+        : `Session complete. You scored ${correctCount} out of ${session.length}.`;
     void tick().then(() => resultsHeading?.focus());
   }
 
   function handleNewSession(): void {
     refreshPool();
     clearSession();
-    retryMode = false;
+    mode = 'new';
     stage = 'start';
     void tick().then(() => startHeading?.focus());
   }
@@ -329,16 +396,29 @@
   function handleReset(): void {
     try {
       resetSeen(subject);
+      resetWrong(subject);
     } catch {
       // Storage is fail-soft; the refresh below will reflect whatever succeeded.
     }
     refreshPool();
     clearSession();
+    mode = 'new';
     stage = 'start';
 
     if (questions.length > 0) {
       handleStart();
     }
+  }
+
+  function handleClearMistakes(): void {
+    try {
+      resetWrong(subject);
+    } catch {
+      // Storage is fail-soft; the refresh below will reflect whatever succeeded.
+    }
+    refreshPool();
+    mode = 'new';
+    startError = '';
   }
 
   function handleKeydown(event: KeyboardEvent): void {
@@ -366,6 +446,18 @@
       event.preventDefault();
       handleNext();
     }
+  }
+
+  function modeButtonClasses(
+    value: 'new' | 'wrong',
+    selected: 'new' | 'wrong'
+  ): string {
+    const base =
+      'min-h-12 rounded-xl px-3 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900';
+    if (value === selected) {
+      return `${base} bg-indigo-600 text-white shadow-sm hover:bg-indigo-700`;
+    }
+    return `${base} border border-slate-300 bg-white text-slate-700 hover:border-indigo-400 hover:bg-indigo-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-indigo-400 dark:hover:bg-slate-700`;
   }
 
   function lengthButtonClasses(value: SessionLength, selected: SessionLength): string {
@@ -466,7 +558,7 @@
         >
           No questions are available for this subject yet.
         </p>
-      {:else if poolExhausted}
+      {:else if poolExhausted && wrongCount === 0}
         <div
           role="status"
           class="space-y-4 rounded-2xl border border-amber-300 bg-amber-50 p-5 text-amber-950 dark:border-amber-500/60 dark:bg-amber-950/40 dark:text-amber-50"
@@ -488,13 +580,44 @@
         </div>
       {:else}
         <div class="space-y-2">
-          <p class="text-lg" aria-live="polite">
-            <strong class="text-2xl font-bold text-indigo-600 dark:text-indigo-400"
-              >{unseenCount}</strong
+          <p id="practice-mode-label" class="text-sm font-semibold">Practice mode</p>
+          <div role="group" aria-labelledby="practice-mode-label" class="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              aria-pressed={mode === 'new'}
+              disabled={poolExhausted}
+              on:click={() => (mode = 'new')}
+              class={modeButtonClasses('new', mode)}
             >
-            <span> unseen of </span>
-            <strong class="text-2xl font-bold">{totalCount}</strong>
-            <span> questions</span>
+              New questions
+            </button>
+            <button
+              type="button"
+              aria-pressed={mode === 'wrong'}
+              disabled={wrongCount === 0}
+              on:click={() => (mode = 'wrong')}
+              class={modeButtonClasses('wrong', mode)}
+            >
+              Practice mistakes ({wrongCount})
+            </button>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <p class="text-lg" aria-live="polite">
+            {#if mode === 'wrong'}
+              <strong class="text-2xl font-bold text-rose-600 dark:text-rose-400"
+                >{wrongCount}</strong
+              >
+              <span> question{wrongCount === 1 ? '' : 's'} to practise again</span>
+            {:else}
+              <strong class="text-2xl font-bold text-indigo-600 dark:text-indigo-400"
+                >{unseenCount}</strong
+              >
+              <span> unseen of </span>
+              <strong class="text-2xl font-bold">{totalCount}</strong>
+              <span> questions</span>
+            {/if}
           </p>
         </div>
 
@@ -569,8 +692,18 @@
           on:click={handleStart}
           class="min-h-14 w-full rounded-2xl bg-indigo-600 px-6 text-lg font-semibold text-white shadow-sm transition-colors hover:bg-indigo-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
         >
-          Start session
+          {mode === 'wrong' ? 'Practise wrong questions' : 'Start session'}
         </button>
+
+        {#if wrongCount > 0}
+          <button
+            type="button"
+            on:click={handleClearMistakes}
+            class="min-h-11 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-700 transition-colors hover:border-rose-400 hover:bg-rose-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-rose-400 dark:hover:bg-slate-700 dark:focus-visible:ring-offset-slate-900"
+          >
+            Clear practice mistakes
+          </button>
+        {/if}
       {/if}
     </div>
   {:else if stage === 'quiz' && current}
@@ -751,7 +884,11 @@
           id="quiz-results-heading"
           class="scroll-mt-24 rounded-lg text-2xl font-bold tracking-tight focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 sm:text-3xl"
         >
-          {retryMode ? 'Retry complete' : 'Session complete'}
+          {wrongMode
+            ? 'Practice complete'
+            : retryMode
+              ? 'Retry complete'
+              : 'Session complete'}
         </h2>
       </div>
 
@@ -864,7 +1001,9 @@
         <p
           class="rounded-2xl border border-emerald-300 bg-emerald-50 p-4 text-emerald-900 dark:border-emerald-500/60 dark:bg-emerald-950/40 dark:text-emerald-100"
         >
-          Perfect score — no missed questions.
+          {wrongMode
+            ? 'All practised questions answered correctly — mistakes cleared.'
+            : 'Perfect score — no missed questions.'}
         </p>
       {/if}
 
@@ -895,9 +1034,11 @@
         Review weak spots ({reviewableCount} due)
       </button>
 
-      {#if retryMode}
+      {#if retryMode || wrongMode}
         <p class="text-center text-xs text-slate-500 dark:text-slate-400">
-          Retry practice doesn't change your saved score or progress.
+          {wrongMode
+            ? "Mistake practice doesn't change your saved score or progress."
+            : "Retry practice doesn't change your saved score or progress."}
         </p>
       {/if}
     </div>

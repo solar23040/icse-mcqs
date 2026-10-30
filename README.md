@@ -45,6 +45,12 @@ The build output is written to `dist/`.
 
 Each file is a JSON array of question objects. Keep it valid JSON: no comments and no trailing commas.
 
+## Practice mistakes
+
+After a session, the start screen shows a **Practice mistakes** mode with a count of questions you answered wrong. It replays only those questions, in a shuffled order with shuffled options. Answering a mistake correctly removes it from the list; getting it wrong again keeps it there for another attempt. A **Clear practice mistakes** button wipes the list for the current subject.
+
+Mistake practice is a study aid: it does not change the saved `attempted`/`correct` stats or the seen-question progress. The wrong-question ids are stored per subject under `mcq:<subject>:wrong` in `localStorage`, next to `mcq:<subject>:seen` and `mcq:<subject>:stats`.
+
 ## Next-subject poll
 
 The `/poll` page asks visitors which subject to add next. Options and ids live in `src/lib/poll.ts`, and the home page and footer link to the page. Visitors can change or remove their vote.

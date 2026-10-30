@@ -212,6 +212,66 @@ describe('game storage', () => {
   });
 });
 
+describe('wrong questions', () => {
+  it('stores wrong ids separately from seen ids and stats', () => {
+    const fake = new FakeStorage();
+    vi.stubGlobal('localStorage', fake);
+
+    storage.markWrong('maths', 'm1');
+    storage.markWrong('maths', 'm2');
+    storage.markWrong('maths', 'm1');
+
+    expect(storage.getWrong('maths')).toEqual(['m1', 'm2']);
+    expect(JSON.parse(fake.getItem('mcq:maths:wrong') ?? '[]')).toEqual(['m1', 'm2']);
+    expect(storage.getSeen('maths')).toEqual([]);
+    expect(storage.getStats('maths')).toEqual({ attempted: 0, correct: 0 });
+    expect(storage.getWrong('history')).toEqual([]);
+  });
+
+  it('unmarks a single id and clears the whole list', () => {
+    vi.stubGlobal('localStorage', new FakeStorage());
+
+    storage.markWrong('geography', 'g1');
+    storage.markWrong('geography', 'g2');
+
+    storage.unmarkWrong('geography', 'g1');
+    expect(storage.getWrong('geography')).toEqual(['g2']);
+
+    storage.unmarkWrong('geography', 'g2');
+    expect(storage.getWrong('geography')).toEqual([]);
+
+    storage.markWrong('geography', 'g3');
+    storage.resetWrong('geography');
+    expect(storage.getWrong('geography')).toEqual([]);
+  });
+
+  it('returns defaults for malformed wrong data', () => {
+    const fake = new FakeStorage();
+    vi.stubGlobal('localStorage', fake);
+
+    fake.setItem('mcq:english-lit:wrong', '{not valid json');
+    expect(storage.getWrong('english-lit')).toEqual([]);
+
+    fake.setItem('mcq:english-lit:wrong', JSON.stringify(['valid', 42, null]));
+    expect(storage.getWrong('english-lit')).toEqual(['valid']);
+  });
+
+  it('keeps working in memory when localStorage throws', () => {
+    vi.stubGlobal('localStorage', unavailableStorage());
+
+    expect(() => storage.markWrong('history', 'h1')).not.toThrow();
+    expect(() => storage.markWrong('history', 'h2')).not.toThrow();
+
+    expect(storage.getWrong('history')).toEqual(['h1', 'h2']);
+
+    storage.unmarkWrong('history', 'h1');
+    expect(storage.getWrong('history')).toEqual(['h2']);
+
+    expect(() => storage.resetWrong('history')).not.toThrow();
+    expect(storage.getWrong('history')).toEqual([]);
+  });
+});
+
 describe('sessions across storage', () => {
   it('never repeats questions after markSeen between consecutive sessions', () => {
     vi.stubGlobal('localStorage', new FakeStorage());

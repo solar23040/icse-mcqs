@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { buildDailyChallenge, buildSession, seededShuffle, shuffle, sprintScore } from './engine';
+import { buildDailyChallenge, buildSession, buildWrongSession, seededShuffle, shuffle, sprintScore } from './engine';
 import type { Question } from './types';
 
 function makeQuestion(id: string, overrides: Partial<Question> = {}): Question {
@@ -241,5 +241,45 @@ describe('sprint score', () => {
     expect(sprintScore({ correct: 5, wrong: 0, seconds: 60 })).toBe(50);
     expect(sprintScore({ correct: 5, wrong: 2, seconds: 30 })).toBe(50 - 10 + 30);
     expect(sprintScore({ correct: 0, wrong: 10, seconds: 10 })).toBe(0);
+  });
+});
+
+describe('buildWrongSession', () => {
+  it('only includes the requested wrong ids and shuffles options', () => {
+    const pool = makePool(5);
+
+    for (let iteration = 0; iteration < 50; iteration += 1) {
+      const result = buildWrongSession(pool, ['q2', 'q4'], 'all');
+
+      expect(ids(result.questions).sort()).toEqual(['q2', 'q4']);
+      expect(result.wrongCount).toBe(2);
+      expect(result.unseenCount).toBe(2);
+      expect(result.poolExhausted).toBe(false);
+      expect(
+        result.questions.every((question) => question.options.length === 4),
+      ).toBe(true);
+    }
+  });
+
+  it('limits the session to the requested length', () => {
+    const result = buildWrongSession(makePool(5), ['q1', 'q2', 'q3', 'q4'], 2);
+
+    expect(result.questions).toHaveLength(2);
+    expect(result.wrongCount).toBe(4);
+  });
+
+  it('accepts an already-filtered pool', () => {
+    const result = buildWrongSession([makeQuestion('q3')], 'all');
+
+    expect(ids(result.questions)).toEqual(['q3']);
+    expect(result.wrongCount).toBe(1);
+  });
+
+  it('reports an exhausted wrong pool when nothing matches', () => {
+    const result = buildWrongSession(makePool(3), ['missing'], 'all');
+
+    expect(result.questions).toEqual([]);
+    expect(result.wrongCount).toBe(0);
+    expect(result.poolExhausted).toBe(true);
   });
 });

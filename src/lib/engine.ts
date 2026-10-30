@@ -211,3 +211,53 @@ export function sprintScore({
   const speedBonus = Math.max(0, 60 - safeSeconds);
   return Math.max(0, safeCorrect * 10 - safeWrong * 5 + speedBonus);
 }
+export interface WrongSessionResult {
+  questions: SessionQuestion[];
+  wrongCount: number;
+  unseenCount: number;
+  poolExhausted: boolean;
+}
+
+/**
+ * Builds a practice session from the ids a learner previously answered wrong.
+ * Accepts either the full pool plus the wrong ids, or a pool that is already
+ * filtered down to the wrong questions.
+ */
+export function buildWrongSession(
+  pool: Question[],
+  length: number | 'all',
+): WrongSessionResult;
+export function buildWrongSession(
+  all: Question[],
+  wrongIds: string[],
+  length: number | 'all',
+): WrongSessionResult;
+export function buildWrongSession(
+  all: Question[],
+  wrongIdsOrLength: string[] | number | 'all',
+  maybeLength?: number | 'all',
+): WrongSessionResult {
+  let pool: Question[];
+  let length: number | 'all';
+
+  if (Array.isArray(wrongIdsOrLength)) {
+    const wrong = new Set(wrongIdsOrLength);
+    pool = all.filter((question) => wrong.has(question.id));
+    length = maybeLength ?? 'all';
+  } else {
+    pool = all;
+    length = wrongIdsOrLength;
+  }
+
+  const session = buildSession(pool, [], length);
+
+  return {
+    questions: session.questions,
+    wrongCount: pool.length,
+    unseenCount: pool.length,
+    poolExhausted: pool.length === 0,
+  };
+}
+
+/* Alias for callers that think of the feature as "review". */
+export const buildReviewSession = buildWrongSession;
