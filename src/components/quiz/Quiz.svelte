@@ -17,6 +17,7 @@
     markSeen,
     markWrong,
     recordAnswer,
+    recordWrongAnswerResult,
     resetSeen,
     saveGame,
     resetWrong,
@@ -274,14 +275,14 @@
       }. ${question.explanation}`;
     }
 
+    let wrongGraduated = false;
+    let wrongCurrentCount = 0;
     try {
       markSeen(subject, question.id);
 
-      if (correct) {
-        unmarkWrong(subject, question.id);
-      } else {
-        markWrong(subject, question.id);
-      }
+      const wrongResult = recordWrongAnswerResult(subject, question.id, correct, 2);
+      wrongGraduated = wrongResult.removed;
+      wrongCurrentCount = wrongResult.currentCount;
 
       // Practice and retry modes are study aids, so they must not
       // double-count saved stats.
@@ -291,29 +292,39 @@
     }
 
     answerHint = '';
-    if (!retryMode && !wrongMode) {
-      const previousBox = game.boxes[question.id] ?? 0;
-      try {
-        const result = applyAnswer(game, {
-          questionId: question.id,
-          subject,
-          correct,
-          combo: correct ? streak : 0,
-          today: currentDay()
-        });
-        game = result.state;
-        saveGame(game);
-        recordGameEvents(result.events);
+    if (wrongMode) {
+      if (wrongGraduated) {
+        answerHint = 'Mistake cleared! (2/2 correct)';
+      } else if (correct && wrongCurrentCount === 1) {
+        answerHint = '1/2 correct (answer correct once more to clear)';
+      }
+    } else if (!retryMode) {
+      if (wrongGraduated) {
+        answerHint = 'Mistake cleared! (2/2 correct)';
+      } else {
+        const previousBox = game.boxes[question.id] ?? 0;
+        try {
+          const result = applyAnswer(game, {
+            questionId: question.id,
+            subject,
+            correct,
+            combo: correct ? streak : 0,
+            today: currentDay()
+          });
+          game = result.state;
+          saveGame(game);
+          recordGameEvents(result.events);
 
-        if (result.events.some((event) => event.type === 'mastered')) {
-          answerHint = 'Mastered!';
-        } else if (!correct) {
-          answerHint = 'Added to review';
-        } else if (previousBox <= 1) {
-          answerHint = `Box ${game.boxes[question.id] ?? 1} of 3`;
+          if (result.events.some((event) => event.type === 'mastered')) {
+            answerHint = 'Mastered!';
+          } else if (!correct) {
+            answerHint = 'Added to review';
+          } else if (previousBox <= 1) {
+            answerHint = `Box ${game.boxes[question.id] ?? 1} of 3`;
+          }
+        } catch {
+          // Gamification is fail-soft; the quiz itself keeps working.
         }
-      } catch {
-        // Gamification is fail-soft; the quiz itself keeps working.
       }
     }
   }

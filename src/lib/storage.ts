@@ -84,6 +84,10 @@ function wrongKey(subject: Subject): string {
   return `mcq:${subject}:wrong`;
 }
 
+function wrongCountsKey(subject: Subject): string {
+  return `mcq:${subject}:wrong_counts`;
+}
+
 function emptyStats(): Stats {
   return { attempted: 0, correct: 0 };
 }
@@ -140,29 +144,122 @@ export function resetSeen(subject: Subject): void {
   removeRaw(seenKey(subject));
 }
 
+export function getWrongCounts(subject: Subject): Record<string, number> {
+  const raw = readRaw(wrongCountsKey(subject));
+  if (raw === null) return {};
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) return {};
+    const counts: Record<string, number> = {};
+    for (const [key, val] of Object.entries(parsed)) {
+      if (typeof val === 'number' && Number.isFinite(val) && val > 0) {
+        counts[key] = Math.trunc(val);
+      }
+    }
+    return counts;
+  } catch {
+    return {};
+  }
+}
+
+function saveWrongCounts(subject: Subject, counts: Record<string, number>): void {
+  const entries = Object.entries(counts).filter(([, val]) => val > 0);
+  if (entries.length === 0) {
+    removeRaw(wrongCountsKey(subject));
+    return;
+  }
+  writeRaw(wrongCountsKey(subject), JSON.stringify(Object.fromEntries(entries)));
+}
+
 export function markWrong(subject: Subject, id: string): void {
   const wrong = getWrong(subject);
-  if (wrong.includes(id)) return;
+  if (!wrong.includes(id)) {
+    wrong.push(id);
+    writeRaw(wrongKey(subject), JSON.stringify(wrong));
+  }
 
-  wrong.push(id);
-  writeRaw(wrongKey(subject), JSON.stringify(wrong));
+  // Reset any consecutive correct count when answered wrong
+  const counts = getWrongCounts(subject);
+  if (counts[id] !== undefined) {
+    delete counts[id];
+    saveWrongCounts(subject, counts);
+  }
 }
 
 export function unmarkWrong(subject: Subject, id: string): void {
   const wrong = getWrong(subject);
-  if (!wrong.includes(id)) return;
-
-  const remaining = wrong.filter((value) => value !== id);
-  if (remaining.length === 0) {
-    removeRaw(wrongKey(subject));
-    return;
+  if (wrong.includes(id)) {
+    const remaining = wrong.filter((value) => value !== id);
+    if (remaining.length === 0) {
+      removeRaw(wrongKey(subject));
+    } else {
+      writeRaw(wrongKey(subject), JSON.stringify(remaining));
+    }
   }
 
-  writeRaw(wrongKey(subject), JSON.stringify(remaining));
+  const counts = getWrongCounts(subject);
+  if (counts[id] !== undefined) {
+    delete counts[id];
+    saveWrongCounts(subject, counts);
+  }
 }
 
 export function resetWrong(subject: Subject): void {
   removeRaw(wrongKey(subject));
+  removeRaw(wrongCountsKey(subject));
+}
+
+export interface WrongAnswerResult {
+  removed: boolean;
+  currentCount: number;
+  inWrongList: boolean;
+}
+
+export function recordWrongAnswerResult(
+  subject: Subject,
+  id: string,
+  correct: boolean,
+  requiredStreak = 2
+): WrongAnswerResult {
+  const wrong = getWrong(subject);
+  const inWrongList = wrong.includes(id);
+
+  if (!correct) {
+    markWrong(subject, id);
+    return {
+      removed: false,
+      currentCount: 0,
+      inWrongList: true
+    };
+  }
+
+  if (!inWrongList) {
+    return {
+      removed: false,
+      currentCount: 0,
+      inWrongList: false
+    };
+  }
+
+  const counts = getWrongCounts(subject);
+  const nextCount = (counts[id] ?? 0) + 1;
+
+  if (nextCount >= requiredStreak) {
+    unmarkWrong(subject, id);
+    return {
+      removed: true,
+      currentCount: nextCount,
+      inWrongList: false
+    };
+  }
+
+  counts[id] = nextCount;
+  saveWrongCounts(subject, counts);
+  return {
+    removed: false,
+    currentCount: nextCount,
+    inWrongList: true
+  };
 }
 
 export function getStats(subject: Subject): Stats {
