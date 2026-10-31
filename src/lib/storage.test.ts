@@ -280,6 +280,55 @@ describe('wrong questions', () => {
     expect(() => storage.resetWrong('history')).not.toThrow();
     expect(storage.getWrong('history')).toEqual([]);
   });
+
+  it('requires 2 correct answers to remove an id from the wrong list', () => {
+    vi.stubGlobal('localStorage', new FakeStorage());
+
+    // Initially mark wrong
+    storage.markWrong('maths', 'm1');
+    expect(storage.getWrong('maths')).toEqual(['m1']);
+    expect(storage.getWrongCounts('maths')).toEqual({});
+
+    // 1st correct answer: not removed yet, count goes to 1
+    const res1 = storage.recordWrongAnswerResult('maths', 'm1', true, 2);
+    expect(res1).toEqual({ removed: false, currentCount: 1, inWrongList: true });
+    expect(storage.getWrong('maths')).toEqual(['m1']);
+    expect(storage.getWrongCounts('maths')).toEqual({ m1: 1 });
+
+    // Answering wrong again resets the streak count
+    const resWrong = storage.recordWrongAnswerResult('maths', 'm1', false, 2);
+    expect(resWrong).toEqual({ removed: false, currentCount: 0, inWrongList: true });
+    expect(storage.getWrong('maths')).toEqual(['m1']);
+    expect(storage.getWrongCounts('maths')).toEqual({});
+
+    // 1st correct answer again
+    const res2 = storage.recordWrongAnswerResult('maths', 'm1', true, 2);
+    expect(res2).toEqual({ removed: false, currentCount: 1, inWrongList: true });
+    expect(storage.getWrong('maths')).toEqual(['m1']);
+    expect(storage.getWrongCounts('maths')).toEqual({ m1: 1 });
+
+    // 2nd correct answer: removed!
+    const res3 = storage.recordWrongAnswerResult('maths', 'm1', true, 2);
+    expect(res3).toEqual({ removed: true, currentCount: 2, inWrongList: false });
+    expect(storage.getWrong('maths')).toEqual([]);
+    expect(storage.getWrongCounts('maths')).toEqual({});
+
+    // Answering correct for an item not in wrong list does nothing
+    const resIgnore = storage.recordWrongAnswerResult('maths', 'm1', true, 2);
+    expect(resIgnore).toEqual({ removed: false, currentCount: 0, inWrongList: false });
+  });
+
+  it('resetWrong clears wrong counts along with wrong list', () => {
+    vi.stubGlobal('localStorage', new FakeStorage());
+
+    storage.markWrong('physics', 'p1');
+    storage.recordWrongAnswerResult('physics', 'p1', true, 2);
+    expect(storage.getWrongCounts('physics')).toEqual({ p1: 1 });
+
+    storage.resetWrong('physics');
+    expect(storage.getWrong('physics')).toEqual([]);
+    expect(storage.getWrongCounts('physics')).toEqual({});
+  });
 });
 
 describe('sessions across storage', () => {
