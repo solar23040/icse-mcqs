@@ -1,4 +1,5 @@
 import type { LeaderboardEntry, LeaderboardMe, LeaderboardSnapshot } from './leaderboard';
+import { getUserName } from './storage';
 
 const ENDPOINT = '/api/leaderboard';
 const TIMEOUT_MS = 5000;
@@ -94,7 +95,8 @@ export function loadLeaderboard(): Promise<LeaderboardSnapshot | null> {
 
 export function submitWeeklyXp(weeklyXp: number): Promise<LeaderboardSnapshot | null> {
   const safeXp = Number.isFinite(weeklyXp) ? Math.max(0, Math.trunc(weeklyXp)) : 0;
-  return request('POST', { weeklyXp: safeXp });
+  const name = getUserName();
+  return request('POST', { weeklyXp: safeXp, ...(name ? { name } : {}) });
 }
 
 export function leaveLeaderboard(): Promise<LeaderboardSnapshot | null> {

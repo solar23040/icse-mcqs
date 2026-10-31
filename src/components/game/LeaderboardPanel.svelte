@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { getGame } from '../../lib/storage';
+  import { getUserName } from '../../lib/storage';
   import {
     advanceWeeklyXp,
     currentIsoWeek,
@@ -18,6 +19,7 @@
   let snapshot = $state<LeaderboardSnapshot | null>(null);
   let message = $state('');
   let failed = $state(false);
+  let displayName = $state<string | null>(null);
 
   async function sync(): Promise<void> {
     if (!optedIn) return;
@@ -31,8 +33,9 @@
       const advanced = advanceWeeklyXp(getLeaderboardState(), getGame().xp, week);
       saveLeaderboardState(advanced);
 
-      const result =
-        advanced.weeklyXp > 0 ? await submitWeeklyXp(advanced.weeklyXp) : await loadLeaderboard();
+      // Always POST so the name is submitted to the server (even when weeklyXp is 0 on first join).
+      // loadLeaderboard() (GET) never sends the name, so using it would leave the user nameless.
+      const result = await submitWeeklyXp(advanced.weeklyXp);
 
       if (result) {
         snapshot = result;
@@ -84,7 +87,17 @@
     mounted = true;
     const state = getLeaderboardState();
     optedIn = state.optedIn;
+    displayName = getUserName();
     if (optedIn) void sync();
+
+    // Re-sync when user sets their name via the modal
+    const handleNameSet = (e: Event): void => {
+      displayName = (e as CustomEvent<{ name: string }>).detail.name;
+      if (optedIn) void sync();
+    };
+    window.addEventListener('icse:nameSet', handleNameSet);
+    // Return cleanup so the listener is removed when the component unmounts
+    return () => window.removeEventListener('icse:nameSet', handleNameSet);
   });
 </script>
 
@@ -116,8 +129,8 @@
   </div>
 
   <p class="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-    Optional. Joining stores an anonymous random id in an HttpOnly cookie and shares only your weekly XP.
-    No name, email or IP address is stored, and you can leave at any time to remove your entry.
+    Optional. Joining stores a random id in an HttpOnly cookie and shares your weekly XP and chosen display name.
+    No email or IP address is stored, and you can leave at any time to remove your entry.
   </p>
 
   <div class="mt-5">
@@ -145,17 +158,35 @@
 
         {#if snapshot.me}
           <div class="rounded-2xl bg-indigo-50 p-4 dark:bg-indigo-500/15">
-            <p class="text-sm font-semibold text-indigo-800 dark:text-indigo-200">
-              You are {snapshot.me.name}
-            </p>
+            <div class="flex items-center justify-between gap-2">
+              <p class="text-sm font-semibold text-indigo-800 dark:text-indigo-200">
+                You are {displayName ?? snapshot.me.name}
+              </p>
+              <button
+                type="button"
+                on:click={() => window.dispatchEvent(new CustomEvent('icse:openNameModal'))}
+                class="text-xs font-semibold text-indigo-600 underline-offset-2 hover:underline dark:text-indigo-400"
+              >
+                Change name
+              </button>
+            </div>
             <p class="mt-1 text-sm text-indigo-900 dark:text-indigo-100">
               Rank #{snapshot.me.rank} · {snapshot.me.xp} XP · Top {snapshot.me.percentile}% this week
             </p>
           </div>
         {:else}
-          <p class="text-sm text-slate-600 dark:text-slate-300">
-            You are not on the board yet. Answer some questions, then refresh.
-          </p>
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <p class="text-sm text-slate-600 dark:text-slate-300">
+              You are not on the board yet. Answer some questions, then refresh.
+            </p>
+            <button
+              type="button"
+              on:click={() => window.dispatchEvent(new CustomEvent('icse:openNameModal'))}
+              class="text-xs font-semibold text-indigo-600 underline-offset-2 hover:underline dark:text-indigo-400"
+            >
+              {displayName ? 'Change name' : 'Set name'}
+            </button>
+          </div>
         {/if}
 
         {#if snapshot.top.length > 0}
@@ -167,7 +198,9 @@
                   : 'bg-slate-100 dark:bg-slate-800/70'}"
               >
                 <span class="w-8 shrink-0 text-slate-500 dark:text-slate-400">#{entry.rank}</span>
-                <span class="min-w-0 flex-1 truncate">{entry.name}</span>
+                <span class="min-w-0 flex-1 truncate">
+                  {snapshot.me?.rank === entry.rank ? (displayName ?? entry.name) : entry.name}
+                </span>
                 <span class="shrink-0 text-indigo-700 dark:text-indigo-300">{entry.xp} XP</span>
               </li>
             {/each}

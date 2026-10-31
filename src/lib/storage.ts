@@ -293,3 +293,18 @@ export const recordWrong = markWrong;
 export const removeWrong = unmarkWrong;
 export const resetWrongQuestions = resetWrong;
 export const clearWrong = resetWrong;
+
+/* ── User display name ────────────────────────────────────────────────── */
+
+const USER_NAME_KEY = 'icse:username:v1';
+
+/** Returns the user's chosen display name, or null if not yet set. */
+export function getUserName(): string | null {
+  return readRaw(USER_NAME_KEY);
+}
+
+/** Persists the user's display name (max 20 chars, whitespace-trimmed). */
+export function setUserName(name: string): void {
+  const clean = name.trim().slice(0, 20);
+  if (clean) writeRaw(USER_NAME_KEY, clean);
+}

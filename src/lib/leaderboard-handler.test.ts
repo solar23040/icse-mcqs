@@ -164,6 +164,21 @@ describe('leaderboard API', () => {
     expect(meOf(await payload(first)).name).toBe(meOf(await payload(second)).name);
   });
 
+  it('accepts and persists a custom display name', async () => {
+    const first = await POST(
+      apiRequest('POST', { body: { weeklyXp: 50, name: 'Aryan <coder> Sharma' } }),
+    );
+    const body1 = await payload(first);
+    expect(meOf(body1).name).toBe('Aryan coder Sharma');
+    expect(topOf(body1)[0]?.name).toBe('Aryan coder Sharma');
+
+    const token = cookieToken(first);
+    const second = await GET(apiRequest('GET', { cookie: token }));
+    const body2 = await payload(second);
+    expect(meOf(body2).name).toBe('Aryan coder Sharma');
+    expect(topOf(body2)[0]?.name).toBe('Aryan coder Sharma');
+  });
+
   it('caps a single submission', async () => {
     const response = await POST(apiRequest('POST', { body: { weeklyXp: 5000 } }));
 

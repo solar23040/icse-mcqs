@@ -132,6 +132,16 @@ describe('storage with localStorage', () => {
     fake.setItem('mcq:english-lit:seen', JSON.stringify(['valid', 42, null]));
     expect(storage.getSeen('english-lit')).toEqual(['valid']);
   });
+
+  it('stores and retrieves the user display name', () => {
+    const fake = new FakeStorage();
+    vi.stubGlobal('localStorage', fake);
+
+    expect(storage.getUserName()).toBeNull();
+    storage.setUserName('  Aryan Sharma  ');
+    expect(storage.getUserName()).toBe('Aryan Sharma');
+    expect(fake.getItem('icse:username:v1')).toBe('Aryan Sharma');
+  });
 });
 
 describe('storage fallback', () => {

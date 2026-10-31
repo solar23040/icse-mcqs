@@ -11,8 +11,10 @@ const COOKIE_NAME = 'icse_lb_id';
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 365; // one year
 const WEEK_KEY_PREFIX = 'leaderboard:week:';
 const DAY_KEY_PREFIX = 'leaderboard:day:';
+const NAME_KEY_PREFIX = 'leaderboard:name:';
 const WEEK_TTL_SECONDS = 60 * 60 * 24 * 14; // two weeks
 const DAY_TTL_SECONDS = 60 * 60 * 24 * 3;
+const NAME_TTL_SECONDS = 60 * 60 * 24 * 90; // 90 days
 const TOP_LIMIT = 10;
 
 /** Keep submissions small enough that a tampered local state cannot jump the board. */
@@ -89,13 +91,19 @@ function isToken(value: unknown): value is string {
   return typeof value === 'string' && /^[a-zA-Z0-9-]{8,64}$/.test(value);
 }
 
+function sanitiseName(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const clean = value.replace(/[^\p{L}\p{N} ._-]/gu, '').trim().slice(0, 20);
+  return clean.length >= 1 ? clean : null;
+}
+
 function toCount(value: unknown): number {
   const number = typeof value === 'number' ? value : Number(value);
   if (!Number.isFinite(number)) return 0;
   return Math.max(0, Math.trunc(number));
 }
 
-function parseTop(raw: unknown): LeaderboardEntry[] {
+function parseTop(raw: unknown, names: Map<string, string> = new Map()): LeaderboardEntry[] {
   if (!Array.isArray(raw)) return [];
 
   const top: LeaderboardEntry[] = [];
@@ -105,7 +113,7 @@ function parseTop(raw: unknown): LeaderboardEntry[] {
     if (!isToken(id)) continue;
 
     top.push({
-      name: nameFor(id),
+      name: names.get(id) ?? nameFor(id),
       xp: toCount(score),
       rank: top.length + 1,
     });
@@ -121,8 +129,9 @@ function buildPayload(
   token: string | null,
   rankRaw?: unknown,
   scoreRaw?: unknown,
+  names: Map<string, string> = new Map(),
 ): LeaderboardPayload {
-  const top = parseTop(topRaw);
+  const top = parseTop(topRaw, names);
   const total = toCount(totalRaw);
 
   let me: LeaderboardMe | null = null;
@@ -131,7 +140,7 @@ function buildPayload(
     if (Number.isFinite(rankIndex) && rankIndex >= 0) {
       const rank = Math.trunc(rankIndex) + 1;
       me = {
-        name: nameFor(token),
+        name: names.get(token) ?? nameFor(token),
         xp: toCount(scoreRaw),
         rank,
         percentile: Math.max(1, Math.ceil((rank / Math.max(1, total)) * 100)),
@@ -226,6 +235,10 @@ function dayKey(week: string, token: string, date: Date): string {
   return `${DAY_KEY_PREFIX}${week}:${token}:${date.toISOString().slice(0, 10)}`;
 }
 
+function nameKey(token: string): string {
+  return `${NAME_KEY_PREFIX}${token}`;
+}
+
 /** ISO week in UTC, e.g. 2026-W01. UTC keeps every visitor on the same week. */
 export function isoWeek(date: Date): string {
   const target = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
@@ -279,6 +292,36 @@ function storageFailure(): Response {
   return json({ configured: true, error: 'storage_unavailable' }, 502);
 }
 
+/** Extract token IDs from a ZREVRANGE WITHSCORES result (alternating id/score). */
+function extractTokens(raw: unknown): string[] {
+  if (!Array.isArray(raw)) return [];
+  const tokens: string[] = [];
+  for (let i = 0; i < raw.length; i += 2) {
+    if (isToken(raw[i])) tokens.push(raw[i] as string);
+  }
+  return tokens;
+}
+
+/** Fetch custom names for a list of tokens. Returns a map token→name. */
+async function fetchNames(tokens: string[]): Promise<Map<string, string>> {
+  const map = new Map<string, string>();
+  if (tokens.length === 0) return map;
+
+  const commands: RedisCommand[] = tokens.map((t) => ['GET', nameKey(t)]);
+  try {
+    const results = await redisPipeline(commands);
+    for (let i = 0; i < tokens.length; i++) {
+      const val = results[i];
+      if (typeof val === 'string' && val.length > 0) {
+        map.set(tokens[i]!, val);
+      }
+    }
+  } catch {
+    // Name fetch is best-effort; fall back to generated names
+  }
+  return map;
+}
+
 export async function GET(request: Request): Promise<Response> {
   if (!redisConfig()) return unconfigured();
 
@@ -294,6 +337,12 @@ export async function GET(request: Request): Promise<Response> {
     if (token) commands.push(['ZREVRANK', key, token], ['ZSCORE', key, token]);
 
     const results = await redisPipeline(commands);
+
+    // Collect tokens that appear in the top list + the current user
+    const topTokens = extractTokens(results[0]);
+    if (token && !topTokens.includes(token)) topTokens.push(token);
+    const names = await fetchNames(topTokens);
+
     return json(
       buildPayload(
         week,
@@ -302,6 +351,7 @@ export async function GET(request: Request): Promise<Response> {
         token,
         token ? results[2] : null,
         token ? results[3] : null,
+        names,
       ),
     );
   } catch {
@@ -314,12 +364,16 @@ export async function POST(request: Request): Promise<Response> {
   if (!redisConfig()) return unconfigured();
 
   let weeklyXp: unknown;
+  let submittedName: string | null = null;
   try {
     const body: unknown = await request.json();
-    weeklyXp =
-      typeof body === 'object' && body !== null
-        ? (body as { weeklyXp?: unknown }).weeklyXp
-        : null;
+    if (typeof body === 'object' && body !== null) {
+      const b = body as { weeklyXp?: unknown; name?: unknown };
+      weeklyXp = b.weeklyXp;
+      submittedName = sanitiseName(b.name);
+    } else {
+      weeklyXp = null;
+    }
   } catch {
     return json({ error: 'invalid_json' }, 400);
   }
@@ -360,6 +414,10 @@ export async function POST(request: Request): Promise<Response> {
         ['SET', day, used + allowed, 'EX', DAY_TTL_SECONDS],
       );
     }
+    // Store custom name if provided
+    if (submittedName) {
+      commands.push(['SET', nameKey(token), submittedName, 'EX', NAME_TTL_SECONDS]);
+    }
     commands.push(
       ['ZREVRANGE', key, 0, TOP_LIMIT - 1, 'WITHSCORES'],
       ['ZCARD', key],
@@ -369,8 +427,15 @@ export async function POST(request: Request): Promise<Response> {
 
     const results = await redisPipeline(commands);
     const offset = results.length - 4;
+
+    // Fetch names for top players
+    const topTokens = extractTokens(results[offset]);
+    if (!topTokens.includes(token)) topTokens.push(token);
+    const names = await fetchNames(topTokens);
+    if (submittedName) names.set(token, submittedName);
+
     return json(
-      buildPayload(week, results[offset], results[offset + 1], token, results[offset + 2], results[offset + 3]),
+      buildPayload(week, results[offset], results[offset + 1], token, results[offset + 2], results[offset + 3], names),
       200,
       existing ? undefined : tokenCookie(token, request),
     );
@@ -394,8 +459,13 @@ export async function DELETE(request: Request): Promise<Response> {
 
     const results = await redisPipeline(commands);
     const offset = results.length - 2;
+
+    // Fetch custom names for remaining top players
+    const topTokens = extractTokens(results[offset]);
+    const names = await fetchNames(topTokens);
+
     return json(
-      buildPayload(week, results[offset], results[offset + 1], null, null, null),
+      buildPayload(week, results[offset], results[offset + 1], null, null, null, names),
       200,
       token ? clearTokenCookie(request) : undefined,
     );
