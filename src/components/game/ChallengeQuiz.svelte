@@ -18,29 +18,29 @@
   } = $props();
 
   type Stage = 'start' | 'quiz' | 'results';
-  let stage: Stage = 'start';
-  let game: GameState = defaultGameState();
-  let today = '';
-  let questions: (ReturnType<typeof buildDailyChallenge>[number] & { subject: Subject })[] = [];
-  let index = 0;
-  let choice: number | null = null;
-  let correctCount = 0;
-  let wrongCount = 0;
-  let streak = 0;
-  let bestStreak = 0;
-  let missedCount = 0;
-  let answeredCount = 0;
-  let dailyAlready = false;
-  let timeLeft = 60;
-  let timeUp = false;
-  let deadline = 0;
+  let stage = $state<Stage>('start');
+  let game = $state<GameState>(defaultGameState());
+  let today = $state('');
+  let questions = $state<(ReturnType<typeof buildDailyChallenge>[number] & { subject: Subject })[]>([]);
+  let index = $state(0);
+  let choice = $state<number | null>(null);
+  let correctCount = $state(0);
+  let wrongCount = $state(0);
+  let streak = $state(0);
+  let bestStreak = $state(0);
+  let missedCount = $state(0);
+  let answeredCount = $state(0);
+  let dailyAlready = $state(false);
+  let timeLeft = $state(60);
+  let timeUp = $state(false);
+  let deadline = $state(0);
   let timerId: ReturnType<typeof setInterval> | null = null;
-  let gameEvents: GameEvent[] = [];
-  let sessionXp = 0;
-  let sessionBadges: string[] = [];
-  let liveMessage = '';
-  let questionHeading: HTMLHeadingElement | null = null;
-  let nextButton: HTMLButtonElement | null = null;
+  let gameEvents = $state<GameEvent[]>([]);
+  let sessionXp = $state(0);
+  let sessionBadges = $state<string[]>([]);
+  let liveMessage = $state('');
+  let questionHeading = $state<HTMLHeadingElement | null>(null);
+  let nextButton = $state<HTMLButtonElement | null>(null);
 
   const current = $derived(questions[index] ?? null);
   const answered = $derived(choice !== null);
@@ -326,7 +326,7 @@
               : optionIndex === current.correctIndex
                 ? 'border-emerald-500 bg-emerald-50 text-emerald-950 dark:border-emerald-400 dark:bg-emerald-950/50 dark:text-emerald-50'
                 : optionIndex === choice
-                  ? 'border-rose-500 bg-rose-50 text-rose-950 dark:border-rose-400 dark:bg-rose-950/50 dark:text-rose-950'
+                  ? 'border-rose-500 bg-rose-50 text-rose-950 dark:border-rose-400 dark:bg-rose-950/50 dark:text-rose-50'
                   : 'border-slate-200 bg-slate-50 text-slate-500 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-400'}"
           >
             <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-sm font-bold dark:bg-slate-700 dark:text-slate-300">
@@ -413,4 +413,3 @@
     </div>
   {/if}
 </section>
-EOF

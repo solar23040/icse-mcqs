@@ -4,6 +4,7 @@
   import { localDay } from '../../lib/date';
   import { defaultGameState, type GameState } from '../../lib/gamification';
   import { getGame, getSeen, resetGame, saveGame } from '../../lib/storage';
+  import { exportProgress, importProgress } from '../../lib/transfer';
   import { SUBJECTS } from '../../lib/subjects';
   import XpBar from './XpBar.svelte';
 
@@ -14,6 +15,11 @@
   let today = $state('');
   let mounted = $state(false);
   let confirmingReset = $state(false);
+  let showTransfer = $state(false);
+  let exportCopied = $state(false);
+  let importCode = $state('');
+  let importStatus = $state<'idle' | 'ok' | 'error'>('idle');
+  let importErrorKey = $state('');
 
   const answeredToday = $derived(game.daily.day === today ? game.daily.answered : 0);
   const unseenCount = $derived(questionIds.filter((id) => !seenIds.has(id)).length);
@@ -54,6 +60,36 @@
     resetGame();
     refresh();
     confirmingReset = false;
+  }
+
+  const IMPORT_ERRORS: Record<string, string> = {
+    invalid_code: "That doesn't look like a valid backup code.",
+    checksum_mismatch: 'The code may be incomplete or edited. Please copy it again.',
+    unknown_version: 'This code was made by a newer version of the app.',
+    invalid_game: 'The backup code contains invalid game data.',
+    storage_error: "Couldn't save the import. Check your browser storage settings.",
+  };
+
+  function handleExport(): void {
+    const code = exportProgress();
+    navigator.clipboard.writeText(code).then(
+      () => { exportCopied = true; setTimeout(() => { exportCopied = false; }, 2000); },
+      () => { exportCopied = false; },
+    );
+  }
+
+  function handleImport(): void {
+    if (!importCode.trim()) return;
+    importStatus = 'idle';
+    const result = importProgress(importCode);
+    if (result.ok) {
+      importStatus = 'ok';
+      importCode = '';
+      refresh();
+    } else {
+      importStatus = 'error';
+      importErrorKey = result.error ?? 'unknown';
+    }
   }
 
   onMount(() => {
@@ -208,6 +244,65 @@
       >
         Reset game progress
       </button>
+    {/if}
+  </div>
+
+  <div class="mt-3 border-t border-slate-200 pt-4 dark:border-slate-800">
+    <button
+      type="button"
+      on:click={() => { showTransfer = !showTransfer; importStatus = 'idle'; }}
+      class="rounded-lg px-2 py-1 text-sm font-semibold text-slate-500 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:text-slate-400"
+    >
+      Backup &amp; restore {showTransfer ? '▴' : '▾'}
+    </button>
+
+    {#if showTransfer}
+      <div class="mt-4 space-y-5">
+        <div>
+          <p class="text-sm font-semibold">Export</p>
+          <p class="mt-1 text-xs text-slate-600 dark:text-slate-300">
+            Copy a code to take your progress to another device.
+          </p>
+          <button
+            type="button"
+            on:click={handleExport}
+            class="mt-2 min-h-10 rounded-lg bg-indigo-600 px-4 text-sm font-semibold text-white transition-colors hover:bg-indigo-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
+          >
+            {exportCopied ? 'Copied!' : 'Copy backup code'}
+          </button>
+        </div>
+
+        <div>
+          <p class="text-sm font-semibold">Import</p>
+          <p class="mt-1 text-xs text-slate-600 dark:text-slate-300">
+            Paste a backup code from another device to restore your progress here.
+          </p>
+          <textarea
+            bind:value={importCode}
+            on:input={() => { importStatus = 'idle'; }}
+            rows="3"
+            placeholder="Paste your backup code here…"
+            class="mt-2 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-mono text-slate-900 placeholder-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:placeholder-slate-500"
+          ></textarea>
+          <button
+            type="button"
+            on:click={handleImport}
+            disabled={!importCode.trim()}
+            class="mt-2 min-h-10 rounded-lg border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-800 transition-colors hover:border-indigo-400 hover:bg-indigo-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:focus-visible:ring-offset-slate-900"
+          >
+            Restore progress
+          </button>
+          {#if importStatus === 'ok'}
+            <p role="status" class="mt-2 text-sm font-semibold text-emerald-700 dark:text-emerald-300">
+              ✓ Progress restored!
+            </p>
+          {:else if importStatus === 'error'}
+            <p role="alert" class="mt-2 text-sm font-semibold text-rose-700 dark:text-rose-300">
+              {IMPORT_ERRORS[importErrorKey] ?? 'Something went wrong. Please try again.'}
+            </p>
+          {/if}
+        </div>
+      </div>
     {/if}
   </div>
 </section>
