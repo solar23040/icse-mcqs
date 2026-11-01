@@ -1,7 +1,9 @@
 <script lang="ts">
-  import { onMount, tick } from 'svelte';
+  import { onDestroy, onMount, tick } from 'svelte';
   import { buildSession, buildWrongSession, type SessionMode } from '../../lib/engine';
   import { localDay } from '../../lib/date';
+  import { recordSubjectPractice } from '../../lib/activity';
+  import { syncLeaderboard } from '../../lib/leaderboard-api';
   import {
     applyAnswer,
     applySession,
@@ -30,6 +32,8 @@
   import ShareCard from '../game/ShareCard.svelte';
   import XpBar from '../game/XpBar.svelte';
   import {
+    SECONDS_PER_QUESTION,
+    formatClock,
     isTypingTarget,
     optionIndexFromKey,
     scorePercent,
@@ -44,6 +48,7 @@
 
   const lengthOptions: { value: SessionLength; label: string; ariaLabel: string }[] = [
     { value: 10, label: '10', ariaLabel: '10 questions' },
+    { value: 16, label: '16', ariaLabel: '16 questions' },
     { value: 20, label: '20', ariaLabel: '20 questions' },
     { value: 30, label: '30', ariaLabel: '30 questions' },
     { value: 'all', label: 'All', ariaLabel: 'All unseen questions' }
@@ -52,6 +57,7 @@
   let stage: Stage = 'start';
   let selectedLength: SessionLength = 10;
   let selectedMode: SessionMode = 'unseen';
+  let timedMode = false;
   let answerHint = '';
   let session: SessionQuestion[] = [];
   let index = 0;
@@ -75,6 +81,16 @@
   let sessionXp = 0;
   let sessionBadges: string[] = [];
 
+  let elapsedSeconds = 0;
+  let totalSeconds = 0;
+  let sessionStartedAt = 0;
+  let elapsedTimerId: ReturnType<typeof setInterval> | null = null;
+  let timeLeft = SECONDS_PER_QUESTION;
+  let timeUp = false;
+  let timedOutCount = 0;
+  let questionDeadline = 0;
+  let questionTimerId: ReturnType<typeof setInterval> | null = null;
+
   let current: SessionQuestion | null = null;
   let answered = false;
   let isLast = false;
@@ -92,7 +108,7 @@
   let nextButton: HTMLButtonElement | null = null;
 
   $: current = session[index] ?? null;
-  $: answered = choice !== null;
+  $: answered = choice !== null || timeUp;
   $: isLast = session.length > 0 && index >= session.length - 1;
   $: progressPercent = session.length > 0 ? ((index + 1) / session.length) * 100 : 0;
   $: scorePercentValue = scorePercent(correctCount, session.length);
@@ -124,8 +140,62 @@
     }
   });
 
+  onDestroy(() => {
+    stopSessionTimer();
+    stopQuestionTimer();
+  });
+
   function currentDay(): string {
     return today === '' ? localDay(new Date()) : today;
+  }
+
+  function startSessionTimer(): void {
+    stopSessionTimer();
+    sessionStartedAt = Date.now();
+    elapsedSeconds = 0;
+    elapsedTimerId = setInterval(() => {
+      elapsedSeconds = Math.floor((Date.now() - sessionStartedAt) / 1000);
+    }, 250);
+  }
+
+  function stopSessionTimer(): void {
+    if (elapsedTimerId) clearInterval(elapsedTimerId);
+    elapsedTimerId = null;
+  }
+
+  function startQuestionTimer(): void {
+    stopQuestionTimer();
+    timeUp = false;
+    timeLeft = SECONDS_PER_QUESTION;
+    if (!timedMode) return;
+
+    questionDeadline = Date.now() + SECONDS_PER_QUESTION * 1000;
+    questionTimerId = setInterval(tickQuestionTimer, 250);
+  }
+
+  function tickQuestionTimer(): void {
+    if (questionDeadline === 0) return;
+
+    // Read the real deadline so throttled background tabs cannot gain time.
+    const remainingMs = questionDeadline - Date.now();
+    const next = Math.max(0, Math.ceil(remainingMs / 1000));
+    const previous = timeLeft;
+    timeLeft = next;
+
+    if (next !== previous && (next === 10 || next === 5)) {
+      liveMessage = `${next} seconds left on this question.`;
+    }
+
+    if (remainingMs <= 0) {
+      questionDeadline = 0;
+      stopQuestionTimer();
+      submitAnswer(null);
+    }
+  }
+
+  function stopQuestionTimer(): void {
+    if (questionTimerId) clearInterval(questionTimerId);
+    questionTimerId = null;
   }
 
   function recordGameEvents(events: GameEvent[]): void {
@@ -160,6 +230,8 @@
   }
 
   function clearSession(): void {
+    stopSessionTimer();
+    stopQuestionTimer();
     session = [];
     index = 0;
     choice = null;
@@ -175,6 +247,12 @@
     sessionXp = 0;
     sessionBadges = [];
     answerHint = '';
+    elapsedSeconds = 0;
+    totalSeconds = 0;
+    timeLeft = SECONDS_PER_QUESTION;
+    timeUp = false;
+    timedOutCount = 0;
+    questionDeadline = 0;
   }
 
   function startQuestions(nextQuestions: SessionQuestion[], retry: boolean, wrong = false): void {
@@ -193,7 +271,11 @@
     sessionXp = 0;
     sessionBadges = [];
     answerHint = '';
+    timedOutCount = 0;
+    totalSeconds = 0;
     stage = 'quiz';
+    startSessionTimer();
+    startQuestionTimer();
     void tick().then(() => questionHeading?.focus());
   }
 
@@ -256,12 +338,25 @@
   }
 
   function chooseOption(optionIndex: number): void {
-    const question = current;
-    if (stage !== 'quiz' || !question || choice !== null) return;
-    if (optionIndex < 0 || optionIndex >= question.options.length) return;
+    submitAnswer(optionIndex);
+  }
 
-    choice = optionIndex;
-    const correct = optionIndex === question.correctIndex;
+  /** optionIndex is null when the per-question timer runs out. */
+  function submitAnswer(optionIndex: number | null): void {
+    const question = current;
+    if (stage !== 'quiz' || !question || choice !== null || timeUp) return;
+    if (optionIndex !== null && (optionIndex < 0 || optionIndex >= question.options.length)) return;
+
+    const timedOut = optionIndex === null;
+    if (timedOut) {
+      timeUp = true;
+      timedOutCount += 1;
+    } else {
+      choice = optionIndex;
+    }
+    stopQuestionTimer();
+
+    const correct = optionIndex !== null && optionIndex === question.correctIndex;
 
     if (correct) {
       correctCount += 1;
@@ -271,15 +366,20 @@
     } else {
       streak = 0;
       missed = [...missed, { question, chosenIndex: optionIndex }];
-      liveMessage = `Incorrect. The correct answer is ${
-        question.options[question.correctIndex]
-      }. ${question.explanation}`;
+      liveMessage = timedOut
+        ? `Time's up. The correct answer is ${question.options[question.correctIndex]}. ${
+            question.explanation
+          }`
+        : `Incorrect. The correct answer is ${
+            question.options[question.correctIndex]
+          }. ${question.explanation}`;
     }
 
     let wrongGraduated = false;
     let wrongCurrentCount = 0;
     try {
       markSeen(subject, question.id);
+      recordSubjectPractice(subject);
 
       const wrongResult = recordWrongAnswerResult(subject, question.id, correct, 2);
       wrongGraduated = wrongResult.removed;
@@ -332,13 +432,15 @@
   }
 
   function handleNext(): void {
-    if (choice === null || !current) return;
+    if (!answered || !current) return;
 
     if (index < session.length - 1) {
       index += 1;
       choice = null;
+      timeUp = false;
       answerHint = '';
       liveMessage = '';
+      startQuestionTimer();
       void tick().then(() => questionHeading?.focus());
       return;
     }
@@ -347,6 +449,11 @@
   }
 
   function finishSession(): void {
+    totalSeconds = Math.floor((Date.now() - sessionStartedAt) / 1000);
+    elapsedSeconds = totalSeconds;
+    stopSessionTimer();
+    stopQuestionTimer();
+
     if (!retryMode && !wrongMode) {
       try {
         const seen = new Set(getSeen(subject));
@@ -369,6 +476,7 @@
         // Gamification is fail-soft; results still render.
       }
     }
+    void syncLeaderboard();
     refreshPool();
     stage = 'results';
     liveMessage = wrongMode
@@ -447,14 +555,14 @@
 
     const picked = optionIndexFromKey(event.key, current.options.length);
     if (picked !== null) {
-      if (choice === null) {
+      if (!answered) {
         event.preventDefault();
         chooseOption(picked);
       }
       return;
     }
 
-    if (event.key === 'Enter' && choice !== null) {
+    if (event.key === 'Enter' && answered) {
       // Let the focused Next button use its native activation.
       if (event.target === nextButton) return;
       event.preventDefault();
@@ -486,12 +594,13 @@
   function optionClasses(
     optionIndex: number,
     chosen: number | null,
-    correctIndex: number
+    correctIndex: number,
+    revealed: boolean
   ): string {
     const base =
       'flex min-h-14 w-full cursor-pointer items-center gap-3 rounded-2xl border-2 px-3 py-3 text-left transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 sm:px-4 sm:py-4';
 
-    if (chosen === null) {
+    if (!revealed) {
       return `${base} border-slate-300 bg-white text-slate-900 hover:border-indigo-400 hover:bg-indigo-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:border-indigo-400 dark:hover:bg-slate-700`;
     }
     if (optionIndex === correctIndex) {
@@ -506,11 +615,12 @@
   function optionNumberClasses(
     optionIndex: number,
     chosen: number | null,
-    correctIndex: number
+    correctIndex: number,
+    revealed: boolean
   ): string {
     const base =
       'flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-sm font-bold';
-    if (chosen === null) {
+    if (!revealed) {
       return `${base} bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300`;
     }
     if (optionIndex === correctIndex) {
@@ -526,10 +636,11 @@
     optionIndex: number,
     option: string,
     chosen: number | null,
-    correctIndex: number
+    correctIndex: number,
+    revealed: boolean
   ): string {
     const base = `Option ${optionIndex + 1}: ${option}`;
-    if (chosen === null) return base;
+    if (!revealed) return base;
     if (optionIndex === correctIndex) return `${base}. Correct answer.`;
     if (optionIndex === chosen) return `${base}. Your answer, incorrect.`;
     return `${base}. Not selected.`;
@@ -679,7 +790,7 @@
           <div
             role="group"
             aria-labelledby="session-length-label"
-            class="grid grid-cols-4 gap-2"
+            class="grid grid-cols-5 gap-2"
           >
             {#each lengthOptions as option (option.value)}
               <button
@@ -693,6 +804,36 @@
               </button>
             {/each}
           </div>
+        </div>
+
+        <div class="space-y-2">
+          <p id="timer-mode-label" class="text-sm font-semibold">Timer</p>
+          <div role="group" aria-labelledby="timer-mode-label" class="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              aria-pressed={!timedMode}
+              on:click={() => (timedMode = false)}
+              class="min-h-12 rounded-xl px-3 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 {!timedMode
+                ? 'bg-indigo-600 text-white shadow-sm hover:bg-indigo-700'
+                : 'border border-slate-300 bg-white text-slate-700 hover:border-indigo-400 hover:bg-indigo-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-indigo-400 dark:hover:bg-slate-700'}"
+            >
+              Practice (no limit)
+            </button>
+            <button
+              type="button"
+              aria-pressed={timedMode}
+              on:click={() => (timedMode = true)}
+              class="min-h-12 rounded-xl px-3 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 {timedMode
+                ? 'bg-indigo-600 text-white shadow-sm hover:bg-indigo-700'
+                : 'border border-slate-300 bg-white text-slate-700 hover:border-indigo-400 hover:bg-indigo-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-indigo-400 dark:hover:bg-slate-700'}"
+            >
+              Timed · 30s each
+            </button>
+          </div>
+          <p class="text-xs text-slate-500 dark:text-slate-400">
+            A stopwatch runs in every session. Timed mode gives you 30 seconds per question;
+            questions left unanswered are marked wrong.
+          </p>
         </div>
 
         {#if startError}
@@ -730,8 +871,26 @@
           <div
             class="flex flex-wrap items-center gap-2 text-sm font-semibold"
             role="group"
-            aria-label="Session score, streak and level"
+            aria-label="Session timer, score, streak and level"
           >
+            <span
+              class="rounded-full bg-slate-100 px-3 py-1 tabular-nums dark:bg-slate-800"
+              aria-label={`Elapsed time ${formatClock(elapsedSeconds)}`}
+            >
+              <span aria-hidden="true">⏱</span>
+              {formatClock(elapsedSeconds)}
+            </span>
+            {#if timedMode}
+              <span
+                class="rounded-full px-3 py-1 tabular-nums {!answered && timeLeft <= 5
+                  ? 'bg-rose-100 text-rose-800 dark:bg-rose-500/20 dark:text-rose-200'
+                  : 'bg-slate-100 dark:bg-slate-800'}"
+                aria-label={answered ? 'Question timer stopped' : `${timeLeft} seconds left`}
+              >
+                <span aria-hidden="true">⏳</span>
+                {answered ? '—' : `${timeLeft}s`}
+              </span>
+            {/if}
             <span class="rounded-full bg-slate-100 px-3 py-1 dark:bg-slate-800">
               Score <span class="text-indigo-600 dark:text-indigo-400">{correctCount}</span>
             </span>
@@ -784,13 +943,19 @@
             role="radio"
             aria-checked={choice === optionIndex}
             aria-disabled={answered}
-            aria-label={optionAriaLabel(optionIndex, option, choice, current.correctIndex)}
+            aria-label={optionAriaLabel(
+              optionIndex,
+              option,
+              choice,
+              current.correctIndex,
+              answered
+            )}
             on:click={() => chooseOption(optionIndex)}
-            class={optionClasses(optionIndex, choice, current.correctIndex)}
+            class={optionClasses(optionIndex, choice, current.correctIndex, answered)}
           >
             <span
               aria-hidden="true"
-              class={optionNumberClasses(optionIndex, choice, current.correctIndex)}
+              class={optionNumberClasses(optionIndex, choice, current.correctIndex, answered)}
             >
               {optionIndex + 1}
             </span>
@@ -851,6 +1016,9 @@
           >
             {#if choice === current.correctIndex}
               Correct!
+            {:else if timeUp && choice === null}
+              Time's up! The correct answer is
+              <strong>{current.options[current.correctIndex]}</strong>.
             {:else}
               Not quite. The correct answer is
               <strong>{current.options[current.correctIndex]}</strong>.
@@ -926,6 +1094,18 @@
         <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">
           Best streak: {bestStreak}
         </p>
+        <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">
+          <span aria-hidden="true">⏱</span>
+          Time: {formatClock(totalSeconds)}
+          {#if session.length > 0}
+            · {Math.round(totalSeconds / session.length)}s per question
+          {/if}
+        </p>
+        {#if timedMode && timedOutCount > 0}
+          <p class="mt-1 text-sm font-semibold text-rose-700 dark:text-rose-300">
+            Timed out on {timedOutCount} question{timedOutCount === 1 ? '' : 's'}.
+          </p>
+        {/if}
       </div>
 
       {#if !retryMode}
@@ -1006,7 +1186,9 @@
                 </p>
                 <p class="mt-1 text-sm text-rose-700 dark:text-rose-300">
                   <span class="font-semibold">You chose:</span>
-                  {item.question.options[item.chosenIndex]}
+                  {item.chosenIndex === null
+                    ? 'No answer (time up)'
+                    : item.question.options[item.chosenIndex]}
                 </p>
               </li>
             {/each}

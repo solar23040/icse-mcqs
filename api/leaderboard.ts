@@ -17,6 +17,48 @@ const DAY_TTL_SECONDS = 60 * 60 * 24 * 3;
 const NAME_TTL_SECONDS = 60 * 60 * 24 * 90; // 90 days
 const TOP_LIMIT = 10;
 
+const PROFILE_KEY_PREFIX = 'leaderboard:profile:';
+const PROFILE_TTL_SECONDS = 60 * 60 * 24 * 90; // 90 days
+const MAX_PROFILE_BADGES = 40;
+const MAX_PROFILE_SUBJECTS = 10;
+
+const BADGE_IDS = new Set([
+  'first-steps',
+  'perfect-ten',
+  'week-warrior',
+  'subject-sweep',
+  'comeback',
+  'all-rounder',
+  'century',
+  'dedicated',
+  'marathon',
+  'sharpshooter',
+  'flawless-twenty',
+  'mastermind',
+  'specialist',
+  'comeback-king',
+  'grand-slam',
+  'fortnight',
+  'daily-devotee',
+  'speed-demon',
+  'goal-getter',
+  'night-owl',
+  'early-bird',
+  'collector',
+]);
+
+const SUBJECT_SLUGS = new Set([
+  'history',
+  'economics',
+  'geography',
+  'maths',
+  'english-lit',
+  'physics',
+  'chemistry',
+  'computer-applications',
+  'physical-education',
+]);
+
 /** Keep submissions small enough that a tampered local state cannot jump the board. */
 const MAX_SUBMISSION_XP = 500;
 const MAX_DAILY_XP = 2000;
@@ -70,6 +112,8 @@ const ANIMALS = [
 type RedisCommand = (string | number)[];
 
 export interface LeaderboardEntry {
+  /** Public profile id, safe to share in profile links. */
+  id: string;
   name: string;
   xp: number;
   rank: number;
@@ -85,6 +129,20 @@ export interface LeaderboardPayload {
   week: string;
   top: LeaderboardEntry[];
   me: LeaderboardMe | null;
+}
+
+export interface ProfileSubject {
+  subject: string;
+  lastPracticed: string;
+  attempts: number;
+}
+
+export interface PublicProfile {
+  id: string;
+  name: string;
+  lastOnline: string;
+  badges: string[];
+  subjects: ProfileSubject[];
 }
 
 function isToken(value: unknown): value is string {
@@ -113,6 +171,7 @@ function parseTop(raw: unknown, names: Map<string, string> = new Map()): Leaderb
     if (!isToken(id)) continue;
 
     top.push({
+      id: publicIdFor(id),
       name: names.get(id) ?? nameFor(id),
       xp: toCount(score),
       rank: top.length + 1,
@@ -140,6 +199,7 @@ function buildPayload(
     if (Number.isFinite(rankIndex) && rankIndex >= 0) {
       const rank = Math.trunc(rankIndex) + 1;
       me = {
+        id: publicIdFor(token),
         name: names.get(token) ?? nameFor(token),
         xp: toCount(scoreRaw),
         rank,
@@ -268,6 +328,93 @@ function nameFor(token: string): string {
   return `${adjective} ${animal} ${(hash % 99) + 1}`;
 }
 
+function hex8(value: number): string {
+  return value.toString(16).padStart(8, '0');
+}
+
+/** Stable public id that does not expose the leaderboard cookie token. */
+function publicIdFor(token: string): string {
+  return hex8(hashToken(`${token}:profile:a`)) + hex8(hashToken(`${token}:profile:b`));
+}
+
+function isPublicId(value: string): boolean {
+  return /^[a-f0-9]{16}$/.test(value);
+}
+
+function profileKey(id: string): string {
+  return `${PROFILE_KEY_PREFIX}${id}`;
+}
+
+function sanitiseBadges(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+
+  const badges: string[] = [];
+  for (const badge of value) {
+    if (typeof badge !== 'string' || !BADGE_IDS.has(badge)) continue;
+    if (!badges.includes(badge)) badges.push(badge);
+  }
+  return badges.slice(0, MAX_PROFILE_BADGES);
+}
+
+function isTimestamp(value: unknown): value is string {
+  return typeof value === 'string' && value.length > 0 && Number.isFinite(Date.parse(value));
+}
+
+function sanitiseSubjects(value: unknown, now: Date): ProfileSubject[] {
+  if (!Array.isArray(value)) return [];
+
+  const subjects: ProfileSubject[] = [];
+  const seen = new Set<string>();
+
+  for (const item of value) {
+    if (typeof item !== 'object' || item === null) continue;
+
+    const { subject, lastPracticed, attempts } = item as {
+      subject?: unknown;
+      lastPracticed?: unknown;
+      attempts?: unknown;
+    };
+    if (typeof subject !== 'string' || !SUBJECT_SLUGS.has(subject)) continue;
+    if (!isTimestamp(lastPracticed) || seen.has(subject)) continue;
+
+    const timestamp = new Date(lastPracticed);
+    // Ignore timestamps in the future so a tampered client cannot claim activity that has not happened.
+    const safeTimestamp = timestamp.getTime() > now.getTime() ? now.toISOString() : timestamp.toISOString();
+    seen.add(subject);
+    subjects.push({
+      subject,
+      lastPracticed: safeTimestamp,
+      attempts: toCount(attempts),
+    });
+  }
+
+  return subjects
+    .sort((left, right) => Date.parse(right.lastPracticed) - Date.parse(left.lastPracticed))
+    .slice(0, MAX_PROFILE_SUBJECTS);
+}
+
+function parseProfile(id: string, raw: string): PublicProfile | null {
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    if (typeof parsed !== 'object' || parsed === null) return null;
+
+    const record = parsed as Record<string, unknown>;
+    const name = typeof record.name === 'string' ? sanitiseName(record.name) : null;
+    if (!name) return null;
+    if (!isTimestamp(record.lastOnline)) return null;
+
+    return {
+      id,
+      name,
+      lastOnline: record.lastOnline,
+      badges: sanitiseBadges(record.badges),
+      subjects: sanitiseSubjects(record.subjects, new Date()),
+    };
+  } catch {
+    return null;
+  }
+}
+
 function sameOrigin(request: Request): boolean {
   const origin = request.headers.get('origin');
   if (!origin) return true;
@@ -322,8 +469,27 @@ async function fetchNames(tokens: string[]): Promise<Map<string, string>> {
   return map;
 }
 
+async function getProfile(id: string): Promise<Response> {
+  if (!isPublicId(id)) return json({ configured: true, error: 'invalid_profile' }, 400);
+
+  try {
+    const [raw] = await redisPipeline([['GET', profileKey(id)]]);
+    if (typeof raw !== 'string') return json({ configured: true, error: 'not_found' }, 404);
+
+    const profile = parseProfile(id, raw);
+    if (!profile) return json({ configured: true, error: 'not_found' }, 404);
+
+    return json({ configured: true, profile });
+  } catch {
+    return storageFailure();
+  }
+}
+
 export async function GET(request: Request): Promise<Response> {
   if (!redisConfig()) return unconfigured();
+
+  const requestedProfile = new URL(request.url).searchParams.get('profile');
+  if (requestedProfile !== null) return getProfile(requestedProfile);
 
   const token = readCookie(request);
   const week = isoWeek(new Date());
@@ -365,12 +531,18 @@ export async function POST(request: Request): Promise<Response> {
 
   let weeklyXp: unknown;
   let submittedName: string | null = null;
+  let submittedProfile: { badges?: unknown; subjects?: unknown } | null = null;
   try {
     const body: unknown = await request.json();
     if (typeof body === 'object' && body !== null) {
-      const b = body as { weeklyXp?: unknown; name?: unknown };
+      const b = body as { weeklyXp?: unknown; name?: unknown; profile?: unknown };
       weeklyXp = b.weeklyXp;
       submittedName = sanitiseName(b.name);
+
+      if (typeof b.profile === 'object' && b.profile !== null) {
+        const profile = b.profile as Record<string, unknown>;
+        submittedProfile = { badges: profile.badges, subjects: profile.subjects };
+      }
     } else {
       weeklyXp = null;
     }
@@ -418,6 +590,22 @@ export async function POST(request: Request): Promise<Response> {
     if (submittedName) {
       commands.push(['SET', nameKey(token), submittedName, 'EX', NAME_TTL_SECONDS]);
     }
+    if (submittedProfile) {
+      const profile: PublicProfile = {
+        id: publicIdFor(token),
+        name: submittedName ?? nameFor(token),
+        lastOnline: now.toISOString(),
+        badges: sanitiseBadges(submittedProfile.badges),
+        subjects: sanitiseSubjects(submittedProfile.subjects, now),
+      };
+      commands.push([
+        'SET',
+        profileKey(profile.id),
+        JSON.stringify(profile),
+        'EX',
+        PROFILE_TTL_SECONDS,
+      ]);
+    }
     commands.push(
       ['ZREVRANGE', key, 0, TOP_LIMIT - 1, 'WITHSCORES'],
       ['ZCARD', key],
@@ -454,7 +642,9 @@ export async function DELETE(request: Request): Promise<Response> {
 
   try {
     const commands: RedisCommand[] = [];
-    if (token) commands.push(['ZREM', key, token]);
+    if (token) {
+      commands.push(['ZREM', key, token], ['DEL', profileKey(publicIdFor(token))]);
+    }
     commands.push(['ZREVRANGE', key, 0, TOP_LIMIT - 1, 'WITHSCORES'], ['ZCARD', key]);
 
     const results = await redisPipeline(commands);

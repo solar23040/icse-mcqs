@@ -51,6 +51,17 @@ After a session, the start screen shows a **Practice mistakes** mode with a coun
 
 Mistake practice is a study aid: it does not change the saved `attempted`/`correct` stats or the seen-question progress. The wrong-question ids are stored per subject under `mcq:<subject>:wrong` in `localStorage`, next to `mcq:<subject>:seen` and `mcq:<subject>:stats`.
 
+## Timer and session length
+
+Every practice session shows a stopwatch (elapsed session time) next to the question counter, and the results screen reports total time and average time per question.
+
+The start screen also offers a **Timer** choice:
+
+- **Practice (no limit)** — answer at your own pace; the stopwatch still runs.
+- **Timed · 30s each** — each question has a 30-second countdown. When it reaches zero the correct answer and explanation are revealed, the question is marked wrong (counted in stats, practice mistakes and review), and you press **Next** to continue. Nothing advances on its own.
+
+Session lengths are 10, 16, 20, 30, or all unseen questions.
+
 ## Next-subject poll
 
 The `/poll` page asks visitors which subject to add next. Options and ids live in `src/lib/poll.ts`, and the home page and footer link to the page. Visitors can change or remove their vote.
@@ -314,11 +325,13 @@ Badges are idempotent and never revoked: First Steps (10 answered), Perfect Ten 
 
 The home page has an optional weekly leaderboard. It is **off by default**; joining is a deliberate choice and can be undone with **Leave leaderboard**.
 
-- The server stores an anonymous random id in an `HttpOnly` cookie (`icse_lb_id`). No name, email or IP address is stored, and there is no free-text input.
+- The server stores an anonymous random id in an `HttpOnly` cookie (`icse_lb_id`). No email or IP address is stored, and there is no free-text input.
 - Display names such as "Brave Owl 42" are generated server-side from the anonymous id.
 - Weekly XP is submitted to `api/leaderboard.ts`, which keeps a Redis sorted set per ISO week (`leaderboard:week:<YYYY-Www>`) with a 14-day TTL. The top 10 are public; each caller also sees their own rank and percentile.
+- Joined players also get a public profile at `/profile?id=<public-id>`. Clicking a name on the leaderboard opens it and shows earned badges, recently practised subjects with answer counts, and the last time they were online. Profiles are stored for 90 days under `leaderboard:profile:<public-id>`.
+- The public id is derived from the cookie token with a one-way hash, so profile links never expose the cookie value. Last-online is updated at most every five minutes while a joined player uses the site.
 - The server caps each submission at 500 XP and each browser at 2000 XP per day. This blocks casual tampering but the leaderboard is **not cheat-proof**.
-- Leaving removes the caller's entry from the current week and clears the cookie. Entries also expire automatically.
+- Leaving removes the caller's entry and public profile from the current week and clears the cookie. Entries also expire automatically.
 - Without Upstash configured the page shows an "unavailable" state; the rest of the site keeps working. `npm run dev` serves the Astro site only, so the leaderboard is unavailable locally unless you use `npx vercel dev`.
 - Configuration uses the same `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` variables as the poll (the older `KV_REST_API_URL` / `KV_REST_API_TOKEN` names are also supported).
 

@@ -73,14 +73,14 @@ function execute(redis: FakeRedis, command: Command): unknown {
 
 function apiRequest(
   method: string,
-  options: { body?: unknown; cookie?: string; origin?: string } = {},
+  options: { body?: unknown; cookie?: string; origin?: string; path?: string } = {},
 ): Request {
   const headers = new Headers();
   if (options.body !== undefined) headers.set('content-type', 'application/json');
   if (options.cookie) headers.set('cookie', `icse_lb_id=${options.cookie}`);
   if (options.origin) headers.set('origin', options.origin);
 
-  return new Request('https://icse.example/api/leaderboard', {
+  return new Request(`https://icse.example${options.path ?? '/api/leaderboard'}`, {
     method,
     headers,
     body: options.body === undefined ? undefined : JSON.stringify(options.body),
@@ -264,6 +264,71 @@ describe('leaderboard API', () => {
 
     expect(response.status).toBe(502);
     expect((await payload(response)).configured).toBe(true);
+  });
+
+  it('stores achievements and practice history in a public profile', async () => {
+    const first = await POST(
+      apiRequest('POST', {
+        body: {
+          weeklyXp: 50,
+          name: 'Aryan',
+          profile: {
+            badges: ['first-steps', 'century', 'not-a-badge'],
+            subjects: [
+              { subject: 'maths', lastPracticed: '2026-10-30T12:00:00.000Z', attempts: 4 },
+              { subject: 'history', lastPracticed: '2026-10-31T12:00:00.000Z', attempts: 7 },
+              { subject: 'not-a-subject', lastPracticed: '2026-10-31T12:00:00.000Z', attempts: 1 },
+            ],
+          },
+        },
+      }),
+    );
+
+    const me = meOf(await payload(first));
+    const id = String(me.id);
+    expect(id).toMatch(/^[a-f0-9]{16}$/);
+
+    const response = await GET(apiRequest('GET', { path: `/api/leaderboard?profile=${id}` }));
+    const body = await payload(response);
+    const profile = body.profile as Record<string, unknown>;
+
+    expect(response.status).toBe(200);
+    expect(profile.id).toBe(id);
+    expect(profile.name).toBe('Aryan');
+    expect(profile.badges).toEqual(['first-steps', 'century']);
+    expect(profile.subjects).toEqual([
+      { subject: 'history', lastPracticed: '2026-10-31T12:00:00.000Z', attempts: 7 },
+      { subject: 'maths', lastPracticed: '2026-10-30T12:00:00.000Z', attempts: 4 },
+    ]);
+    expect(typeof profile.lastOnline).toBe('string');
+  });
+
+  it('returns 400 or 404 for bad profile ids', async () => {
+    const invalid = await GET(apiRequest('GET', { path: '/api/leaderboard?profile=bad' }));
+    const missing = await GET(
+      apiRequest('GET', { path: '/api/leaderboard?profile=0123456789abcdef' }),
+    );
+
+    expect(invalid.status).toBe(400);
+    expect(missing.status).toBe(404);
+  });
+
+  it('removes the public profile when leaving the leaderboard', async () => {
+    const first = await POST(
+      apiRequest('POST', {
+        body: {
+          weeklyXp: 40,
+          profile: { badges: ['first-steps'], subjects: [] },
+        },
+      }),
+    );
+    const token = cookieToken(first);
+    const id = String(meOf(await payload(first)).id);
+
+    await DELETE(apiRequest('DELETE', { cookie: token }));
+    const response = await GET(apiRequest('GET', { path: `/api/leaderboard?profile=${id}` }));
+
+    expect(response.status).toBe(404);
   });
 
   it('uses ISO week keys across year boundaries', () => {

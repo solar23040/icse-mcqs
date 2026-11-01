@@ -3,15 +3,13 @@
   import { getGame } from '../../lib/storage';
   import { getUserName } from '../../lib/storage';
   import {
-    advanceWeeklyXp,
-    currentIsoWeek,
     getLeaderboardState,
     saveLeaderboardState,
     setLeaderboardOptedIn,
     startLeaderboard,
     type LeaderboardSnapshot
   } from '../../lib/leaderboard';
-  import { leaveLeaderboard, loadLeaderboard, submitWeeklyXp } from '../../lib/leaderboard-api';
+  import { leaveLeaderboard, syncLeaderboard } from '../../lib/leaderboard-api';
 
   let mounted = $state(false);
   let optedIn = $state(false);
@@ -29,13 +27,8 @@
     message = '';
 
     try {
-      const week = currentIsoWeek();
-      const advanced = advanceWeeklyXp(getLeaderboardState(), getGame().xp, week);
-      saveLeaderboardState(advanced);
-
-      // Always POST so the name is submitted to the server (even when weeklyXp is 0 on first join).
-      // loadLeaderboard() (GET) never sends the name, so using it would leave the user nameless.
-      const result = await submitWeeklyXp(advanced.weeklyXp);
+      // Always POST so the name, achievements and practice history are submitted to the server.
+      const result = await syncLeaderboard();
 
       if (result) {
         snapshot = result;
@@ -129,8 +122,9 @@
   </div>
 
   <p class="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-    Optional. Joining stores a random id in an HttpOnly cookie and shares your weekly XP and chosen display name.
-    No email or IP address is stored, and you can leave at any time to remove your entry.
+    Optional. Joining stores a random id in an HttpOnly cookie and shares your weekly XP, chosen display name,
+    earned badges and recent subject activity. No email or IP address is stored, and you can leave at any time
+    to remove your entry and profile.
   </p>
 
   <div class="mt-5">
@@ -162,13 +156,23 @@
               <p class="text-sm font-semibold text-indigo-800 dark:text-indigo-200">
                 You are {displayName ?? snapshot.me.name}
               </p>
-              <button
-                type="button"
-                on:click={() => window.dispatchEvent(new CustomEvent('icse:openNameModal'))}
-                class="text-xs font-semibold text-indigo-600 underline-offset-2 hover:underline dark:text-indigo-400"
-              >
-                Change name
-              </button>
+              <div class="flex items-center gap-3">
+                {#if snapshot.me.id}
+                  <a
+                    href={`/profile?id=${snapshot.me.id}`}
+                    class="text-xs font-semibold text-indigo-600 underline-offset-2 hover:underline dark:text-indigo-400"
+                  >
+                    View profile
+                  </a>
+                {/if}
+                <button
+                  type="button"
+                  on:click={() => window.dispatchEvent(new CustomEvent('icse:openNameModal'))}
+                  class="text-xs font-semibold text-indigo-600 underline-offset-2 hover:underline dark:text-indigo-400"
+                >
+                  Change name
+                </button>
+              </div>
             </div>
             <p class="mt-1 text-sm text-indigo-900 dark:text-indigo-100">
               Rank #{snapshot.me.rank} · {snapshot.me.xp} XP · Top {snapshot.me.percentile}% this week
@@ -192,16 +196,31 @@
         {#if snapshot.top.length > 0}
           <ol class="space-y-2">
             {#each snapshot.top as entry (entry.rank)}
-              <li
-                class="flex items-center gap-3 rounded-xl px-3 py-2 text-sm {snapshot.me?.rank === entry.rank
+              {@const rowClass = `flex items-center gap-3 rounded-xl px-3 py-2 text-sm ${
+                snapshot.me?.rank === entry.rank
                   ? 'bg-indigo-100 font-semibold dark:bg-indigo-500/20'
-                  : 'bg-slate-100 dark:bg-slate-800/70'}"
-              >
-                <span class="w-8 shrink-0 text-slate-500 dark:text-slate-400">#{entry.rank}</span>
-                <span class="min-w-0 flex-1 truncate">
-                  {snapshot.me?.rank === entry.rank ? (displayName ?? entry.name) : entry.name}
-                </span>
-                <span class="shrink-0 text-indigo-700 dark:text-indigo-300">{entry.xp} XP</span>
+                  : 'bg-slate-100 dark:bg-slate-800/70'
+              }`}
+              {@const rowName = snapshot.me?.rank === entry.rank ? (displayName ?? entry.name) : entry.name}
+              <li>
+                {#if entry.id}
+                  <a
+                    href={`/profile?id=${entry.id}`}
+                    aria-label={`View ${rowName}'s profile`}
+                    class="{rowClass} transition-colors hover:bg-indigo-50 dark:hover:bg-slate-700"
+                  >
+                    <span class="w-8 shrink-0 text-slate-500 dark:text-slate-400">#{entry.rank}</span>
+                    <span class="min-w-0 flex-1 truncate">{rowName}</span>
+                    <span class="shrink-0 text-indigo-700 dark:text-indigo-300">{entry.xp} XP</span>
+                    <span aria-hidden="true" class="shrink-0 text-slate-400">›</span>
+                  </a>
+                {:else}
+                  <div class={rowClass}>
+                    <span class="w-8 shrink-0 text-slate-500 dark:text-slate-400">#{entry.rank}</span>
+                    <span class="min-w-0 flex-1 truncate">{rowName}</span>
+                    <span class="shrink-0 text-indigo-700 dark:text-indigo-300">{entry.xp} XP</span>
+                  </div>
+                {/if}
               </li>
             {/each}
           </ol>

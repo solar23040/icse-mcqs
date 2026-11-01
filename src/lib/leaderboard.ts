@@ -1,6 +1,8 @@
 export const LEADERBOARD_STORAGE_KEY = 'icse:leaderboard:v1';
 
 export interface LeaderboardEntry {
+  /** Public profile id, safe to share in profile links. */
+  id?: string;
   name: string;
   xp: number;
   rank: number;

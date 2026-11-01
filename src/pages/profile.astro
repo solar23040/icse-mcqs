@@ -1,0 +1,11 @@
+---
+import Base from '../layouts/Base.astro';
+import ProfileView from '../components/game/ProfileView.svelte';
+---
+
+<Base
+  title="Player profile"
+  description="See a player's achievements, recently practised subjects and when they were last online."
+>
+  <ProfileView client:load />
+</Base>

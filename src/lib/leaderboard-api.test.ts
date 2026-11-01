@@ -2,7 +2,9 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   leaveLeaderboard,
   loadLeaderboard,
+  loadProfile,
   normaliseLeaderboard,
+  normaliseProfile,
   submitWeeklyXp,
 } from './leaderboard-api';
 
@@ -68,7 +70,7 @@ describe('leaderboard API client', () => {
       '/api/leaderboard',
       expect.objectContaining({
         method: 'POST',
-        body: JSON.stringify({ weeklyXp: 42 }),
+        body: JSON.stringify({ weeklyXp: 42, profile: { badges: [], subjects: [] } }),
         credentials: 'same-origin',
       }),
     );
@@ -109,5 +111,72 @@ describe('leaderboard API client', () => {
       }) as unknown as typeof fetch,
     );
     expect(await loadLeaderboard()).toBeNull();
+  });
+});
+
+describe('profile API client', () => {
+  it('normalises a valid public profile and sorts recent subjects', () => {
+    const profile = normaliseProfile({
+      configured: true,
+      profile: {
+        id: '0123456789abcdef',
+        name: 'Brave Owl 42',
+        lastOnline: '2026-10-31T12:00:00.000Z',
+        badges: ['first-steps', 'century', 'first-steps', 7],
+        subjects: [
+          { subject: 'maths', lastPracticed: '2026-10-30T12:00:00.000Z', attempts: 5 },
+          { subject: 'history', lastPracticed: '2026-10-31T12:00:00.000Z', attempts: 12.9 },
+          { subject: 'geography', lastPracticed: 'not a date', attempts: 3 },
+        ],
+      },
+    });
+
+    expect(profile).not.toBeNull();
+    expect(profile?.badges).toEqual(['first-steps', 'century']);
+    expect(profile?.subjects).toEqual([
+      { subject: 'history', lastPracticed: '2026-10-31T12:00:00.000Z', attempts: 12 },
+      { subject: 'maths', lastPracticed: '2026-10-30T12:00:00.000Z', attempts: 5 },
+    ]);
+  });
+
+  it('rejects malformed profiles', () => {
+    expect(normaliseProfile({ configured: false })).toBeNull();
+    expect(
+      normaliseProfile({
+        configured: true,
+        profile: {
+          id: 'not-a-profile',
+          name: 'Brave Owl 42',
+          lastOnline: '2026-10-31T12:00:00.000Z',
+          badges: [],
+          subjects: [],
+        },
+      }),
+    ).toBeNull();
+  });
+
+  it('loads a profile by public id', async () => {
+    const fetchMock = vi.fn(async () =>
+      response({
+        configured: true,
+        profile: {
+          id: '0123456789abcdef',
+          name: 'Brave Owl 42',
+          lastOnline: '2026-10-31T12:00:00.000Z',
+          badges: ['first-steps'],
+          subjects: [],
+        },
+      }),
+    );
+    vi.stubGlobal('fetch', fetchMock as unknown as typeof fetch);
+
+    const profile = await loadProfile('0123456789abcdef');
+
+    expect(profile?.name).toBe('Brave Owl 42');
+    expect(fetchMock).toHaveBeenCalledWith(
+      '/api/leaderboard?profile=0123456789abcdef',
+      expect.objectContaining({ cache: 'no-store' }),
+    );
+    expect(await loadProfile('bad id')).toBeNull();
   });
 });

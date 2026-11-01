@@ -3,6 +3,7 @@ import '../styles/global.css';
 import HeaderGame from '../components/game/HeaderGame.svelte';
 import ThemeToggle from '../components/shell/ThemeToggle.svelte';
 import NameModal from '../components/game/NameModal.svelte';
+import Presence from '../components/game/Presence.svelte';
 
 interface Props {
   title?: string;
@@ -64,6 +65,7 @@ const pageTitle = title ? `${title} | ICSE 10 MCQs` : 'ICSE Class 10 MCQ Practic
     </header>
 
     <NameModal client:load />
+    <Presence client:load />
 
     <main id="main" tabindex="-1" class="mx-auto w-full max-w-5xl scroll-mt-20 flex-1 px-4 pb-16 pt-6 sm:pt-10">
       <slot />

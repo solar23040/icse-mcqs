@@ -2,10 +2,12 @@
   import { onDestroy, onMount, tick } from 'svelte';
   import { buildDailyChallenge, sprintScore } from '../../lib/engine';
   import { localDay } from '../../lib/date';
+  import { recordSubjectPractice } from '../../lib/activity';
+  import { syncLeaderboard } from '../../lib/leaderboard-api';
   import { applyAnswer, applySession, defaultGameState, levelFromXp, type GameEvent, type GameState } from '../../lib/gamification';
   import { getGame, markSeen, recordAnswer, saveGame } from '../../lib/storage';
   import { badgeInfo } from '../../lib/badges';
-  import { optionIndexFromKey, isTypingTarget } from '../quiz/quiz-utils';
+  import { optionIndexFromKey, isTypingTarget, formatClock } from '../quiz/quiz-utils';
   import type { Question, Subject } from '../../lib/types';
   import EventStack from './EventStack.svelte';
   import ShareCard from './ShareCard.svelte';
@@ -36,6 +38,9 @@
   let timeUp = $state(false);
   let deadline = $state(0);
   let timerId: ReturnType<typeof setInterval> | null = null;
+  let elapsedSeconds = $state(0);
+  let startedAt = $state(0);
+  let elapsedTimerId: ReturnType<typeof setInterval> | null = null;
   let gameEvents = $state<GameEvent[]>([]);
   let sessionXp = $state(0);
   let sessionBadges = $state<string[]>([]);
@@ -87,6 +92,20 @@
     timerId = null;
   }
 
+  function startElapsedTimer(): void {
+    stopElapsedTimer();
+    startedAt = Date.now();
+    elapsedSeconds = 0;
+    elapsedTimerId = setInterval(() => {
+      elapsedSeconds = Math.floor((Date.now() - startedAt) / 1000);
+    }, 250);
+  }
+
+  function stopElapsedTimer(): void {
+    if (elapsedTimerId) clearInterval(elapsedTimerId);
+    elapsedTimerId = null;
+  }
+
   // The interval can be throttled in background tabs, so answers are also
   // checked against the real deadline instead of the last rendered second.
   function sprintLocked(): boolean {
@@ -121,6 +140,7 @@
     sessionBadges = [];
     liveMessage = '';
     stage = 'quiz';
+    startElapsedTimer();
     void tick().then(() => questionHeading?.focus());
 
     if (mode === 'sprint') startTimer();
@@ -149,6 +169,7 @@
 
     try {
       markSeen(question.subject, question.id);
+      recordSubjectPractice(question.subject);
       const shouldCount = mode === 'sprint' || !dailyAlready;
       if (shouldCount) recordAnswer(question.subject, correct);
     } catch {
@@ -194,6 +215,10 @@
 
   function finishSession(): void {
     stopTimer();
+    if (startedAt > 0) {
+      elapsedSeconds = Math.floor((Date.now() - startedAt) / 1000);
+    }
+    stopElapsedTimer();
     const shouldUpdateGame = mode === 'sprint' || !dailyAlready;
     if (shouldUpdateGame) {
       try {
@@ -221,6 +246,7 @@
           game.counters[`dailyChallenge:${currentDay()}`] = 1;
           saveGame(game);
         }
+        void syncLeaderboard();
       } catch {
         // Gamification is fail-soft.
       }
@@ -263,6 +289,7 @@
 
   onDestroy(() => {
     stopTimer();
+    stopElapsedTimer();
   });
 </script>
 
@@ -310,6 +337,14 @@
           {#if mode === 'sprint'}
             <span class="rounded-full bg-rose-100 px-3 py-1 text-rose-800 dark:bg-rose-500/20 dark:text-rose-200">
               {timeLeft}s
+            </span>
+          {:else}
+            <span
+              class="rounded-full bg-slate-100 px-3 py-1 tabular-nums dark:bg-slate-800"
+              aria-label={`Elapsed time ${formatClock(elapsedSeconds)}`}
+            >
+              <span aria-hidden="true">⏱</span>
+              {formatClock(elapsedSeconds)}
             </span>
           {/if}
           <span class="rounded-full bg-slate-100 px-3 py-1 dark:bg-slate-800">
@@ -399,6 +434,10 @@
         </p>
         <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">
           Best streak: {bestStreak}
+        </p>
+        <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">
+          <span aria-hidden="true">⏱</span>
+          Time: {formatClock(elapsedSeconds)}
         </p>
         {#if mode === 'sprint'}
           <p class="mt-1 text-sm font-semibold text-slate-700 dark:text-slate-200">
