@@ -24,7 +24,8 @@ export interface ProfileSubject {
 export interface PublicProfile {
   id: string;
   name: string;
-  lastOnline: string;
+  /** Null for players who joined the board before profiles existed. */
+  lastOnline: string | null;
   badges: string[];
   subjects: ProfileSubject[];
 }
@@ -118,7 +119,10 @@ export function normaliseProfile(value: unknown): PublicProfile | null {
   const { id, name, lastOnline, badges, subjects } = profile;
   if (typeof id !== 'string' || !PROFILE_ID_PATTERN.test(id)) return null;
   if (typeof name !== 'string' || name.length === 0) return null;
-  if (!isTimestamp(lastOnline)) return null;
+
+  // Older entries have no stored profile, so the server sends lastOnline: null.
+  const safeLastOnline = lastOnline === null ? null : isTimestamp(lastOnline) ? lastOnline : undefined;
+  if (safeLastOnline === undefined) return null;
 
   const safeBadges = Array.isArray(badges)
     ? [...new Set(badges.filter((badge): badge is string => typeof badge === 'string'))]
@@ -150,7 +154,7 @@ export function normaliseProfile(value: unknown): PublicProfile | null {
   return {
     id,
     name,
-    lastOnline,
+    lastOnline: safeLastOnline,
     badges: safeBadges,
     subjects: safeSubjects,
   };

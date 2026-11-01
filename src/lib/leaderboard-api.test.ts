@@ -153,6 +153,34 @@ describe('profile API client', () => {
         },
       }),
     ).toBeNull();
+    expect(
+      normaliseProfile({
+        configured: true,
+        profile: {
+          id: '0123456789abcdef',
+          name: 'Brave Owl 42',
+          lastOnline: 'not a date',
+          badges: [],
+          subjects: [],
+        },
+      }),
+    ).toBeNull();
+  });
+
+  it('accepts profiles without a last-online timestamp', () => {
+    const profile = normaliseProfile({
+      configured: true,
+      profile: {
+        id: '0123456789abcdef',
+        name: 'Brave Owl 42',
+        lastOnline: null,
+        badges: [],
+        subjects: [],
+      },
+    });
+
+    expect(profile).not.toBeNull();
+    expect(profile?.lastOnline).toBeNull();
   });
 
   it('loads a profile by public id', async () => {

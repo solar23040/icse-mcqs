@@ -42,3 +42,45 @@ describe('subject activity', () => {
     expect(activity.getRecentSubjects()).toEqual([]);
   });
 });
+
+describe('weekly activity', () => {
+  it('summarises the last seven days', () => {
+    activity.recordSubjectPractice('maths', new Date('2026-10-27T10:00:00'), true);
+    activity.recordSubjectPractice('maths', new Date('2026-10-27T11:00:00'), false);
+    activity.recordSubjectPractice('history', new Date('2026-11-01T09:00:00'), true);
+
+    const summary = activity.getWeeklyActivity(new Date('2026-11-01T18:00:00'));
+
+    expect(summary.days).toHaveLength(7);
+    expect(summary.days[0].day).toBe('2026-10-26');
+    expect(summary.days[6].day).toBe('2026-11-01');
+    expect(summary.answered).toBe(3);
+    expect(summary.correct).toBe(2);
+    expect(summary.activeDays).toBe(2);
+    expect(summary.subjects).toEqual([
+      { subject: 'maths', answered: 2 },
+      { subject: 'history', answered: 1 },
+    ]);
+  });
+
+  it('ignores activity older than the window', () => {
+    activity.recordSubjectPractice('physics', new Date('2026-10-20T10:00:00'), true);
+
+    const summary = activity.getWeeklyActivity(new Date('2026-11-01T18:00:00'));
+
+    expect(summary.answered).toBe(0);
+    expect(summary.correct).toBe(0);
+    expect(summary.activeDays).toBe(0);
+    expect(summary.subjects).toEqual([]);
+  });
+
+  it('counts the same day only once as active', () => {
+    activity.recordSubjectPractice('geography', new Date('2026-11-01T08:00:00'), true);
+    activity.recordSubjectPractice('economics', new Date('2026-11-01T09:00:00'), false);
+
+    const summary = activity.getWeeklyActivity(new Date('2026-11-01T18:00:00'));
+
+    expect(summary.activeDays).toBe(1);
+    expect(summary.days[6]).toEqual({ day: '2026-11-01', answered: 2, correct: 1 });
+  });
+});

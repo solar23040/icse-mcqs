@@ -169,7 +169,7 @@
 
     try {
       markSeen(question.subject, question.id);
-      recordSubjectPractice(question.subject);
+      recordSubjectPractice(question.subject, new Date(), correct);
       const shouldCount = mode === 'sprint' || !dailyAlready;
       if (shouldCount) recordAnswer(question.subject, correct);
     } catch {

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { getWeeklyActivity, type WeeklySummary } from '../../lib/activity';
   import { DAILY_GOAL_OPTIONS, EXAM_DATE, type DailyGoal } from '../../lib/config';
   import { localDay } from '../../lib/date';
   import { BADGES } from '../../lib/badges';
@@ -15,6 +16,13 @@
   let seenIds = $state<Set<string>>(new Set());
   let today = $state('');
   let mounted = $state(false);
+  let week = $state<WeeklySummary>({
+    days: [],
+    answered: 0,
+    correct: 0,
+    activeDays: 0,
+    subjects: [],
+  });
   let confirmingReset = $state(false);
   let showTransfer = $state(false);
   let exportCopied = $state(false);
@@ -31,6 +39,10 @@
   const goal = $derived(game.dailyGoal);
   const goalPercent = $derived(Math.min(100, Math.round((answeredToday / goal) * 100)));
   const badgeCount = $derived(BADGES.filter((badge) => Boolean(game.badges[badge.id])).length);
+  const weekAccuracy = $derived(
+    week.answered > 0 ? Math.round((week.correct / week.answered) * 100) : 0,
+  );
+  const weekMax = $derived(Math.max(1, ...week.days.map((day) => day.answered)));
   const radius = 28;
   const circumference = 2 * Math.PI * radius;
   const dashOffset = $derived(circumference * (1 - goalPercent / 100));
@@ -40,9 +52,20 @@
     return Date.UTC(year ?? 1970, (month ?? 1) - 1, date ?? 1) / 86_400_000;
   }
 
+  function dayLabel(day: string): string {
+    const date = new Date(`${day}T12:00:00`);
+    if (!Number.isFinite(date.getTime())) return day;
+    return date.toLocaleDateString(undefined, { weekday: 'short' });
+  }
+
+  function subjectTitle(slug: string): string {
+    return SUBJECTS.find((subject) => subject.slug === slug)?.title ?? slug;
+  }
+
   function refresh(): void {
     today = localDay(new Date());
     game = getGame();
+    week = getWeeklyActivity(new Date());
 
     const seen = new Set<string>();
     for (const { slug } of SUBJECTS) {
@@ -187,6 +210,79 @@
       <p class="mt-1 text-xs text-slate-600 dark:text-slate-300">Questions per day</p>
     </div>
   </div>
+
+  <section
+    aria-labelledby="weekly-summary-heading"
+    class="mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800/50"
+  >
+    <div class="flex flex-wrap items-baseline justify-between gap-2">
+      <h3 id="weekly-summary-heading" class="text-sm font-semibold">This week</h3>
+      <p class="text-xs text-slate-500 dark:text-slate-400">Last 7 days</p>
+    </div>
+
+    {#if !mounted}
+      <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Loading your weekly summary…</p>
+    {:else if week.answered === 0}
+      <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">
+        No questions answered in the last 7 days. Start a session to build your weekly summary.
+      </p>
+    {:else}
+      <div class="mt-3 grid grid-cols-3 gap-2">
+        <div class="rounded-xl bg-white px-3 py-2 dark:bg-slate-900">
+          <p class="text-xs text-slate-500 dark:text-slate-400">Answered</p>
+          <p class="text-lg font-bold">{week.answered}</p>
+        </div>
+        <div class="rounded-xl bg-white px-3 py-2 dark:bg-slate-900">
+          <p class="text-xs text-slate-500 dark:text-slate-400">Accuracy</p>
+          <p class="text-lg font-bold">{weekAccuracy}%</p>
+        </div>
+        <div class="rounded-xl bg-white px-3 py-2 dark:bg-slate-900">
+          <p class="text-xs text-slate-500 dark:text-slate-400">Active days</p>
+          <p class="text-lg font-bold">{week.activeDays}/7</p>
+        </div>
+      </div>
+
+      <div class="mt-4 flex items-end gap-2" aria-hidden="true">
+        {#each week.days as day (day.day)}
+          <div class="flex min-w-0 flex-1 flex-col items-center gap-1">
+            <div class="flex h-16 w-full items-end">
+              <div
+                class="w-full rounded-t-md bg-indigo-500 transition-[height] duration-300 motion-reduce:transition-none dark:bg-indigo-400"
+                style={`height: ${day.answered === 0 ? 0 : Math.max(6, Math.round((day.answered / weekMax) * 100))}%`}
+              ></div>
+            </div>
+            <span class="text-[10px] font-semibold text-slate-500 dark:text-slate-400">
+              {dayLabel(day.day)}
+            </span>
+          </div>
+        {/each}
+      </div>
+      <p class="sr-only">
+        {#each week.days as day}
+          {dayLabel(day.day)}: {day.answered} question{day.answered === 1 ? '' : 's'}.
+        {/each}
+      </p>
+
+      {#if week.subjects.length > 0}
+        <div class="mt-3">
+          <p class="text-xs font-semibold text-slate-500 dark:text-slate-400">Subjects</p>
+          <ul class="mt-1.5 flex flex-wrap gap-1.5" role="list">
+            {#each week.subjects.slice(0, 4) as entry (entry.subject)}
+              <li class="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 dark:bg-slate-900 dark:text-slate-200">
+                {subjectTitle(entry.subject)}
+                <span class="text-slate-500 dark:text-slate-400">· {entry.answered}</span>
+              </li>
+            {/each}
+            {#if week.subjects.length > 4}
+              <li class="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-slate-500 dark:bg-slate-900 dark:text-slate-400">
+                +{week.subjects.length - 4} more
+              </li>
+            {/if}
+          </ul>
+        </div>
+      {/if}
+    {/if}
+  </section>
 
   {#if mounted && daysUntilExam > 0}
     <div class="mt-5 rounded-2xl border border-indigo-200 bg-indigo-50/60 p-4 dark:border-indigo-500/40 dark:bg-indigo-950/30">

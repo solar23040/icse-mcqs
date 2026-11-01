@@ -12,7 +12,8 @@
     profile ? BADGES.filter((badge) => profile?.badges.includes(badge.id)) : [],
   );
 
-  function relativeTime(iso: string): string {
+  function relativeTime(iso: string | null): string {
+    if (iso === null) return 'Unknown';
     const time = Date.parse(iso);
     if (!Number.isFinite(time)) return 'Unknown';
 
@@ -32,7 +33,8 @@
     return `${months} month${months === 1 ? '' : 's'} ago`;
   }
 
-  function exactTime(iso: string): string {
+  function exactTime(iso: string | null): string {
+    if (iso === null) return 'Unknown';
     const date = new Date(iso);
     if (!Number.isFinite(date.getTime())) return 'Unknown';
     return date.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
@@ -90,13 +92,20 @@
         </span>
         <div class="min-w-0">
           <h1 class="truncate text-2xl font-bold tracking-tight">{profile.name}</h1>
-          <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">
-            Last online
-            <time datetime={profile.lastOnline} title={exactTime(profile.lastOnline)}>
-              {relativeTime(profile.lastOnline)}
-            </time>
-          </p>
-          <p class="text-xs text-slate-500 dark:text-slate-400">{exactTime(profile.lastOnline)}</p>
+          {#if profile.lastOnline}
+            <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">
+              Last online
+              <time datetime={profile.lastOnline} title={exactTime(profile.lastOnline)}>
+                {relativeTime(profile.lastOnline)}
+              </time>
+            </p>
+            <p class="text-xs text-slate-500 dark:text-slate-400">{exactTime(profile.lastOnline)}</p>
+          {:else}
+            <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">Last online unknown</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400">
+              This player's achievements will appear after their next visit.
+            </p>
+          {/if}
         </div>
       </div>
     </header>

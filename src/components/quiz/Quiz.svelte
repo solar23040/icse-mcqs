@@ -379,7 +379,7 @@
     let wrongCurrentCount = 0;
     try {
       markSeen(subject, question.id);
-      recordSubjectPractice(subject);
+      recordSubjectPractice(subject, new Date(), correct);
 
       const wrongResult = recordWrongAnswerResult(subject, question.id, correct, 2);
       wrongGraduated = wrongResult.removed;

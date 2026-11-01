@@ -25,6 +25,20 @@ function sortedScores(redis: FakeRedis, key: string): Array<[string, number]> {
   );
 }
 
+function scoreRange(
+  redis: FakeRedis,
+  key: string,
+  start: number,
+  stop: number,
+  reverse: boolean,
+): Array<[string, number]> {
+  const list = sortedScores(redis, key);
+  if (!reverse) list.reverse();
+  const from = start < 0 ? Math.max(list.length + start, 0) : start;
+  const to = stop < 0 ? list.length + stop : stop;
+  return list.slice(from, to + 1);
+}
+
 function execute(redis: FakeRedis, command: Command): unknown {
   const [name, ...args] = command;
   const key = String(args[0]);
@@ -42,9 +56,13 @@ function execute(redis: FakeRedis, command: Command): unknown {
       return next;
     }
     case 'ZREVRANGE': {
-      const start = Number(args[1]);
-      const stop = Number(args[2]);
-      const page = sortedScores(redis, key).slice(start, stop + 1);
+      const page = scoreRange(redis, key, Number(args[1]), Number(args[2]), true);
+      return String(args[3] ?? '').toUpperCase() === 'WITHSCORES'
+        ? page.flatMap(([member, score]) => [member, String(score)])
+        : page.map(([member]) => member);
+    }
+    case 'ZRANGE': {
+      const page = scoreRange(redis, key, Number(args[1]), Number(args[2]), false);
       return String(args[3] ?? '').toUpperCase() === 'WITHSCORES'
         ? page.flatMap(([member, score]) => [member, String(score)])
         : page.map(([member]) => member);
@@ -311,6 +329,22 @@ describe('leaderboard API', () => {
 
     expect(invalid.status).toBe(400);
     expect(missing.status).toBe(404);
+  });
+
+  it('falls back to the leaderboard entry when no profile is stored', async () => {
+    const first = await POST(apiRequest('POST', { body: { weeklyXp: 75, name: 'Legacy Player' } }));
+    const me = meOf(await payload(first));
+
+    const response = await GET(apiRequest('GET', { path: `/api/leaderboard?profile=${me.id}` }));
+    const body = await payload(response);
+    const profile = body.profile as Record<string, unknown>;
+
+    expect(response.status).toBe(200);
+    expect(profile.id).toBe(me.id);
+    expect(profile.name).toBe('Legacy Player');
+    expect(profile.lastOnline).toBeNull();
+    expect(profile.badges).toEqual([]);
+    expect(profile.subjects).toEqual([]);
   });
 
   it('removes the public profile when leaving the leaderboard', async () => {

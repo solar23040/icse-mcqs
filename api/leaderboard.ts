@@ -140,7 +140,8 @@ export interface ProfileSubject {
 export interface PublicProfile {
   id: string;
   name: string;
-  lastOnline: string;
+  /** Null for players who joined the board before profiles existed. */
+  lastOnline: string | null;
   badges: string[];
   subjects: ProfileSubject[];
 }
@@ -401,12 +402,19 @@ function parseProfile(id: string, raw: string): PublicProfile | null {
     const record = parsed as Record<string, unknown>;
     const name = typeof record.name === 'string' ? sanitiseName(record.name) : null;
     if (!name) return null;
-    if (!isTimestamp(record.lastOnline)) return null;
+
+    const lastOnline =
+      record.lastOnline === null
+        ? null
+        : isTimestamp(record.lastOnline)
+          ? record.lastOnline
+          : undefined;
+    if (lastOnline === undefined) return null;
 
     return {
       id,
       name,
-      lastOnline: record.lastOnline,
+      lastOnline,
       badges: sanitiseBadges(record.badges),
       subjects: sanitiseSubjects(record.subjects, new Date()),
     };
@@ -469,16 +477,41 @@ async function fetchNames(tokens: string[]): Promise<Map<string, string>> {
   return map;
 }
 
+/** Find the leaderboard token behind a public profile id for the given week. */
+async function findTokenByPublicId(id: string, key: string): Promise<string | null> {
+  const [members] = await redisPipeline([['ZRANGE', key, 0, -1]]);
+  if (!Array.isArray(members)) return null;
+
+  for (const member of members) {
+    if (isToken(member) && publicIdFor(member) === id) return member;
+  }
+  return null;
+}
+
 async function getProfile(id: string): Promise<Response> {
   if (!isPublicId(id)) return json({ configured: true, error: 'invalid_profile' }, 400);
 
   try {
     const [raw] = await redisPipeline([['GET', profileKey(id)]]);
-    if (typeof raw !== 'string') return json({ configured: true, error: 'not_found' }, 404);
+    if (typeof raw === 'string') {
+      const stored = parseProfile(id, raw);
+      if (stored) return json({ configured: true, profile: stored });
+    }
 
-    const profile = parseProfile(id, raw);
-    if (!profile) return json({ configured: true, error: 'not_found' }, 404);
+    // Players who joined before profiles existed have no stored profile yet.
+    // Fall back to this week's leaderboard so their name is still reachable.
+    const week = isoWeek(new Date());
+    const token = await findTokenByPublicId(id, weekKey(week));
+    if (!token) return json({ configured: true, error: 'not_found' }, 404);
 
+    const names = await fetchNames([token]);
+    const profile: PublicProfile = {
+      id,
+      name: names.get(token) ?? nameFor(token),
+      lastOnline: null,
+      badges: [],
+      subjects: [],
+    };
     return json({ configured: true, profile });
   } catch {
     return storageFailure();

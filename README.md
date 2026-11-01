@@ -51,6 +51,12 @@ After a session, the start screen shows a **Practice mistakes** mode with a coun
 
 Mistake practice is a study aid: it does not change the saved `attempted`/`correct` stats or the seen-question progress. The wrong-question ids are stored per subject under `mcq:<subject>:wrong` in `localStorage`, next to `mcq:<subject>:seen` and `mcq:<subject>:stats`.
 
+## Weekly summary
+
+The home page's **This week** card shows the last seven local days: questions answered, accuracy, active days, a small day-by-day bar chart, and the subjects practised. It also counts mistake and retry practice, so it reflects everything you did rather than only scored sessions.
+
+Activity is stored in `icse:activity:v1` in `localStorage`, alongside the per-subject last-practised timestamps. Only the latest 90 days are kept.
+
 ## Timer and session length
 
 Every practice session shows a stopwatch (elapsed session time) next to the question counter, and the results screen reports total time and average time per question.
@@ -328,7 +334,7 @@ The home page has an optional weekly leaderboard. It is **off by default**; join
 - The server stores an anonymous random id in an `HttpOnly` cookie (`icse_lb_id`). No email or IP address is stored, and there is no free-text input.
 - Display names such as "Brave Owl 42" are generated server-side from the anonymous id.
 - Weekly XP is submitted to `api/leaderboard.ts`, which keeps a Redis sorted set per ISO week (`leaderboard:week:<YYYY-Www>`) with a 14-day TTL. The top 10 are public; each caller also sees their own rank and percentile.
-- Joined players also get a public profile at `/profile?id=<public-id>`. Clicking a name on the leaderboard opens it and shows earned badges, recently practised subjects with answer counts, and the last time they were online. Profiles are stored for 90 days under `leaderboard:profile:<public-id>`.
+- Joined players also get a public profile at `/profile?id=<public-id>`. Clicking a name on the leaderboard opens it and shows earned badges, recently practised subjects with answer counts, and the last time they were online. Profiles are stored for 90 days under `leaderboard:profile:<public-id>`. Players who joined before profiles existed still get a basic profile (name only) from the current week's board until their next visit fills in the details.
 - The public id is derived from the cookie token with a one-way hash, so profile links never expose the cookie value. Last-online is updated at most every five minutes while a joined player uses the site.
 - The server caps each submission at 500 XP and each browser at 2000 XP per day. This blocks casual tampering but the leaderboard is **not cheat-proof**.
 - Leaving removes the caller's entry and public profile from the current week and clears the cookie. Entries also expire automatically.
