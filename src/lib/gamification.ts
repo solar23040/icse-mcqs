@@ -49,6 +49,8 @@ export interface AnswerInput {
   combo: number;
   /** Local day as YYYY-MM-DD. */
   today: string;
+  /** Optional local hour (0-23) for time-of-day badges. */
+  hour?: number;
 }
 
 export interface SessionInput {
@@ -59,6 +61,10 @@ export interface SessionInput {
   today: string;
   /** Optional: how many questions in the subject are still unseen after this session. */
   unseenRemaining?: number;
+  /** Optional: longest run of correct answers inside this session. */
+  bestStreak?: number;
+  /** Optional: timed sprint score. */
+  score?: number;
 }
 
 export interface GameResult {
@@ -208,7 +214,7 @@ function resetDailyIfNeeded(state: GameState, today: string): GameState {
 }
 
 export function applyAnswer(state: GameState, input: AnswerInput): GameResult {
-  const { questionId, subject, correct, combo, today } = input;
+  const { questionId, subject, correct, combo, today, hour } = input;
   const events: GameEvent[] = [];
 
   let next = cloneState(resetDailyIfNeeded(state, today));
@@ -248,6 +254,7 @@ export function applyAnswer(state: GameState, input: AnswerInput): GameResult {
   }
 
   if (next.daily.answered === next.dailyGoal) {
+    next.counters.goalDays = (next.counters.goalDays ?? 0) + 1;
     events.push({ type: 'goalReached' });
   }
 
@@ -257,13 +264,21 @@ export function applyAnswer(state: GameState, input: AnswerInput): GameResult {
   if (masteredNow && wasMissed) {
     next.counters.comeback = (next.counters.comeback ?? 0) + 1;
   }
+  if (masteredNow) {
+    next.counters.mastered = (next.counters.mastered ?? 0) + 1;
+    next.counters[`mastered:${subject}`] = (next.counters[`mastered:${subject}`] ?? 0) + 1;
+  }
+  if (typeof hour === 'number' && Number.isFinite(hour)) {
+    if (hour >= 22 || hour < 5) next.counters.nightOwl = 1;
+    else if (hour < 7) next.counters.earlyBird = 1;
+  }
 
   awardBadges(next, today, events);
   return { state: next, events };
 }
 
 export function applySession(state: GameState, input: SessionInput): GameResult {
-  const { subject, total, correct, today, unseenRemaining } = input;
+  const { subject, total, correct, today, unseenRemaining, bestStreak, score } = input;
   const events: GameEvent[] = [];
 
   let next = cloneState(resetDailyIfNeeded(state, today));
@@ -280,6 +295,18 @@ export function applySession(state: GameState, input: SessionInput): GameResult 
     next.counters[`subject:${subject}`] = (next.counters[`subject:${subject}`] ?? 0) + 1;
     if (total >= 10 && correct === total) {
       next.counters.perfectSessions = (next.counters.perfectSessions ?? 0) + 1;
+    }
+    if (total >= 20 && correct === total) {
+      next.counters.perfectTwenty = (next.counters.perfectTwenty ?? 0) + 1;
+    }
+    if (typeof bestStreak === 'number' && Number.isFinite(bestStreak)) {
+      next.counters.bestSessionStreak = Math.max(
+        next.counters.bestSessionStreak ?? 0,
+        Math.floor(bestStreak),
+      );
+    }
+    if (typeof score === 'number' && Number.isFinite(score)) {
+      next.counters.bestSprint = Math.max(next.counters.bestSprint ?? 0, Math.floor(score));
     }
     if (unseenRemaining === 0) {
       next.counters[`sweep:${subject}`] = 1;
@@ -343,22 +370,45 @@ export function evaluateBadges(state: GameState): string[] {
   const add = (id: string, condition: boolean): void => {
     if (condition && !state.badges[id]) earned.push(id);
   };
+  const sweptSubjects = Object.keys(counters).filter(
+    (key) => key.startsWith('sweep:') && (counters[key] ?? 0) > 0,
+  ).length;
 
   add('first-steps', (counters.answered ?? 0) >= 10);
   add('perfect-ten', (counters.perfectSessions ?? 0) >= 1);
   add('week-warrior', Math.max(state.streak.best, state.streak.count) >= 7);
   add(
     'subject-sweep',
-    Object.keys(counters).some(
-      (key) =>
-        (key.startsWith('sweep:') && (counters[key] ?? 0) > 0) ||
-        key === 'subject-sweep' ||
-        key === 'subjectSweep',
-    ),
+    sweptSubjects > 0 ||
+      (counters['subject-sweep'] ?? 0) > 0 ||
+      (counters.subjectSweep ?? 0) > 0,
   );
   add('comeback', (counters.comeback ?? 0) >= 5);
   add('all-rounder', LIVE_SUBJECTS.every((subject) => (counters[`subject:${subject}`] ?? 0) > 0));
   add('century', (counters.correct ?? 0) >= 100);
+
+  add('dedicated', (counters.sessions ?? 0) >= 25);
+  add('marathon', (counters.sessions ?? 0) >= 50);
+  add('sharpshooter', (counters.bestSessionStreak ?? 0) >= 15);
+  add('flawless-twenty', (counters.perfectTwenty ?? 0) >= 1);
+  add('mastermind', (counters.mastered ?? 0) >= 50);
+  add(
+    'specialist',
+    Object.keys(counters).some(
+      (key) => key.startsWith('mastered:') && (counters[key] ?? 0) >= 25,
+    ),
+  );
+  add('comeback-king', (counters.comeback ?? 0) >= 25);
+  add('grand-slam', sweptSubjects >= 3);
+  add('fortnight', Math.max(state.streak.best, state.streak.count) >= 14);
+  add('daily-devotee', (counters.dailyChallenges ?? 0) >= 7);
+  add('speed-demon', (counters.bestSprint ?? 0) >= 150);
+  add('goal-getter', (counters.goalDays ?? 0) >= 7);
+  add('night-owl', (counters.nightOwl ?? 0) > 0);
+  add('early-bird', (counters.earlyBird ?? 0) > 0);
+
+  // Must stay last: it depends on how many other badges this run earns.
+  add('collector', Object.keys(state.badges).length + earned.length >= 10);
 
   return earned;
 }

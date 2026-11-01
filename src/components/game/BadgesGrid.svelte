@@ -15,12 +15,17 @@
   function earned(id: string): boolean {
     return mounted && Boolean(game.badges[id]);
   }
+
+  const earnedCount = $derived(BADGES.filter((badge) => earned(badge.id)).length);
 </script>
 
 <section class="mx-auto w-full max-w-3xl">
   <h1 class="text-3xl font-bold tracking-tight">Badges</h1>
   <p class="mt-2 text-slate-600 dark:text-slate-300">
     Earn badges as you practise. Locked badges show how to unlock them.
+  </p>
+  <p class="mt-1 text-sm font-semibold text-amber-700 dark:text-amber-300">
+    {mounted ? `${earnedCount} of ${BADGES.length} earned` : 'Loading your badges'}
   </p>
 
   <ul class="mt-6 grid gap-4 sm:grid-cols-2" role="list">

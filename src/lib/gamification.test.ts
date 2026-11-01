@@ -458,4 +458,222 @@ describe('badges', () => {
     state.badges['first-steps'] = '2026-01-01';
     expect(evaluateBadges(state)).not.toContain('first-steps');
   });
+
+  it('awards Dedicated and Marathon for session volume', () => {
+    const state = defaultGameState();
+    state.counters.sessions = 25;
+    expect(evaluateBadges(state)).toContain('dedicated');
+
+    state.counters.sessions = 50;
+    expect(evaluateBadges(state)).toContain('marathon');
+  });
+
+  it('awards Sharpshooter and Flawless Twenty', () => {
+    const state = defaultGameState();
+    state.counters.bestSessionStreak = 15;
+    state.counters.perfectTwenty = 1;
+    expect(evaluateBadges(state)).toEqual(
+      expect.arrayContaining(['sharpshooter', 'flawless-twenty']),
+    );
+  });
+
+  it('awards Mastermind and Specialist for mastery', () => {
+    const state = defaultGameState();
+    state.counters.mastered = 50;
+    state.counters['mastered:history'] = 25;
+    expect(evaluateBadges(state)).toEqual(expect.arrayContaining(['mastermind', 'specialist']));
+  });
+
+  it('does not award Specialist below 25 mastered in one subject', () => {
+    const state = defaultGameState();
+    state.counters['mastered:history'] = 24;
+    expect(evaluateBadges(state)).not.toContain('specialist');
+  });
+
+  it('awards Comeback King at 25 mastered missed questions', () => {
+    const state = defaultGameState();
+    state.counters.comeback = 25;
+    expect(evaluateBadges(state)).toContain('comeback-king');
+  });
+
+  it('awards Grand Slam after sweeping three subjects', () => {
+    const state = defaultGameState();
+    state.counters['sweep:history'] = 1;
+    state.counters['sweep:maths'] = 1;
+    state.counters['sweep:geography'] = 1;
+    expect(evaluateBadges(state)).toContain('grand-slam');
+  });
+
+  it('awards Fortnight at a 14-day streak', () => {
+    const state = defaultGameState();
+    state.streak.best = 14;
+    expect(evaluateBadges(state)).toContain('fortnight');
+  });
+
+  it('awards Daily Devotee and Goal Getter from counters', () => {
+    const state = defaultGameState();
+    state.counters.dailyChallenges = 7;
+    state.counters.goalDays = 7;
+    expect(evaluateBadges(state)).toEqual(expect.arrayContaining(['daily-devotee', 'goal-getter']));
+  });
+
+  it('awards Speed Demon at a sprint score of 150', () => {
+    const state = defaultGameState();
+    state.counters.bestSprint = 150;
+    expect(evaluateBadges(state)).toContain('speed-demon');
+  });
+
+  it('awards Night Owl and Early Bird from time markers', () => {
+    const state = defaultGameState();
+    state.counters.nightOwl = 1;
+    expect(evaluateBadges(state)).toContain('night-owl');
+
+    const morning = defaultGameState();
+    morning.counters.earlyBird = 1;
+    expect(evaluateBadges(morning)).toContain('early-bird');
+  });
+
+  it('awards Collector last, once ten badges are earned', () => {
+    const state = defaultGameState();
+    state.badges = Object.fromEntries(
+      [
+        'perfect-ten',
+        'week-warrior',
+        'subject-sweep',
+        'comeback',
+        'all-rounder',
+        'century',
+        'dedicated',
+        'sharpshooter',
+        'mastermind',
+      ].map((id) => [id, '2026-01-01']),
+    );
+    state.counters.answered = 10;
+    const earned = evaluateBadges(state);
+    expect(earned).toEqual(['first-steps', 'collector']);
+  });
+
+  it('does not award Collector below ten badges', () => {
+    const state = defaultGameState();
+    state.badges = Object.fromEntries(
+      [
+        'perfect-ten',
+        'week-warrior',
+        'subject-sweep',
+        'comeback',
+        'all-rounder',
+        'century',
+        'dedicated',
+        'sharpshooter',
+      ].map((id) => [id, '2026-01-01']),
+    );
+    state.counters.answered = 10;
+    expect(evaluateBadges(state)).not.toContain('collector');
+  });
+});
+
+describe('new badge counters', () => {
+  it('tracks session best streak, perfect twenty and sprint score', () => {
+    const result = applySession(defaultGameState(), {
+      subject: 'sprint',
+      total: 20,
+      correct: 20,
+      today: '2026-01-01',
+      bestStreak: 16,
+      score: 160,
+    });
+
+    expect(result.state.counters.bestSessionStreak).toBe(16);
+    expect(result.state.counters.perfectTwenty).toBe(1);
+    expect(result.state.counters.bestSprint).toBe(160);
+    expect(result.events).toEqual(
+      expect.arrayContaining([
+        { type: 'badge', id: 'sharpshooter' },
+        { type: 'badge', id: 'flawless-twenty' },
+        { type: 'badge', id: 'speed-demon' },
+      ]),
+    );
+  });
+
+  it('keeps the highest per-session and sprint values', () => {
+    const state = defaultGameState();
+    state.counters.bestSessionStreak = 20;
+    state.counters.bestSprint = 200;
+
+    const result = applySession(state, {
+      subject: 'sprint',
+      total: 5,
+      correct: 5,
+      today: '2026-01-01',
+      bestStreak: 4,
+      score: 60,
+    });
+
+    expect(result.state.counters.bestSessionStreak).toBe(20);
+    expect(result.state.counters.bestSprint).toBe(200);
+  });
+
+  it('counts mastery per subject and overall', () => {
+    const state = defaultGameState();
+    state.boxes.q1 = 2;
+
+    const result = applyAnswer(state, {
+      questionId: 'q1',
+      subject: 'maths',
+      correct: true,
+      combo: 3,
+      today: '2026-01-01',
+    });
+
+    expect(result.state.counters.mastered).toBe(1);
+    expect(result.state.counters['mastered:maths']).toBe(1);
+  });
+
+  it('counts a day when the daily goal is reached', () => {
+    const state = withDaily(defaultGameState(), '2026-01-01', 9);
+
+    const result = applyAnswer(state, {
+      questionId: 'q1',
+      subject: 'maths',
+      correct: true,
+      combo: 1,
+      today: '2026-01-01',
+    });
+
+    expect(result.state.counters.goalDays).toBe(1);
+    expect(result.events).toContainEqual({ type: 'goalReached' });
+  });
+
+  it('marks Night Owl and Early Bird from the local hour', () => {
+    const night = applyAnswer(defaultGameState(), {
+      questionId: 'q1',
+      subject: 'maths',
+      correct: true,
+      combo: 1,
+      today: '2026-01-01',
+      hour: 23,
+    });
+    expect(night.state.counters.nightOwl).toBe(1);
+
+    const morning = applyAnswer(defaultGameState(), {
+      questionId: 'q1',
+      subject: 'maths',
+      correct: true,
+      combo: 1,
+      today: '2026-01-01',
+      hour: 6,
+    });
+    expect(morning.state.counters.earlyBird).toBe(1);
+
+    const noon = applyAnswer(defaultGameState(), {
+      questionId: 'q1',
+      subject: 'maths',
+      correct: true,
+      combo: 1,
+      today: '2026-01-01',
+      hour: 12,
+    });
+    expect(noon.state.counters.nightOwl).toBeUndefined();
+    expect(noon.state.counters.earlyBird).toBeUndefined();
+  });
 });

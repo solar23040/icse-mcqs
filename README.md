@@ -303,7 +303,7 @@ Progress is stored locally under `icse:game:v1`. It is separate from seen questi
 
 ### Badges
 
-Badges are idempotent and never revoked: First Steps (10 answered), Perfect Ten (10/10 session), Week Warrior (7-day streak), Subject Sweep (all questions in a subject seen), Comeback (5 previously missed questions mastered), All-Rounder (attempted every live subject), Century (100 correct).
+Badges are idempotent and never revoked: First Steps (10 answered), Perfect Ten (10/10 session), Week Warrior (7-day streak), Subject Sweep (all questions in a subject seen), Comeback (5 previously missed questions mastered), All-Rounder (attempted every live subject), Century (100 correct), Dedicated (25 sessions), Marathon (50 sessions), Sharpshooter (15 correct in a row in one session), Flawless Twenty (20/20 session), Mastermind (50 questions mastered), Specialist (25 mastered in one subject), Comeback King (25 missed questions mastered), Grand Slam (3 subjects swept), Fortnight (14-day streak), Daily Devotee (7 daily challenges), Speed Demon (sprint score 150+), Goal Getter (daily goal reached on 7 days), Night Owl (answer after 10 pm), Early Bird (answer before 7 am), Collector (10 badges).
 
 ### Challenge modes
 

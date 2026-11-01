@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { DAILY_GOAL_OPTIONS, EXAM_DATE, type DailyGoal } from '../../lib/config';
   import { localDay } from '../../lib/date';
+  import { BADGES } from '../../lib/badges';
   import { defaultGameState, type GameState } from '../../lib/gamification';
   import { getGame, getSeen, resetGame, saveGame } from '../../lib/storage';
   import { exportProgress, importProgress } from '../../lib/transfer';
@@ -29,6 +30,7 @@
   const perDay = $derived(daysUntilExam > 0 && unseenCount > 0 ? Math.ceil(unseenCount / daysUntilExam) : 0);
   const goal = $derived(game.dailyGoal);
   const goalPercent = $derived(Math.min(100, Math.round((answeredToday / goal) * 100)));
+  const badgeCount = $derived(BADGES.filter((badge) => Boolean(game.badges[badge.id])).length);
   const radius = 28;
   const circumference = 2 * Math.PI * radius;
   const dashOffset = $derived(circumference * (1 - goalPercent / 100));
@@ -112,6 +114,9 @@
       <h2 id="game-progress-heading" class="mt-1 text-xl font-bold tracking-tight">
         Keep the streak alive
       </h2>
+      <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">
+        {mounted ? `${badgeCount} of ${BADGES.length} badges earned` : 'Loading your badges'}
+      </p>
     </div>
     <div class="min-w-44 flex-1 sm:max-w-64">
       <XpBar xp={mounted ? game.xp : 0} />

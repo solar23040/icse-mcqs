@@ -4,6 +4,7 @@
   import { localDay } from '../../lib/date';
   import { applyAnswer, applySession, defaultGameState, levelFromXp, type GameEvent, type GameState } from '../../lib/gamification';
   import { getGame, markSeen, recordAnswer, saveGame } from '../../lib/storage';
+  import { badgeInfo } from '../../lib/badges';
   import { optionIndexFromKey, isTypingTarget } from '../quiz/quiz-utils';
   import type { Question, Subject } from '../../lib/types';
   import EventStack from './EventStack.svelte';
@@ -162,7 +163,8 @@
           subject: question.subject,
           correct,
           combo: correct ? streak : 0,
-          today: currentDay()
+          today: currentDay(),
+          hour: new Date().getHours()
         });
         game = result.state;
         if (mode === 'daily' && !dailyAlready) {
@@ -195,11 +197,21 @@
     const shouldUpdateGame = mode === 'sprint' || !dailyAlready;
     if (shouldUpdateGame) {
       try {
+        if (mode === 'daily' && !dailyAlready) {
+          game.counters.dailyChallenges = (game.counters.dailyChallenges ?? 0) + 1;
+          game.counters[`dailyChallenge:${currentDay()}`] = 1;
+        }
+        const score =
+          mode === 'sprint'
+            ? sprintScore({ correct: correctCount, wrong: wrongCount, seconds: 60 - timeLeft })
+            : undefined;
         const result = applySession(game, {
           subject: mode,
           total: answeredCount,
           correct: correctCount,
-          today: currentDay()
+          today: currentDay(),
+          bestStreak,
+          score
         });
         game = result.state;
         saveGame(game);
@@ -402,6 +414,20 @@
         streak={game.streak.count}
         level={levelFromXp(game.xp)}
       />
+
+      {#if sessionBadges.length > 0}
+        <div class="rounded-3xl border border-amber-200 bg-amber-50 p-5 dark:border-amber-500/40 dark:bg-amber-950/30">
+          <p class="text-sm font-semibold text-amber-900 dark:text-amber-100">New badges</p>
+          <ul class="mt-2 flex flex-wrap gap-2">
+            {#each sessionBadges as badge (badge)}
+              <li class="rounded-full bg-amber-100 px-3 py-1 text-sm font-semibold text-amber-900 dark:bg-amber-500/20 dark:text-amber-200">
+                <span aria-hidden="true">{badgeInfo(badge)?.icon ?? '🏅'}</span>
+                {badgeInfo(badge)?.title ?? badge}
+              </li>
+            {/each}
+          </ul>
+        </div>
+      {/if}
 
       <button
         type="button"

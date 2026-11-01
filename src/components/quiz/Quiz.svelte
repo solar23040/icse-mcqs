@@ -24,6 +24,7 @@
     unmarkWrong
   } from '../../lib/storage';
   import type { Question, SessionQuestion, Subject } from '../../lib/types';
+  import { badgeInfo } from '../../lib/badges';
   import ComboBadge from '../game/ComboBadge.svelte';
   import EventStack from '../game/EventStack.svelte';
   import ShareCard from '../game/ShareCard.svelte';
@@ -309,7 +310,8 @@
             subject,
             correct,
             combo: correct ? streak : 0,
-            today: currentDay()
+            today: currentDay(),
+            hour: new Date().getHours()
           });
           game = result.state;
           saveGame(game);
@@ -357,7 +359,8 @@
           total: session.length,
           correct: correctCount,
           today: currentDay(),
-          unseenRemaining
+          unseenRemaining,
+          bestStreak
         });
         game = result.state;
         saveGame(game);
@@ -944,7 +947,8 @@
               <ul class="mt-1 flex flex-wrap gap-2">
                 {#each sessionBadges as badge (badge)}
                   <li class="rounded-full bg-amber-100 px-3 py-1 text-sm font-semibold text-amber-900 dark:bg-amber-500/20 dark:text-amber-200">
-                    {badge}
+                    <span aria-hidden="true">{badgeInfo(badge)?.icon ?? '🏅'}</span>
+                    {badgeInfo(badge)?.title ?? badge}
                   </li>
                 {/each}
               </ul>
