@@ -345,6 +345,12 @@ The home page has an optional weekly leaderboard. It is **off by default**; join
 
 Progress can be exported as a base64 code containing game state, seen ids and stats, with a version and checksum. Tampered or unknown-version codes are rejected. Use the settings hook to wire export/import into the UI.
 
+### Developer panel (`/dev`)
+
+`/dev` is a hidden, `noindex` login for adjusting **credits** (spendable XP), lifetime XP and level for the browser you are using. It is meant for development and demos: game progress is local-only, so it cannot change another visitor's credits.
+
+Credentials come from the build-time variables `PUBLIC_DEV_USERNAME` and `PUBLIC_DEV_PASSWORD`. Set them in `.env.local` for local builds, or in the host's environment settings before deploying. They are compiled into the public JavaScript bundle, so treat them as a casual-access gate rather than a secret. Leave both blank to disable the panel.
+
 ### Mastery and ranks
 
 Each question sits in a Leitner box. A wrong answer sends it to box 0 (and onto the review list); each correct answer moves it up one box, to a maximum of box 3. Box 3 questions count as mastered. Answering an already-mastered question gives only 2 XP, so repeating mastered questions cannot farm XP.
@@ -365,3 +371,4 @@ npm run validate
 - Set `verified` to `true` only for questions you have checked.
 - Run `npm run validate`, `npm test`, and `npm run build`.
 - Check a deployed preview on a phone, since the site is designed for quick practice sessions.
+- Change or blank the `PUBLIC_DEV_USERNAME` / `PUBLIC_DEV_PASSWORD` variables if the `/dev` panel should not be usable in production.

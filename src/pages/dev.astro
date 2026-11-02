@@ -1,0 +1,12 @@
+---
+import Base from '../layouts/Base.astro';
+import DevPanel from '../components/dev/DevPanel.svelte';
+---
+
+<Base
+  title="Developer panel"
+  description="Developer credit controls for this browser."
+  noindex
+>
+  <DevPanel client:load />
+</Base>

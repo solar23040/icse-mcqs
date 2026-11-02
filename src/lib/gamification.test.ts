@@ -5,10 +5,13 @@ import {
   applySession,
   defaultGameState,
   evaluateBadges,
+  hintCost,
+  hintsUsedToday,
   levelForGame,
   levelFromXp,
   masteryPercent,
   rankFor,
+  spendHint,
   spendXp,
   touchStreak,
   xpForLevel,
@@ -94,6 +97,83 @@ describe('spending XP on hints', () => {
 
     expect(result.state.totalEarnedXP).toBe(result.state.xp);
     expect(result.state.highestLevelReached).toBe(levelForGame(result.state));
+  });
+});
+
+describe('daily hint pricing', () => {
+  const today = '2026-01-01';
+
+  it('charges 500 then 750, then the whole balance', () => {
+    const state = defaultGameState();
+    state.xp = 5_000;
+
+    expect(hintCost(state, today)).toEqual({ cost: 500, usedToday: 0, allCredits: false });
+
+    const first = spendHint(state, today);
+    expect(first.purchased).toBe(true);
+    expect(first.cost).toBe(500);
+    expect(first.state.xp).toBe(4_500);
+    expect(hintsUsedToday(first.state, today)).toBe(1);
+    expect(hintCost(first.state, today)).toEqual({
+      cost: 750,
+      usedToday: 1,
+      allCredits: false,
+    });
+
+    const second = spendHint(first.state, today);
+    expect(second.cost).toBe(750);
+    expect(second.state.xp).toBe(3_750);
+    expect(hintsUsedToday(second.state, today)).toBe(2);
+
+    const third = spendHint(second.state, today);
+    expect(third.purchased).toBe(true);
+    expect(third.allCredits).toBe(true);
+    expect(third.cost).toBe(3_750);
+    expect(third.state.xp).toBe(0);
+    expect(hintsUsedToday(third.state, today)).toBe(3);
+
+    const fourth = spendHint(third.state, today);
+    expect(fourth.purchased).toBe(true);
+    expect(fourth.cost).toBe(0);
+    expect(fourth.state.xp).toBe(0);
+  });
+
+  it('resets the count on the next day', () => {
+    const state = defaultGameState();
+    state.xp = 2_000;
+    const first = spendHint(state, today);
+    const second = spendHint(first.state, today);
+
+    expect(hintCost(second.state, '2026-01-02')).toEqual({
+      cost: 500,
+      usedToday: 0,
+      allCredits: false,
+    });
+  });
+
+  it('does not buy a hint when XP is short', () => {
+    const state = defaultGameState();
+    state.xp = 499;
+
+    const result = spendHint(state, today);
+
+    expect(result.purchased).toBe(false);
+    expect(result.state).toBe(state);
+    expect(result.events).toEqual([]);
+    expect(hintsUsedToday(state, today)).toBe(0);
+  });
+
+  it('keeps lifetime XP and level intact', () => {
+    const state = defaultGameState();
+    state.xp = 1_000;
+    state.totalEarnedXP = 5_000;
+    state.highestLevelReached = levelFromXp(5_000);
+
+    const result = spendHint(state, today);
+
+    expect(result.state.xp).toBe(500);
+    expect(result.state.totalEarnedXP).toBe(5_000);
+    expect(levelForGame(result.state)).toBe(levelForGame(state));
   });
 });
 

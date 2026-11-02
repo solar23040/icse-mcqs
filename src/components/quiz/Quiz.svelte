@@ -4,13 +4,13 @@
   import { localDay } from '../../lib/date';
   import { recordSubjectPractice } from '../../lib/activity';
   import { syncLeaderboard } from '../../lib/leaderboard-api';
-  import { HINT_COST_XP } from '../../lib/config';
   import {
     applyAnswer,
     applySession,
     defaultGameState,
+    hintCost,
     levelForGame,
-    spendXp,
+    spendHint,
     type GameEvent,
     type GameState
   } from '../../lib/gamification';
@@ -89,6 +89,7 @@
   let game: GameState = defaultGameState();
   let gameEvents: GameEvent[] = [];
   let today = '';
+  $: hint = hintCost(game, today || localDay(new Date()));
   let sessionXp = 0;
   let sessionBadges: string[] = [];
 
@@ -411,15 +412,16 @@
     const question = current;
     if (stage !== 'quiz' || !question || answered || hintUsed) return;
 
-    if (game.xp < HINT_COST_XP) {
-      hintMessage = `You need ${HINT_COST_XP} XP to use a hint. Answer more questions correctly to earn XP.`;
+    const quote = hintCost(game, currentDay());
+    if (!quote.allCredits && game.xp < quote.cost) {
+      hintMessage = `You need ${quote.cost} XP for this hint. Answer more questions correctly to earn XP.`;
       return;
     }
 
-    const confirmed =
-      typeof window === 'undefined'
-        ? false
-        : window.confirm(`Use hint for ${HINT_COST_XP} XP?`);
+    const prompt = quote.allCredits
+      ? `Hint ${quote.usedToday + 1} today uses all ${game.xp} XP. Continue?`
+      : `Use hint ${quote.usedToday + 1} today for ${quote.cost} XP?`;
+    const confirmed = typeof window === 'undefined' ? false : window.confirm(prompt);
     if (!confirmed) return;
 
     const candidate = question.options.findIndex((_, optionIndex) => {
@@ -427,9 +429,15 @@
     });
     if (candidate === -1) return;
 
+    let charged = quote.cost;
     try {
-      const result = spendXp(game, HINT_COST_XP);
+      const result = spendHint(game, currentDay());
+      if (!result.purchased) {
+        hintMessage = `You need ${result.cost} XP for this hint. Answer more questions correctly to earn XP.`;
+        return;
+      }
       game = result.state;
+      charged = result.cost;
       saveGame(game);
       recordGameEvents(result.events);
     } catch {
@@ -438,7 +446,9 @@
 
     hiddenOption = candidate;
     hintUsed = true;
-    hintMessage = `Hint used: option ${candidate + 1} is incorrect. −${HINT_COST_XP} XP`;
+    hintMessage = quote.allCredits
+      ? `Hint ${quote.usedToday + 1} used all ${charged} XP: option ${candidate + 1} is incorrect.`
+      : `Hint used: option ${candidate + 1} is incorrect. −${charged} XP`;
     liveMessage = hintMessage;
   }
 
@@ -1091,18 +1101,22 @@
           <button
             type="button"
             on:click={useHint}
-            disabled={hintUsed || game.xp < HINT_COST_XP}
+            disabled={hintUsed || (!hint.allCredits && game.xp < hint.cost)}
             class="min-h-10 rounded-lg border border-amber-300 bg-amber-50 px-3 text-sm font-semibold text-amber-900 transition-colors hover:border-amber-400 hover:bg-amber-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:border-amber-500/60 dark:bg-amber-950/40 dark:text-amber-100 dark:focus-visible:ring-offset-slate-900"
           >
-            {hintUsed ? 'Hint used' : `Use hint (−${HINT_COST_XP} XP)`}
+            {hintUsed
+              ? 'Hint used'
+              : hint.allCredits
+                ? `Use hint (−all ${game.xp} XP)`
+                : `Use hint (−${hint.cost} XP)`}
           </button>
           <p class="text-xs text-slate-600 dark:text-slate-300">
-            Removes one wrong option · Balance {game.xp} XP
+            Removes one wrong option · Hint {Math.min(hint.usedToday + 1, 3)} today · Balance {game.xp} XP
           </p>
         </div>
-        {#if game.xp < HINT_COST_XP && !hintUsed}
+        {#if !hint.allCredits && game.xp < hint.cost && !hintUsed}
           <p class="text-sm font-semibold text-rose-700 dark:text-rose-300" role="status">
-            Not enough XP for a hint. You need {HINT_COST_XP} XP; earn more by answering correctly.
+            Not enough XP for a hint. You need {hint.cost} XP; earn more by answering correctly.
           </p>
         {/if}
         {#if hintMessage}

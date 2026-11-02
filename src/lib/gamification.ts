@@ -4,6 +4,8 @@ import {
   COMBO_TIER_2,
   COMBO_TIER_3,
   DAILY_GOAL_OPTIONS,
+  HINT_COST_XP,
+  HINT_SECOND_EXTRA_XP,
   XP_CORRECT_BASE,
   XP_MASTERED_CAP,
   XP_MISSED_BONUS,
@@ -199,6 +201,74 @@ export function spendXp(state: GameState, amount: number): GameResult {
   next.xp = available - spent;
   next.highestLevelReached = levelForGame(state);
   return { state: next, events: [{ type: 'xp', amount: -spent }] };
+}
+
+export interface HintQuote {
+  /** XP this hint will cost, or the whole balance for the third hint of a day. */
+  cost: number;
+  /** Hints already used on this local day. */
+  usedToday: number;
+  /** True from the third hint of the day: the balance is spent down to zero. */
+  allCredits: boolean;
+}
+
+export interface HintPurchase extends GameResult, HintQuote {
+  purchased: boolean;
+}
+
+function availableXp(state: GameState): number {
+  return Number.isFinite(state.xp) ? Math.max(0, Math.trunc(state.xp)) : 0;
+}
+
+function hintCounterKey(today: string): string {
+  return `hints:${today}`;
+}
+
+/** Number of hints already used on the given local day. */
+export function hintsUsedToday(state: GameState, today: string): number {
+  if (!isDay(today)) return 0;
+  return Math.max(0, Math.trunc(state.counters[hintCounterKey(today)] ?? 0));
+}
+
+/**
+ * Price the next hint: 500 XP for the first, 750 XP for the second, then the
+ * whole balance for every later hint on the same day.
+ */
+export function hintCost(state: GameState, today: string): HintQuote {
+  const usedToday = hintsUsedToday(state, today);
+  if (usedToday >= 2) {
+    return { cost: availableXp(state), usedToday, allCredits: true };
+  }
+
+  const cost = usedToday === 0 ? HINT_COST_XP : HINT_COST_XP + HINT_SECOND_EXTRA_XP;
+  return { cost, usedToday, allCredits: false };
+}
+
+/** Buy one hint and record it against today's count. */
+export function spendHint(state: GameState, today: string): HintPurchase {
+  const quote = hintCost(state, today);
+  const available = availableXp(state);
+
+  if (available < quote.cost) {
+    return { state, events: [], ...quote, purchased: false };
+  }
+
+  const next = cloneState(state);
+  next.xp = available - quote.cost;
+  next.highestLevelReached = levelForGame(state);
+  if (isDay(today)) {
+    next.counters[hintCounterKey(today)] = quote.usedToday + 1;
+  }
+
+  const events: GameEvent[] = quote.cost > 0 ? [{ type: 'xp', amount: -quote.cost }] : [];
+  return {
+    state: next,
+    events,
+    cost: quote.cost,
+    usedToday: quote.usedToday + 1,
+    allCredits: quote.allCredits,
+    purchased: true,
+  };
 }
 
 /**
