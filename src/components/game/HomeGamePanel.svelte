@@ -142,7 +142,7 @@
       </p>
     </div>
     <div class="min-w-44 flex-1 sm:max-w-64">
-      <XpBar xp={mounted ? game.xp : 0} />
+      <XpBar xp={mounted ? game.xp : 0} level={mounted ? game.highestLevelReached : 1} />
     </div>
   </div>
 

@@ -219,7 +219,8 @@ export function syncLeaderboard(now = new Date()): Promise<LeaderboardSnapshot |
   const state = getLeaderboardState(now);
   if (!state.optedIn) return Promise.resolve(null);
 
-  const advanced = advanceWeeklyXp(state, getGame().xp, currentIsoWeek(now));
+  const game = getGame();
+  const advanced = advanceWeeklyXp(state, game.totalEarnedXP, currentIsoWeek(now));
   saveLeaderboardState(advanced);
 
   return submitWeeklyXp(advanced.weeklyXp, buildProfileSubmission());

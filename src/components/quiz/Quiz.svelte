@@ -4,11 +4,13 @@
   import { localDay } from '../../lib/date';
   import { recordSubjectPractice } from '../../lib/activity';
   import { syncLeaderboard } from '../../lib/leaderboard-api';
+  import { HINT_COST_XP } from '../../lib/config';
   import {
     applyAnswer,
     applySession,
     defaultGameState,
-    levelFromXp,
+    levelForGame,
+    spendXp,
     type GameEvent,
     type GameState
   } from '../../lib/gamification';
@@ -16,6 +18,8 @@
     getGame,
     getSeen,
     getWrong,
+    getWrongTimestamps,
+    isWrongLockedAt,
     markSeen,
     markWrong,
     recordAnswer,
@@ -23,7 +27,8 @@
     resetSeen,
     saveGame,
     resetWrong,
-    unmarkWrong
+    unmarkWrong,
+    wrongUnlockTime
   } from '../../lib/storage';
   import type { Question, SessionQuestion, Subject } from '../../lib/types';
   import { badgeInfo } from '../../lib/badges';
@@ -59,6 +64,9 @@
   let selectedMode: SessionMode = 'unseen';
   let timedMode = false;
   let answerHint = '';
+  let hintMessage = '';
+  let hintUsed = false;
+  let hiddenOption: number | null = null;
   let session: SessionQuestion[] = [];
   let index = 0;
   let choice: number | null = null;
@@ -70,6 +78,9 @@
   let mode: 'new' | 'wrong' = 'new';
   let wrongMode = false;
   let wrongIds: string[] = [];
+  let wrongAt: Record<string, number> = {};
+  let clockNow = Date.now();
+  let clockTimerId: ReturnType<typeof setInterval> | null = null;
   let totalCount = questions.length;
   let unseenCount = questions.length;
   let poolExhausted = false;
@@ -101,6 +112,16 @@
   $: wrongIdSet = new Set(wrongIds);
   $: wrongQuestions = questions.filter((question) => wrongIdSet.has(question.id));
   $: wrongCount = wrongQuestions.length;
+  $: wrongDueQuestions = wrongQuestions.filter((question) => !isWrongLocked(question.id));
+  $: wrongLockedQuestions = wrongQuestions.filter((question) => isWrongLocked(question.id));
+  $: nextWrongUnlock = wrongLockedQuestions.reduce(
+    (earliest, question) => {
+      const unlockAt = wrongUnlockAt(question.id);
+      return earliest === null || unlockAt < earliest ? unlockAt : earliest;
+    },
+    null as number | null,
+  );
+  $: retryDueCount = missed.filter((item) => !isWrongLocked(item.question.id)).length;
 
   let questionHeading: HTMLHeadingElement | null = null;
   let resultsHeading: HTMLHeadingElement | null = null;
@@ -114,7 +135,7 @@
   $: scorePercentValue = scorePercent(correctCount, session.length);
   $: reviewableCount = questions.filter((question) => {
     const box = game.boxes[question.id];
-    return box !== undefined && box < 3;
+    return box !== undefined && box < 3 && !isWrongLocked(question.id);
   }).length;
   $: if (stage === 'start' && poolExhausted && wrongCount > 0 && mode === 'new') {
     mode = 'wrong';
@@ -135,6 +156,9 @@
     refreshPool();
     game = getGame();
     today = localDay(new Date());
+    clockTimerId = setInterval(() => {
+      clockNow = Date.now();
+    }, 60_000);
     if (new URLSearchParams(window.location.search).get('mode') === 'review') {
       selectedMode = 'review';
     }
@@ -143,10 +167,35 @@
   onDestroy(() => {
     stopSessionTimer();
     stopQuestionTimer();
+    if (clockTimerId) clearInterval(clockTimerId);
+    clockTimerId = null;
   });
 
   function currentDay(): string {
     return today === '' ? localDay(new Date()) : today;
+  }
+
+  function wrongUnlockAt(id: string): number {
+    return wrongUnlockTime(wrongAt[id]);
+  }
+
+  function isWrongLocked(id: string): boolean {
+    return isWrongLockedAt(wrongAt[id], clockNow);
+  }
+
+  /** Short countdown such as "1d 6h" for a locked Wrong-box question. */
+  function formatRemaining(ms: number): string {
+    const totalMinutes = Math.max(0, Math.ceil(ms / 60_000));
+    const days = Math.floor(totalMinutes / 1440);
+    const hours = Math.floor((totalMinutes % 1440) / 60);
+    const minutes = totalMinutes % 60;
+    if (days > 0) return `${days}d ${hours}h`;
+    if (hours > 0) return `${hours}h ${minutes}m`;
+    return `${minutes}m`;
+  }
+
+  function lockedLabel(id: string): string {
+    return `Available in ${formatRemaining(wrongUnlockAt(id) - clockNow)}`;
   }
 
   function startSessionTimer(): void {
@@ -224,8 +273,10 @@
 
     try {
       wrongIds = getWrong(subject);
+      wrongAt = getWrongTimestamps(subject);
     } catch {
       wrongIds = [];
+      wrongAt = {};
     }
   }
 
@@ -247,6 +298,9 @@
     sessionXp = 0;
     sessionBadges = [];
     answerHint = '';
+    hintMessage = '';
+    hintUsed = false;
+    hiddenOption = null;
     elapsedSeconds = 0;
     totalSeconds = 0;
     timeLeft = SECONDS_PER_QUESTION;
@@ -271,6 +325,9 @@
     sessionXp = 0;
     sessionBadges = [];
     answerHint = '';
+    hintMessage = '';
+    hintUsed = false;
+    hiddenOption = null;
     timedOutCount = 0;
     totalSeconds = 0;
     stage = 'quiz';
@@ -283,8 +340,11 @@
     startError = '';
 
     if (mode === 'wrong') {
-      if (wrongQuestions.length === 0) {
-        startError = 'There are no wrong questions to practice yet.';
+      if (wrongDueQuestions.length === 0) {
+        startError =
+          nextWrongUnlock === null
+            ? 'There are no wrong questions to practice yet.'
+            : `All wrong questions are locked. Next unlocks in ${formatRemaining(nextWrongUnlock - clockNow)}.`;
         refreshPool();
         return;
       }
@@ -292,7 +352,7 @@
       let wrongSession: ReturnType<typeof buildWrongSession>;
 
       try {
-        wrongSession = buildWrongSession(wrongQuestions, selectedLength);
+        wrongSession = buildWrongSession(wrongDueQuestions, selectedLength);
       } catch {
         startError = 'The practice session could not start. Please try again.';
         return;
@@ -316,7 +376,12 @@
     let nextSession: ReturnType<typeof buildSession>;
 
     try {
-      nextSession = buildSession(questions, getSeen(subject), selectedLength, {
+      // Locked Wrong-box questions must not be reachable through review mode.
+      const pool =
+        selectedMode === 'review'
+          ? questions.filter((question) => !isWrongLocked(question.id))
+          : questions;
+      nextSession = buildSession(pool, getSeen(subject), selectedLength, {
         mode: selectedMode,
         boxes: game.boxes
       });
@@ -338,7 +403,43 @@
   }
 
   function chooseOption(optionIndex: number): void {
+    if (optionIndex === hiddenOption) return;
     submitAnswer(optionIndex);
+  }
+
+  function useHint(): void {
+    const question = current;
+    if (stage !== 'quiz' || !question || answered || hintUsed) return;
+
+    if (game.xp < HINT_COST_XP) {
+      hintMessage = `You need ${HINT_COST_XP} XP to use a hint. Answer more questions correctly to earn XP.`;
+      return;
+    }
+
+    const confirmed =
+      typeof window === 'undefined'
+        ? false
+        : window.confirm(`Use hint for ${HINT_COST_XP} XP?`);
+    if (!confirmed) return;
+
+    const candidate = question.options.findIndex((_, optionIndex) => {
+      return optionIndex !== question.correctIndex;
+    });
+    if (candidate === -1) return;
+
+    try {
+      const result = spendXp(game, HINT_COST_XP);
+      game = result.state;
+      saveGame(game);
+      recordGameEvents(result.events);
+    } catch {
+      // Gamification is fail-soft; the hint can still be shown.
+    }
+
+    hiddenOption = candidate;
+    hintUsed = true;
+    hintMessage = `Hint used: option ${candidate + 1} is incorrect. −${HINT_COST_XP} XP`;
+    liveMessage = hintMessage;
   }
 
   /** optionIndex is null when the per-question timer runs out. */
@@ -375,15 +476,13 @@
           }. ${question.explanation}`;
     }
 
-    let wrongGraduated = false;
-    let wrongCurrentCount = 0;
+    let wrongRemoved = false;
     try {
       markSeen(subject, question.id);
       recordSubjectPractice(subject, new Date(), correct);
 
-      const wrongResult = recordWrongAnswerResult(subject, question.id, correct, 2);
-      wrongGraduated = wrongResult.removed;
-      wrongCurrentCount = wrongResult.currentCount;
+      const wrongResult = recordWrongAnswerResult(subject, question.id, correct);
+      wrongRemoved = wrongResult.removed;
 
       // Practice and retry modes are study aids, so they must not
       // double-count saved stats.
@@ -394,14 +493,14 @@
 
     answerHint = '';
     if (wrongMode) {
-      if (wrongGraduated) {
-        answerHint = 'Mistake cleared! (2/2 correct)';
-      } else if (correct && wrongCurrentCount === 1) {
-        answerHint = '1/2 correct (answer correct once more to clear)';
+      if (wrongRemoved) {
+        answerHint = 'Mistake cleared! Removed from your Wrong box.';
+      } else if (!correct) {
+        answerHint = 'Still in your Wrong box. Available again in 2 days.';
       }
     } else if (!retryMode) {
-      if (wrongGraduated) {
-        answerHint = 'Mistake cleared! (2/2 correct)';
+      if (wrongRemoved) {
+        answerHint = 'Mistake cleared! Removed from your Wrong box.';
       } else {
         const previousBox = game.boxes[question.id] ?? 0;
         try {
@@ -439,6 +538,9 @@
       choice = null;
       timeUp = false;
       answerHint = '';
+      hintMessage = '';
+      hintUsed = false;
+      hiddenOption = null;
       liveMessage = '';
       startQuestionTimer();
       void tick().then(() => questionHeading?.focus());
@@ -497,13 +599,21 @@
 
   function handleRetryMissed(): void {
     if (missed.length === 0) return;
-    const retryQuestions = missed.map((item) => item.question);
-    startQuestions(retryQuestions, true);
+    const due = missed.filter((item) => !isWrongLocked(item.question.id));
+    if (due.length === 0) {
+      liveMessage = 'Wrong questions unlock 2 days after they were answered wrong.';
+      return;
+    }
+    startQuestions(
+      due.map((item) => item.question),
+      true,
+    );
   }
 
   function handleReviewSession(): void {
     try {
-      const nextSession = buildSession(questions, getSeen(subject), selectedLength, {
+      const pool = questions.filter((question) => !isWrongLocked(question.id));
+      const nextSession = buildSession(pool, getSeen(subject), selectedLength, {
         mode: 'review',
         boxes: game.boxes
       });
@@ -595,11 +705,15 @@
     optionIndex: number,
     chosen: number | null,
     correctIndex: number,
-    revealed: boolean
+    revealed: boolean,
+    eliminated = false
   ): string {
     const base =
       'flex min-h-14 w-full cursor-pointer items-center gap-3 rounded-2xl border-2 px-3 py-3 text-left transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 sm:px-4 sm:py-4';
 
+    if (eliminated && !revealed) {
+      return `${base} cursor-not-allowed border-slate-200 bg-slate-100 text-slate-400 line-through dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-500`;
+    }
     if (!revealed) {
       return `${base} border-slate-300 bg-white text-slate-900 hover:border-indigo-400 hover:bg-indigo-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:border-indigo-400 dark:hover:bg-slate-700`;
     }
@@ -732,9 +846,13 @@
           <p class="text-lg" aria-live="polite">
             {#if mode === 'wrong'}
               <strong class="text-2xl font-bold text-rose-600 dark:text-rose-400"
-                >{wrongCount}</strong
+                >{wrongDueQuestions.length}</strong
               >
-              <span> question{wrongCount === 1 ? '' : 's'} to practise again</span>
+              <span> ready · </span>
+              <strong class="text-2xl font-bold text-slate-500 dark:text-slate-400"
+                >{wrongLockedQuestions.length}</strong
+              >
+              <span> locked</span>
             {:else}
               <strong class="text-2xl font-bold text-indigo-600 dark:text-indigo-400"
                 >{unseenCount}</strong
@@ -744,6 +862,31 @@
               <span> questions</span>
             {/if}
           </p>
+
+          {#if mode === 'wrong' && wrongCount > 0}
+            <div
+              class="rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/60"
+            >
+              <p class="text-sm font-semibold">Wrong box</p>
+              <ul class="mt-2 max-h-64 space-y-1.5 overflow-y-auto" role="list">
+                {#each wrongQuestions as wrongQuestion (wrongQuestion.id)}
+                  {@const locked = isWrongLocked(wrongQuestion.id)}
+                  <li class="flex items-center gap-2 rounded-lg bg-white px-3 py-2 text-sm dark:bg-slate-900">
+                    <span class="min-w-0 flex-1 truncate">{wrongQuestion.question}</span>
+                    {#if locked}
+                      <span class="shrink-0 rounded-full bg-rose-100 px-2 py-0.5 text-xs font-semibold text-rose-800 dark:bg-rose-500/20 dark:text-rose-200">
+                        {lockedLabel(wrongQuestion.id)}
+                      </span>
+                    {:else}
+                      <span class="shrink-0 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-200">
+                        Ready
+                      </span>
+                    {/if}
+                  </li>
+                {/each}
+              </ul>
+            </div>
+          {/if}
         </div>
 
         <div class="space-y-2">
@@ -845,10 +988,20 @@
         <button
           type="button"
           on:click={handleStart}
-          class="min-h-14 w-full rounded-2xl bg-indigo-600 px-6 text-lg font-semibold text-white shadow-sm transition-colors hover:bg-indigo-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
+          disabled={mode === 'wrong' && wrongDueQuestions.length === 0}
+          class="min-h-14 w-full rounded-2xl bg-indigo-600 px-6 text-lg font-semibold text-white shadow-sm transition-colors hover:bg-indigo-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:focus-visible:ring-offset-slate-900"
         >
-          {mode === 'wrong' ? 'Practise wrong questions' : 'Start session'}
+          {mode === 'wrong'
+            ? `Practise ready questions (${wrongDueQuestions.length})`
+            : 'Start session'}
         </button>
+
+        {#if mode === 'wrong' && wrongDueQuestions.length === 0 && nextWrongUnlock !== null}
+          <p class="text-sm font-semibold text-amber-700 dark:text-amber-300" role="status">
+            All wrong questions are locked. Next unlocks in
+            {formatRemaining(nextWrongUnlock - clockNow)}.
+          </p>
+        {/if}
 
         {#if wrongCount > 0}
           <button
@@ -898,7 +1051,7 @@
               Streak <span class="text-amber-600 dark:text-amber-400">{streak}</span>
             </span>
             <span class="rounded-full bg-slate-100 px-3 py-1 dark:bg-slate-800">
-              Lv {levelFromXp(game.xp)}
+              Lv {levelForGame(game)}
             </span>
             <span class="rounded-full bg-slate-100 px-3 py-1 dark:bg-slate-800">
               {game.xp} XP
@@ -931,6 +1084,34 @@
         {current.question}
       </h2>
 
+      {#if !answered}
+        <div
+          class="flex flex-wrap items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/60"
+        >
+          <button
+            type="button"
+            on:click={useHint}
+            disabled={hintUsed || game.xp < HINT_COST_XP}
+            class="min-h-10 rounded-lg border border-amber-300 bg-amber-50 px-3 text-sm font-semibold text-amber-900 transition-colors hover:border-amber-400 hover:bg-amber-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:border-amber-500/60 dark:bg-amber-950/40 dark:text-amber-100 dark:focus-visible:ring-offset-slate-900"
+          >
+            {hintUsed ? 'Hint used' : `Use hint (−${HINT_COST_XP} XP)`}
+          </button>
+          <p class="text-xs text-slate-600 dark:text-slate-300">
+            Removes one wrong option · Balance {game.xp} XP
+          </p>
+        </div>
+        {#if game.xp < HINT_COST_XP && !hintUsed}
+          <p class="text-sm font-semibold text-rose-700 dark:text-rose-300" role="status">
+            Not enough XP for a hint. You need {HINT_COST_XP} XP; earn more by answering correctly.
+          </p>
+        {/if}
+        {#if hintMessage}
+          <p class="text-sm font-semibold text-amber-700 dark:text-amber-300" aria-live="polite">
+            {hintMessage}
+          </p>
+        {/if}
+      {/if}
+
       <div
         role="radiogroup"
         aria-labelledby="quiz-question"
@@ -942,7 +1123,7 @@
             type="button"
             role="radio"
             aria-checked={choice === optionIndex}
-            aria-disabled={answered}
+            aria-disabled={answered || optionIndex === hiddenOption}
             aria-label={optionAriaLabel(
               optionIndex,
               option,
@@ -951,7 +1132,14 @@
               answered
             )}
             on:click={() => chooseOption(optionIndex)}
-            class={optionClasses(optionIndex, choice, current.correctIndex, answered)}
+            disabled={answered || optionIndex === hiddenOption}
+            class={optionClasses(
+              optionIndex,
+              choice,
+              current.correctIndex,
+              answered,
+              optionIndex === hiddenOption
+            )}
           >
             <span
               aria-hidden="true"
@@ -1113,10 +1301,10 @@
           <div class="flex flex-wrap items-center justify-between gap-2">
             <h3 class="text-lg font-bold">Progress</h3>
             <p class="rounded-full bg-white px-3 py-1 text-sm font-bold text-indigo-700 dark:bg-slate-900 dark:text-indigo-300">
-              +{sessionXp} XP this session
+              {sessionXp >= 0 ? `+${sessionXp}` : sessionXp} XP this session
             </p>
           </div>
-          <XpBar xp={game.xp} />
+          <XpBar xp={game.xp} level={game.highestLevelReached} />
           <p class="text-sm text-slate-700 dark:text-slate-200">
             <span aria-hidden="true">🔥</span>
             {game.streak.count}-day streak · best {game.streak.best} · freezes {game.streak.freezes}/2
@@ -1143,7 +1331,7 @@
           correct={correctCount}
           total={session.length}
           streak={game.streak.count}
-          level={levelFromXp(game.xp)}
+          level={levelForGame(game)}
         />
       {/if}
 
@@ -1208,10 +1396,10 @@
         <button
           type="button"
           on:click={handleRetryMissed}
-          disabled={missed.length === 0}
+          disabled={retryDueCount === 0}
           class="min-h-14 rounded-2xl bg-indigo-600 px-5 text-base font-semibold text-white shadow-sm transition-colors hover:bg-indigo-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-offset-slate-900"
         >
-          Retry missed
+          {retryDueCount === 0 ? 'Retry unlocks in 2 days' : 'Retry missed'}
         </button>
         <button
           type="button"

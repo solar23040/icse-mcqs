@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { buildSession } from './engine';
+import { WRONG_BOX_LOCK_MS } from './config';
 import type { Question, Subject } from './types';
 
 type StorageModule = typeof import('./storage');
@@ -281,53 +282,69 @@ describe('wrong questions', () => {
     expect(storage.getWrong('history')).toEqual([]);
   });
 
-  it('requires 2 correct answers to remove an id from the wrong list', () => {
-    vi.stubGlobal('localStorage', new FakeStorage());
+  it('stores a wrongAt timestamp when a question enters the Wrong box', () => {
+    const fake = new FakeStorage();
+    vi.stubGlobal('localStorage', fake);
+    const first = Date.parse('2026-01-01T00:00:00Z');
 
-    // Initially mark wrong
-    storage.markWrong('maths', 'm1');
+    storage.markWrong('maths', 'm1', first);
     expect(storage.getWrong('maths')).toEqual(['m1']);
-    expect(storage.getWrongCounts('maths')).toEqual({});
+    expect(storage.getWrongAt('maths', 'm1')).toBe(first);
+    expect(JSON.parse(fake.getItem('mcq:maths:wrong_at') ?? '{}')).toEqual({ m1: first });
 
-    // 1st correct answer: not removed yet, count goes to 1
-    const res1 = storage.recordWrongAnswerResult('maths', 'm1', true, 2);
-    expect(res1).toEqual({ removed: false, currentCount: 1, inWrongList: true });
+    // A failed retry keeps the question in the box and restarts the timer.
+    const retry = first + 60 * 60 * 1000;
+    const wrongRetry = storage.recordWrongAnswerResult('maths', 'm1', false, retry);
+    expect(wrongRetry).toEqual({ removed: false, wrongAt: retry, inWrongList: true });
     expect(storage.getWrong('maths')).toEqual(['m1']);
-    expect(storage.getWrongCounts('maths')).toEqual({ m1: 1 });
+    expect(storage.getWrongAt('maths', 'm1')).toBe(retry);
 
-    // Answering wrong again resets the streak count
-    const resWrong = storage.recordWrongAnswerResult('maths', 'm1', false, 2);
-    expect(resWrong).toEqual({ removed: false, currentCount: 0, inWrongList: true });
-    expect(storage.getWrong('maths')).toEqual(['m1']);
-    expect(storage.getWrongCounts('maths')).toEqual({});
-
-    // 1st correct answer again
-    const res2 = storage.recordWrongAnswerResult('maths', 'm1', true, 2);
-    expect(res2).toEqual({ removed: false, currentCount: 1, inWrongList: true });
-    expect(storage.getWrong('maths')).toEqual(['m1']);
-    expect(storage.getWrongCounts('maths')).toEqual({ m1: 1 });
-
-    // 2nd correct answer: removed!
-    const res3 = storage.recordWrongAnswerResult('maths', 'm1', true, 2);
-    expect(res3).toEqual({ removed: true, currentCount: 2, inWrongList: false });
+    // A correct retry removes it and its timestamp.
+    const correctRetry = storage.recordWrongAnswerResult('maths', 'm1', true, retry + 1);
+    expect(correctRetry).toEqual({ removed: true, wrongAt: null, inWrongList: false });
     expect(storage.getWrong('maths')).toEqual([]);
-    expect(storage.getWrongCounts('maths')).toEqual({});
+    expect(storage.getWrongAt('maths', 'm1')).toBeNull();
 
-    // Answering correct for an item not in wrong list does nothing
-    const resIgnore = storage.recordWrongAnswerResult('maths', 'm1', true, 2);
-    expect(resIgnore).toEqual({ removed: false, currentCount: 0, inWrongList: false });
+    // A correct answer for an id not in the list is ignored.
+    expect(storage.recordWrongAnswerResult('maths', 'm1', true, retry)).toEqual({
+      removed: false,
+      wrongAt: null,
+      inWrongList: false,
+    });
   });
 
-  it('resetWrong clears wrong counts along with wrong list', () => {
+  it('locks a Wrong-box question for exactly 48 hours', () => {
+    const markedAt = Date.parse('2026-01-01T00:00:00Z');
+
+    expect(storage.isWrongLockedAt(markedAt, markedAt)).toBe(true);
+    expect(storage.isWrongLockedAt(markedAt, markedAt + WRONG_BOX_LOCK_MS - 1)).toBe(true);
+    expect(storage.isWrongLockedAt(markedAt, markedAt + WRONG_BOX_LOCK_MS)).toBe(false);
+    expect(storage.wrongUnlockTime(markedAt)).toBe(markedAt + WRONG_BOX_LOCK_MS);
+    expect(storage.isWrongLockedAt(null, markedAt)).toBe(false);
+  });
+
+  it('returns defaults for malformed wrong timestamps', () => {
+    const fake = new FakeStorage();
+    vi.stubGlobal('localStorage', fake);
+
+    fake.setItem('mcq:english-lit:wrong_at', '{not valid json');
+    expect(storage.getWrongTimestamps('english-lit')).toEqual({});
+
+    fake.setItem(
+      'mcq:english-lit:wrong_at',
+      JSON.stringify({ valid: 123, bad: 'later', zero: 0 }),
+    );
+    expect(storage.getWrongTimestamps('english-lit')).toEqual({ valid: 123 });
+  });
+
+  it('resetWrong clears timestamps along with the wrong list', () => {
     vi.stubGlobal('localStorage', new FakeStorage());
 
-    storage.markWrong('physics', 'p1');
-    storage.recordWrongAnswerResult('physics', 'p1', true, 2);
-    expect(storage.getWrongCounts('physics')).toEqual({ p1: 1 });
-
+    storage.markWrong('physics', 'p1', 123);
     storage.resetWrong('physics');
+
     expect(storage.getWrong('physics')).toEqual([]);
-    expect(storage.getWrongCounts('physics')).toEqual({});
+    expect(storage.getWrongTimestamps('physics')).toEqual({});
   });
 });
 

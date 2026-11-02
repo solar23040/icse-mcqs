@@ -1,9 +1,13 @@
 <script lang="ts">
   import { levelFromXp, xpForLevel } from '../../lib/gamification';
 
-  let { xp, compact = false }: { xp: number; compact?: boolean } = $props();
+  let {
+    xp,
+    level: levelProp,
+    compact = false,
+  }: { xp: number; level?: number; compact?: boolean } = $props();
 
-  const level = $derived(levelFromXp(xp));
+  const level = $derived(Math.max(levelProp ?? 1, levelFromXp(xp)));
   const start = $derived(xpForLevel(level));
   const next = $derived(xpForLevel(level + 1));
   const span = $derived(Math.max(1, next - start));

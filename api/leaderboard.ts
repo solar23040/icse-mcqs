@@ -61,7 +61,8 @@ const SUBJECT_SLUGS = new Set([
 
 /** Keep submissions small enough that a tampered local state cannot jump the board. */
 const MAX_SUBMISSION_XP = 500;
-const MAX_DAILY_XP = 2000;
+/** Highest weekly XP a single player can hold on the leaderboard. */
+const MAX_LEADERBOARD_XP = 20000;
 
 const ADJECTIVES = [
   'Brave',
@@ -609,7 +610,8 @@ export async function POST(request: Request): Promise<Response> {
     const requested = Math.max(0, weeklyXp - current);
     const delta = Math.min(requested, MAX_SUBMISSION_XP);
     const used = toCount(usedRaw);
-    const allowed = Math.min(delta, Math.max(0, MAX_DAILY_XP - used));
+    const remaining = Math.max(0, MAX_LEADERBOARD_XP - current);
+    const allowed = Math.min(delta, remaining, Math.max(0, MAX_LEADERBOARD_XP - used));
 
     const commands: RedisCommand[] = [];
     if (allowed > 0) {

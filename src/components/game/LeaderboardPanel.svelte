@@ -47,7 +47,7 @@
     if (!input || busy) return;
 
     if (input.checked) {
-      const state = startLeaderboard(getLeaderboardState(), getGame().xp);
+      const state = startLeaderboard(getLeaderboardState(), getGame().totalEarnedXP);
       saveLeaderboardState(state);
       optedIn = true;
       await sync();

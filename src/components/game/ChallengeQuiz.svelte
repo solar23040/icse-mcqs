@@ -4,7 +4,7 @@
   import { localDay } from '../../lib/date';
   import { recordSubjectPractice } from '../../lib/activity';
   import { syncLeaderboard } from '../../lib/leaderboard-api';
-  import { applyAnswer, applySession, defaultGameState, levelFromXp, type GameEvent, type GameState } from '../../lib/gamification';
+  import { applyAnswer, applySession, defaultGameState, levelForGame, type GameEvent, type GameState } from '../../lib/gamification';
   import { getGame, markSeen, recordAnswer, saveGame } from '../../lib/storage';
   import { badgeInfo } from '../../lib/badges';
   import { optionIndexFromKey, isTypingTarget, formatClock } from '../quiz/quiz-utils';
@@ -351,7 +351,7 @@
             Score <span class="text-indigo-600 dark:text-indigo-400">{correctCount}</span>
           </span>
           <span class="rounded-full bg-slate-100 px-3 py-1 dark:bg-slate-800">
-            Lv {levelFromXp(game.xp)}
+            Lv {levelForGame(game)}
           </span>
         </div>
       </div>
@@ -451,7 +451,7 @@
         correct={correctCount}
         total={answeredCount}
         streak={game.streak.count}
-        level={levelFromXp(game.xp)}
+        level={levelForGame(game)}
       />
 
       {#if sessionBadges.length > 0}

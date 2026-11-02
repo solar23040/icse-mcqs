@@ -1,5 +1,5 @@
-import { DAILY_GOAL_OPTIONS } from './config';
-import { defaultGameState, type GameState } from './gamification';
+import { DAILY_GOAL_OPTIONS, WRONG_BOX_LOCK_MS } from './config';
+import { defaultGameState, levelFromXp, type GameState } from './gamification';
 import type { Subject } from './types';
 
 interface Stats {
@@ -84,8 +84,8 @@ function wrongKey(subject: Subject): string {
   return `mcq:${subject}:wrong`;
 }
 
-function wrongCountsKey(subject: Subject): string {
-  return `mcq:${subject}:wrong_counts`;
+function wrongAtKey(subject: Subject): string {
+  return `mcq:${subject}:wrong_at`;
 }
 
 function emptyStats(): Stats {
@@ -144,46 +144,58 @@ export function resetSeen(subject: Subject): void {
   removeRaw(seenKey(subject));
 }
 
-export function getWrongCounts(subject: Subject): Record<string, number> {
-  const raw = readRaw(wrongCountsKey(subject));
+function toTimestamp(value: unknown): number {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return 0;
+  return Math.max(0, Math.trunc(value));
+}
+
+/** Persistent timestamp (epoch ms) for each question currently in the Wrong box. */
+export function getWrongTimestamps(subject: Subject): Record<string, number> {
+  const raw = readRaw(wrongAtKey(subject));
   if (raw === null) return {};
   try {
     const parsed: unknown = JSON.parse(raw);
     if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) return {};
-    const counts: Record<string, number> = {};
+    const timestamps: Record<string, number> = {};
     for (const [key, val] of Object.entries(parsed)) {
-      if (typeof val === 'number' && Number.isFinite(val) && val > 0) {
-        counts[key] = Math.trunc(val);
-      }
+      const timestamp = toTimestamp(val);
+      if (timestamp > 0) timestamps[key] = timestamp;
     }
-    return counts;
+    return timestamps;
   } catch {
     return {};
   }
 }
 
-function saveWrongCounts(subject: Subject, counts: Record<string, number>): void {
-  const entries = Object.entries(counts).filter(([, val]) => val > 0);
-  if (entries.length === 0) {
-    removeRaw(wrongCountsKey(subject));
-    return;
-  }
-  writeRaw(wrongCountsKey(subject), JSON.stringify(Object.fromEntries(entries)));
+export function getWrongAt(subject: Subject, id: string): number | null {
+  return getWrongTimestamps(subject)[id] ?? null;
 }
 
-export function markWrong(subject: Subject, id: string): void {
+/** When a Wrong-box question becomes retryable again. */
+export function wrongUnlockTime(wrongAt: number | null | undefined): number {
+  const timestamp =
+    typeof wrongAt === 'number' && Number.isFinite(wrongAt) ? Math.max(0, Math.trunc(wrongAt)) : 0;
+  return timestamp + WRONG_BOX_LOCK_MS;
+}
+
+export function isWrongLockedAt(
+  wrongAt: number | null | undefined,
+  now = Date.now(),
+): boolean {
+  return now < wrongUnlockTime(wrongAt);
+}
+
+export function markWrong(subject: Subject, id: string, now = Date.now()): void {
   const wrong = getWrong(subject);
   if (!wrong.includes(id)) {
     wrong.push(id);
     writeRaw(wrongKey(subject), JSON.stringify(wrong));
   }
 
-  // Reset any consecutive correct count when answered wrong
-  const counts = getWrongCounts(subject);
-  if (counts[id] !== undefined) {
-    delete counts[id];
-    saveWrongCounts(subject, counts);
-  }
+  // Every wrong answer (including a failed retry) restarts the 48-hour timer.
+  const timestamps = getWrongTimestamps(subject);
+  timestamps[id] = toTimestamp(now) || Date.now();
+  writeRaw(wrongAtKey(subject), JSON.stringify(timestamps));
 }
 
 export function unmarkWrong(subject: Subject, id: string): void {
@@ -197,21 +209,26 @@ export function unmarkWrong(subject: Subject, id: string): void {
     }
   }
 
-  const counts = getWrongCounts(subject);
-  if (counts[id] !== undefined) {
-    delete counts[id];
-    saveWrongCounts(subject, counts);
+  const timestamps = getWrongTimestamps(subject);
+  if (timestamps[id] !== undefined) {
+    delete timestamps[id];
+    if (Object.keys(timestamps).length === 0) {
+      removeRaw(wrongAtKey(subject));
+    } else {
+      writeRaw(wrongAtKey(subject), JSON.stringify(timestamps));
+    }
   }
 }
 
 export function resetWrong(subject: Subject): void {
   removeRaw(wrongKey(subject));
-  removeRaw(wrongCountsKey(subject));
+  removeRaw(wrongAtKey(subject));
 }
 
 export interface WrongAnswerResult {
   removed: boolean;
-  currentCount: number;
+  /** Epoch ms when the question last went into the Wrong box, or null. */
+  wrongAt: number | null;
   inWrongList: boolean;
 }
 
@@ -219,46 +236,32 @@ export function recordWrongAnswerResult(
   subject: Subject,
   id: string,
   correct: boolean,
-  requiredStreak = 2
+  now = Date.now(),
 ): WrongAnswerResult {
-  const wrong = getWrong(subject);
-  const inWrongList = wrong.includes(id);
+  const inWrongList = getWrong(subject).includes(id);
 
   if (!correct) {
-    markWrong(subject, id);
+    markWrong(subject, id, now);
     return {
       removed: false,
-      currentCount: 0,
-      inWrongList: true
+      wrongAt: toTimestamp(now) || Date.now(),
+      inWrongList: true,
     };
   }
 
   if (!inWrongList) {
     return {
       removed: false,
-      currentCount: 0,
-      inWrongList: false
+      wrongAt: null,
+      inWrongList: false,
     };
   }
 
-  const counts = getWrongCounts(subject);
-  const nextCount = (counts[id] ?? 0) + 1;
-
-  if (nextCount >= requiredStreak) {
-    unmarkWrong(subject, id);
-    return {
-      removed: true,
-      currentCount: nextCount,
-      inWrongList: false
-    };
-  }
-
-  counts[id] = nextCount;
-  saveWrongCounts(subject, counts);
+  unmarkWrong(subject, id);
   return {
-    removed: false,
-    currentCount: nextCount,
-    inWrongList: true
+    removed: true,
+    wrongAt: null,
+    inWrongList: false,
   };
 }
 
@@ -347,6 +350,13 @@ function parseGame(raw: string): GameState {
     return {
       v: 1,
       xp: toCount(record.xp),
+      totalEarnedXP: Math.max(toCount(record.totalEarnedXP), toCount(record.xp)),
+      highestLevelReached: Math.max(
+        1,
+        toCount(record.highestLevelReached),
+        levelFromXp(toCount(record.totalEarnedXP)),
+        levelFromXp(toCount(record.xp)),
+      ),
       streak: {
         count: toCount(streakRaw.count),
         lastDay: toDay(streakRaw.lastDay),

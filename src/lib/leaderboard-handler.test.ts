@@ -203,10 +203,10 @@ describe('leaderboard API', () => {
     expect(meOf(await payload(response)).xp).toBe(500);
   });
 
-  it('caps the total submitted per day', async () => {
+  it('caps the total leaderboard XP at 20,000', async () => {
     let token = '';
 
-    for (let index = 1; index <= 5; index += 1) {
+    for (let index = 1; index <= 45; index += 1) {
       const response = await POST(
         apiRequest('POST', {
           body: { weeklyXp: index * 500 },
@@ -218,7 +218,7 @@ describe('leaderboard API', () => {
 
     const response = await GET(apiRequest('GET', { cookie: token }));
 
-    expect(meOf(await payload(response)).xp).toBe(2000);
+    expect(meOf(await payload(response)).xp).toBe(20000);
   });
 
   it('ignores negative deltas after a local reset', async () => {

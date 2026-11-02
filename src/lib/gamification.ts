@@ -15,7 +15,12 @@ export type { DailyGoal };
 
 export interface GameState {
   v: 1;
+  /** Spendable XP. Hints reduce this, never below zero. */
   xp: number;
+  /** Lifetime XP earned. Rankings use this so spending never lowers a rank. */
+  totalEarnedXP: number;
+  /** Highest level ever reached. Spending XP never lowers the level. */
+  highestLevelReached: number;
   streak: {
     count: number;
     lastDay: string;
@@ -76,6 +81,8 @@ export function defaultGameState(): GameState {
   return {
     v: 1,
     xp: 0,
+    totalEarnedXP: 0,
+    highestLevelReached: 1,
     streak: { count: 0, lastDay: '', freezes: 0, best: 0 },
     dailyGoal: DAILY_GOAL_OPTIONS[0],
     daily: { day: '', answered: 0 },
@@ -147,6 +154,51 @@ function cloneState(state: GameState): GameState {
     missed: { ...state.missed },
     counters: { ...state.counters },
   };
+}
+
+/** Current level. It is monotonic: spending XP never lowers it. */
+export function levelForGame(state: GameState): number {
+  const stored = Number.isFinite(state.highestLevelReached)
+    ? Math.max(1, Math.trunc(state.highestLevelReached))
+    : 1;
+  return Math.max(stored, levelFromXp(state.totalEarnedXP), levelFromXp(state.xp));
+}
+
+function grantXp(state: GameState, amount: number, events: GameEvent[]): void {
+  const gained = Math.max(0, Math.trunc(amount));
+  if (gained === 0) return;
+
+  const previousLevel = levelForGame(state);
+  const earnedBefore = Math.max(
+    Number.isFinite(state.totalEarnedXP) ? state.totalEarnedXP : 0,
+    Number.isFinite(state.xp) ? state.xp : 0,
+  );
+
+  state.xp += gained;
+  state.totalEarnedXP = earnedBefore + gained;
+  state.highestLevelReached = Math.max(
+    previousLevel,
+    levelFromXp(state.totalEarnedXP),
+    levelFromXp(state.xp),
+  );
+  events.push({ type: 'xp', amount: gained });
+
+  if (state.highestLevelReached > previousLevel) {
+    events.push({ type: 'levelUp', level: state.highestLevelReached });
+  }
+}
+
+/** Spend XP on a hint. Returns no events when the balance is already empty. */
+export function spendXp(state: GameState, amount: number): GameResult {
+  const cost = Number.isFinite(amount) ? Math.max(0, Math.trunc(amount)) : 0;
+  const available = Number.isFinite(state.xp) ? Math.max(0, Math.trunc(state.xp)) : 0;
+  const spent = Math.min(cost, available);
+  if (spent === 0) return { state, events: [] };
+
+  const next = cloneState(state);
+  next.xp = available - spent;
+  next.highestLevelReached = levelForGame(state);
+  return { state: next, events: [{ type: 'xp', amount: -spent }] };
 }
 
 /**
@@ -237,12 +289,7 @@ export function applyAnswer(state: GameState, input: AnswerInput): GameResult {
   }
 
   if (gained > 0) {
-    const oldLevel = levelFromXp(next.xp);
-    next.xp += gained;
-    events.push({ type: 'xp', amount: gained });
-
-    const newLevel = levelFromXp(next.xp);
-    if (newLevel > oldLevel) events.push({ type: 'levelUp', level: newLevel });
+    grantXp(next, gained, events);
   }
 
   if (masteredNow) events.push({ type: 'mastered', questionId });
@@ -284,12 +331,7 @@ export function applySession(state: GameState, input: SessionInput): GameResult 
   let next = cloneState(resetDailyIfNeeded(state, today));
 
   if (total > 0) {
-    const oldLevel = levelFromXp(next.xp);
-    next.xp += XP_SESSION_COMPLETE;
-    events.push({ type: 'xp', amount: XP_SESSION_COMPLETE });
-
-    const newLevel = levelFromXp(next.xp);
-    if (newLevel > oldLevel) events.push({ type: 'levelUp', level: newLevel });
+    grantXp(next, XP_SESSION_COMPLETE, events);
 
     next.counters.sessions = (next.counters.sessions ?? 0) + 1;
     next.counters[`subject:${subject}`] = (next.counters[`subject:${subject}`] ?? 0) + 1;

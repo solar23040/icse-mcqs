@@ -5,9 +5,11 @@ import {
   applySession,
   defaultGameState,
   evaluateBadges,
+  levelForGame,
   levelFromXp,
   masteryPercent,
   rankFor,
+  spendXp,
   touchStreak,
   xpForLevel,
   type GameState,
@@ -51,6 +53,47 @@ describe('level curve', () => {
     expect(levelFromXp(-10)).toBe(1);
     expect(levelFromXp(Number.NaN)).toBe(1);
     expect(levelFromXp(Number.POSITIVE_INFINITY)).toBe(1);
+  });
+});
+
+describe('spending XP on hints', () => {
+  it('deducts XP without lowering the level or total earned XP', () => {
+    const state = defaultGameState();
+    state.xp = 100;
+    state.totalEarnedXP = 500;
+    state.highestLevelReached = levelFromXp(500);
+    const levelBefore = levelForGame(state);
+
+    const result = spendXp(state, 10);
+
+    expect(result.state.xp).toBe(90);
+    expect(result.state.totalEarnedXP).toBe(500);
+    expect(levelForGame(result.state)).toBe(levelBefore);
+    expect(result.events).toEqual([{ type: 'xp', amount: -10 }]);
+  });
+
+  it('never spends below zero', () => {
+    const state = defaultGameState();
+    state.xp = 4;
+
+    const result = spendXp(state, 10);
+
+    expect(result.state.xp).toBe(0);
+    expect(result.events).toEqual([{ type: 'xp', amount: -4 }]);
+    expect(spendXp(defaultGameState(), 10).events).toEqual([]);
+  });
+
+  it('keeps totalEarnedXP ahead of spendable XP when XP is earned', () => {
+    const result = applyAnswer(defaultGameState(), {
+      questionId: 'q1',
+      subject: 'maths',
+      correct: true,
+      combo: 1,
+      today: '2026-01-01',
+    });
+
+    expect(result.state.totalEarnedXP).toBe(result.state.xp);
+    expect(result.state.highestLevelReached).toBe(levelForGame(result.state));
   });
 });
 
