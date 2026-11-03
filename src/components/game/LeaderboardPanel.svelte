@@ -1,18 +1,10 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { getGame } from '../../lib/storage';
   import { getUserName } from '../../lib/storage';
-  import {
-    getLeaderboardState,
-    saveLeaderboardState,
-    setLeaderboardOptedIn,
-    startLeaderboard,
-    type LeaderboardSnapshot
-  } from '../../lib/leaderboard';
-  import { leaveLeaderboard, syncLeaderboard } from '../../lib/leaderboard-api';
+  import type { LeaderboardSnapshot } from '../../lib/leaderboard';
+  import { syncLeaderboard } from '../../lib/leaderboard-api';
 
   let mounted = $state(false);
-  let optedIn = $state(false);
   let busy = $state(false);
   let snapshot = $state<LeaderboardSnapshot | null>(null);
   let message = $state('');
@@ -20,8 +12,6 @@
   let displayName = $state<string | null>(null);
 
   async function sync(): Promise<void> {
-    if (!optedIn) return;
-
     busy = true;
     failed = false;
     message = '';
@@ -42,51 +32,15 @@
     }
   }
 
-  async function handleToggle(event: Event): Promise<void> {
-    const input = event.currentTarget as HTMLInputElement | null;
-    if (!input || busy) return;
-
-    if (input.checked) {
-      const state = startLeaderboard(getLeaderboardState(), getGame().totalEarnedXP);
-      saveLeaderboardState(state);
-      optedIn = true;
-      await sync();
-      return;
-    }
-
-    await leave();
-  }
-
-  async function leave(): Promise<void> {
-    optedIn = false;
-    setLeaderboardOptedIn(false);
-    snapshot = null;
-    failed = false;
-    message = '';
-    busy = true;
-
-    const result = await leaveLeaderboard();
-    busy = false;
-
-    if (!result) {
-      failed = true;
-      message = 'Could not reach the leaderboard. Your entry will expire automatically.';
-    } else {
-      message = 'You left the weekly leaderboard.';
-    }
-  }
-
   onMount(() => {
     mounted = true;
-    const state = getLeaderboardState();
-    optedIn = state.optedIn;
     displayName = getUserName();
-    if (optedIn) void sync();
+    void sync();
 
     // Re-sync when user sets their name via the modal
     const handleNameSet = (e: Event): void => {
       displayName = (e as CustomEvent<{ name: string }>).detail.name;
-      if (optedIn) void sync();
+      void sync();
     };
     window.addEventListener('icse:nameSet', handleNameSet);
     // Return cleanup so the listener is removed when the component unmounts
@@ -108,33 +62,19 @@
       </h2>
     </div>
 
-    <label class="flex min-h-10 cursor-pointer items-center gap-3 rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold dark:border-slate-600">
-      <input
-        type="checkbox"
-        role="switch"
-        checked={optedIn}
-        disabled={!mounted || busy}
-        on:change={handleToggle}
-        class="h-5 w-5 accent-indigo-600"
-      />
-      <span>{optedIn ? 'Joined' : 'Join'}</span>
-    </label>
+    <span class="flex min-h-10 items-center gap-2 rounded-xl border border-emerald-300 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-800 dark:border-emerald-500/50 dark:bg-emerald-500/10 dark:text-emerald-200">
+      <span aria-hidden="true">✓</span>
+      Automatically joined
+    </span>
   </div>
 
   <p class="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-    Optional. Joining stores a random id in an HttpOnly cookie and shares your weekly XP, chosen display name,
-    earned badges and recent subject activity. No email or IP address is stored, and you can leave at any time
-    to remove your entry and profile.
+    Everyone is on the weekly board automatically. The site stores a random id in an HttpOnly cookie and shares your
+    weekly XP, chosen display name, earned badges and recent subject activity. No email or IP address is stored.
   </p>
 
   <div class="mt-5">
-    {#if !mounted}
-      <p class="text-sm text-slate-500 dark:text-slate-400">Loading leaderboard settings…</p>
-    {:else if !optedIn}
-      <p class="text-sm text-slate-600 dark:text-slate-300">
-        The leaderboard is off. Turn it on to see the top 10 and your weekly rank.
-      </p>
-    {:else if busy && !snapshot}
+    {#if !mounted || (busy && !snapshot)}
       <p class="text-sm text-slate-500 dark:text-slate-400">Loading this week's scores…</p>
     {:else if snapshot}
       <div class="space-y-4">
@@ -229,35 +169,16 @@
             No scores yet this week. Be the first on the board.
           </p>
         {/if}
-
-        <button
-          type="button"
-          on:click={leave}
-          disabled={busy}
-          class="min-h-10 rounded-lg border border-rose-300 px-4 text-sm font-semibold text-rose-700 transition-colors hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-rose-500/60 dark:text-rose-300 dark:hover:bg-rose-500/10"
-        >
-          Leave leaderboard
-        </button>
       </div>
     {:else}
-      <div class="flex flex-wrap gap-2">
-        <button
-          type="button"
-          on:click={sync}
-          disabled={busy}
-          class="min-h-10 rounded-lg bg-indigo-600 px-4 text-sm font-semibold text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          Try again
-        </button>
-        <button
-          type="button"
-          on:click={leave}
-          disabled={busy}
-          class="min-h-10 rounded-lg border border-rose-300 px-4 text-sm font-semibold text-rose-700 transition-colors hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-rose-500/60 dark:text-rose-300 dark:hover:bg-rose-500/10"
-        >
-          Leave leaderboard
-        </button>
-      </div>
+      <button
+        type="button"
+        on:click={sync}
+        disabled={busy}
+        class="min-h-10 rounded-lg bg-indigo-600 px-4 text-sm font-semibold text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        Try again
+      </button>
     {/if}
 
     {#if message}

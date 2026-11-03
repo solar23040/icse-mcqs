@@ -103,32 +103,32 @@ describe('spending XP on hints', () => {
 describe('daily hint pricing', () => {
   const today = '2026-01-01';
 
-  it('charges 500 then 750, then the whole balance', () => {
+  it('charges 250 then 500, then the whole balance', () => {
     const state = defaultGameState();
     state.xp = 5_000;
 
-    expect(hintCost(state, today)).toEqual({ cost: 500, usedToday: 0, allCredits: false });
+    expect(hintCost(state, today)).toEqual({ cost: 250, usedToday: 0, allCredits: false });
 
     const first = spendHint(state, today);
     expect(first.purchased).toBe(true);
-    expect(first.cost).toBe(500);
-    expect(first.state.xp).toBe(4_500);
+    expect(first.cost).toBe(250);
+    expect(first.state.xp).toBe(4_750);
     expect(hintsUsedToday(first.state, today)).toBe(1);
     expect(hintCost(first.state, today)).toEqual({
-      cost: 750,
+      cost: 500,
       usedToday: 1,
       allCredits: false,
     });
 
     const second = spendHint(first.state, today);
-    expect(second.cost).toBe(750);
-    expect(second.state.xp).toBe(3_750);
+    expect(second.cost).toBe(500);
+    expect(second.state.xp).toBe(4_250);
     expect(hintsUsedToday(second.state, today)).toBe(2);
 
     const third = spendHint(second.state, today);
     expect(third.purchased).toBe(true);
     expect(third.allCredits).toBe(true);
-    expect(third.cost).toBe(3_750);
+    expect(third.cost).toBe(4_250);
     expect(third.state.xp).toBe(0);
     expect(hintsUsedToday(third.state, today)).toBe(3);
 
@@ -145,7 +145,7 @@ describe('daily hint pricing', () => {
     const second = spendHint(first.state, today);
 
     expect(hintCost(second.state, '2026-01-02')).toEqual({
-      cost: 500,
+      cost: 250,
       usedToday: 0,
       allCredits: false,
     });
@@ -153,7 +153,7 @@ describe('daily hint pricing', () => {
 
   it('does not buy a hint when XP is short', () => {
     const state = defaultGameState();
-    state.xp = 499;
+    state.xp = 249;
 
     const result = spendHint(state, today);
 
@@ -171,7 +171,7 @@ describe('daily hint pricing', () => {
 
     const result = spendHint(state, today);
 
-    expect(result.state.xp).toBe(500);
+    expect(result.state.xp).toBe(750);
     expect(result.state.totalEarnedXP).toBe(5_000);
     expect(levelForGame(result.state)).toBe(levelForGame(state));
   });

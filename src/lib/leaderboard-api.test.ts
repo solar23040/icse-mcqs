@@ -6,7 +6,39 @@ import {
   normaliseLeaderboard,
   normaliseProfile,
   submitWeeklyXp,
+  syncLeaderboard,
 } from './leaderboard-api';
+import { getLeaderboardState } from './leaderboard';
+import { defaultGameState } from './gamification';
+import { saveGame } from './storage';
+
+class FakeStorage implements Storage {
+  private readonly data = new Map<string, string>();
+
+  get length(): number {
+    return this.data.size;
+  }
+
+  clear(): void {
+    this.data.clear();
+  }
+
+  getItem(key: string): string | null {
+    return this.data.get(key) ?? null;
+  }
+
+  key(index: number): string | null {
+    return Array.from(this.data.keys())[index] ?? null;
+  }
+
+  removeItem(key: string): void {
+    this.data.delete(key);
+  }
+
+  setItem(key: string, value: string): void {
+    this.data.set(key, value);
+  }
+}
 
 function response(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
@@ -111,6 +143,39 @@ describe('leaderboard API client', () => {
       }) as unknown as typeof fetch,
     );
     expect(await loadLeaderboard()).toBeNull();
+  });
+});
+
+describe('automatic leaderboard enrolment', () => {
+  it('joins new visitors from their current total, then keeps future XP intact', async () => {
+    vi.stubGlobal('localStorage', new FakeStorage());
+    const fetchMock = vi.fn(async (_input: RequestInfo | URL, _init?: RequestInit) =>
+      response({ configured: true, week: '2026-W01', top: [], me: null }),
+    );
+    vi.stubGlobal('fetch', fetchMock as unknown as typeof fetch);
+
+    const now = new Date('2026-01-01T12:00:00Z');
+    saveGame({ ...defaultGameState(), xp: 900, totalEarnedXP: 900 });
+
+    await syncLeaderboard(now);
+
+    const firstState = getLeaderboardState(now);
+    expect(firstState.optedIn).toBe(true);
+    expect(firstState.weeklyXp).toBe(0);
+    expect(firstState.lastTotalXp).toBe(900);
+
+    saveGame({ ...defaultGameState(), xp: 950, totalEarnedXP: 950 });
+    await syncLeaderboard(now);
+
+    const nextState = getLeaderboardState(now);
+    expect(nextState.optedIn).toBe(true);
+    expect(nextState.weeklyXp).toBe(50);
+    expect(nextState.lastTotalXp).toBe(950);
+
+    const submitted = fetchMock.mock.calls.map(([, init]) =>
+      JSON.parse(String((init as RequestInit | undefined)?.body)) as { weeklyXp: number },
+    );
+    expect(submitted.map((body) => body.weeklyXp)).toEqual([0, 50]);
   });
 });
 

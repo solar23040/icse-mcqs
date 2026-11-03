@@ -91,7 +91,7 @@
         What's your name?
       </h2>
       <p class="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-        This name will appear on the leaderboard when you join. You can always update it later.
+        This name will appear on the leaderboard. You can always update it later.
       </p>
 
       <div class="mt-6">

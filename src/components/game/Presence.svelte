@@ -25,7 +25,7 @@
   onMount(() => {
     if (Date.now() - lastPing() < MIN_INTERVAL_MS) return;
 
-    // syncLeaderboard is a no-op unless the visitor joined the leaderboard.
+    // syncLeaderboard auto-joins the visitor and keeps their entry fresh.
     void syncLeaderboard().then((snapshot) => {
       if (snapshot) rememberPing();
     });

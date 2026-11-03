@@ -4,6 +4,7 @@ import {
   currentIsoWeek,
   getLeaderboardState,
   saveLeaderboardState,
+  startLeaderboard,
   type LeaderboardEntry,
   type LeaderboardMe,
   type LeaderboardSnapshot,
@@ -212,15 +213,20 @@ export function submitWeeklyXp(
 }
 
 /**
- * Push the current XP, achievements and practice history to the server. Does
- * nothing unless the visitor has opted in to the weekly leaderboard.
+ * Push the current XP, achievements and practice history to the server. Every
+ * visitor is enrolled automatically, so this always submits.
+ *
+ * First-time visitors (and anyone still on the old opt-in default) are joined
+ * with their current total as the baseline. That keeps all local XP untouched
+ * while only counting XP earned from this point on towards the weekly board.
  */
 export function syncLeaderboard(now = new Date()): Promise<LeaderboardSnapshot | null> {
   const state = getLeaderboardState(now);
-  if (!state.optedIn) return Promise.resolve(null);
-
+  const week = currentIsoWeek(now);
   const game = getGame();
-  const advanced = advanceWeeklyXp(state, game.totalEarnedXP, currentIsoWeek(now));
+
+  const joined = state.optedIn ? state : startLeaderboard(state, game.totalEarnedXP, week);
+  const advanced = advanceWeeklyXp(joined, game.totalEarnedXP, week);
   saveLeaderboardState(advanced);
 
   return submitWeeklyXp(advanced.weeklyXp, buildProfileSubmission());

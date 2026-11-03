@@ -22,6 +22,7 @@ export interface LeaderboardSnapshot {
 
 export interface LeaderboardState {
   v: 1;
+  /** Kept for older stored states; syncLeaderboard enrols everyone automatically. */
   optedIn: boolean;
   week: string;
   weeklyXp: number;

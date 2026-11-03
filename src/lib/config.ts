@@ -15,8 +15,8 @@ export const XP_MISSED_BONUS = 5;
 export const XP_SESSION_COMPLETE = 20;
 export const XP_MASTERED_CAP = 2;
 /** XP deducted for the first hint of the day. */
-export const HINT_COST_XP = 500;
-/** Extra XP added to the second hint of the same day (500 + 250 = 750). */
+export const HINT_COST_XP = 250;
+/** Extra XP added to the second hint of the same day (250 + 250 = 500). */
 export const HINT_SECOND_EXTRA_XP = 250;
 
 /** Combo multiplier tiers. A tier is reached every COMBO_STEP consecutive correct answers. */
