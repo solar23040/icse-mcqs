@@ -357,6 +357,10 @@ node -e "const c=require('crypto');const s='icse-dev-v1:';console.log(c.createHa
 
 The salt is `DEV_SALT` in `src/lib/dev.ts`; keep it in sync with that command.
 
+After signing in, the **All players** tab lists every shared leaderboard account. You can rename a player, set their weekly XP, or remove them. These actions go through `/api/admin`, which uses the same Upstash Redis storage as the leaderboard and a short-lived server session (12 hours, kept in `sessionStorage`). Local credits, badges and streaks are stored in each visitor's browser, so they cannot be changed remotely.
+
+The admin endpoint keeps its own copy of the credential hash in `api/admin.ts`; update it together with `src/lib/dev.ts` (or override both with `DEV_USERNAME` / `DEV_PASSWORD` on the host).
+
 ### Mastery and ranks
 
 Each question sits in a Leitner box. A wrong answer sends it to box 0 (and onto the review list); each correct answer moves it up one box, to a maximum of box 3. Box 3 questions count as mastered. Answering an already-mastered question gives only 2 XP, so repeating mastered questions cannot farm XP.

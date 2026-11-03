@@ -3,6 +3,15 @@
   import { defaultGameState, levelForGame, type GameState } from '../../lib/gamification';
   import { getGame, resetGame, saveGame } from '../../lib/storage';
   import {
+    adminLogin,
+    adminLogout,
+    deletePlayer,
+    hasAdminToken,
+    listPlayers,
+    updatePlayer,
+    type AdminPlayer,
+  } from '../../lib/admin-api';
+  import {
     addCredits,
     endDevSession,
     hasDevSession,
@@ -25,6 +34,18 @@
   let statusKind = $state<'ok' | 'error'>('ok');
   let confirmingCreditsReset = $state(false);
   let confirmingFullReset = $state(false);
+
+  let tab = $state<'credits' | 'players'>('credits');
+  let adminReady = $state<boolean | null>(null);
+  let players = $state<AdminPlayer[]>([]);
+  let playersLoading = $state(false);
+  let playersMessage = $state('');
+  let playersKind = $state<'info' | 'error'>('info');
+  let editingId = $state<string | null>(null);
+  let editName = $state('');
+  let editXp = $state('');
+  let savingId = $state<string | null>(null);
+  let confirmingDeleteId = $state<string | null>(null);
 
   const level = $derived(levelForGame(game));
 
@@ -60,11 +81,14 @@
     startDevSession();
     authed = true;
     loginError = '';
+    // Best effort: the shared account list needs the leaderboard server.
+    adminReady = await adminLogin(username, password);
     password = '';
     refresh();
   }
 
   function logout(): void {
+    void adminLogout();
     endDevSession();
     authed = false;
     username = '';
@@ -72,6 +96,133 @@
     status = '';
     confirmingCreditsReset = false;
     confirmingFullReset = false;
+    tab = 'credits';
+    adminReady = null;
+    players = [];
+    playersMessage = '';
+    playersKind = 'info';
+    editingId = null;
+    confirmingDeleteId = null;
+  }
+
+  function showPlayersMessage(message: string, kind: 'info' | 'error' = 'info'): void {
+    playersMessage = message;
+    playersKind = kind;
+  }
+
+  async function refreshPlayers(): Promise<void> {
+    playersLoading = true;
+    playersMessage = '';
+    const result = await listPlayers();
+    playersLoading = false;
+
+    if (result.ok) {
+      players = result.data;
+      return;
+    }
+    if (result.error === 'unauthorized') {
+      showPlayersMessage('Admin session expired. Log out and sign in again.', 'error');
+    } else if (result.error === 'unavailable') {
+      showPlayersMessage('Player management needs the leaderboard server, which is not configured on this deployment.', 'error');
+    } else {
+      showPlayersMessage('Could not load players. Check your connection and try again.', 'error');
+    }
+  }
+
+  async function openPlayers(): Promise<void> {
+    tab = 'players';
+    editingId = null;
+    confirmingDeleteId = null;
+
+    if (!hasAdminToken()) {
+      players = [];
+      showPlayersMessage(
+        adminReady === false
+          ? 'Player management needs the leaderboard server, which is not configured on this deployment.'
+          : 'Admin session expired. Log out and sign in again.',
+        'error',
+      );
+      return;
+    }
+    await refreshPlayers();
+  }
+
+  function beginEdit(player: AdminPlayer): void {
+    editingId = player.id;
+    editName = player.name;
+    editXp = String(player.xp);
+    confirmingDeleteId = null;
+    playersMessage = '';
+  }
+
+  function cancelEdit(): void {
+    editingId = null;
+    playersMessage = '';
+  }
+
+  async function saveEdit(player: AdminPlayer): Promise<void> {
+    const name = editName.trim();
+    const xp = Number(editXp);
+
+    if (!name) {
+      showPlayersMessage('Enter a display name.', 'error');
+      return;
+    }
+    if (!Number.isFinite(xp) || xp < 0) {
+      showPlayersMessage('Weekly XP must be zero or a positive number.', 'error');
+      return;
+    }
+
+    savingId = player.id;
+    const result = await updatePlayer(player.id, { name, xp: Math.trunc(xp) });
+    savingId = null;
+
+    if (result.ok) {
+      players = players.map((item) =>
+        item.id === result.data.player.id ? result.data.player : item,
+      );
+      editingId = null;
+      showPlayersMessage(
+        result.data.xpApplied
+          ? `Saved ${result.data.player.name}.`
+          : `Saved ${result.data.player.name}, but this player has no entry in this week's board, so XP was not changed.`,
+      );
+      return;
+    }
+
+    if (result.error === 'unauthorized') {
+      showPlayersMessage('Admin session expired. Log out and sign in again.', 'error');
+    } else if (result.error === 'unavailable') {
+      showPlayersMessage('Player management is not configured on this deployment.', 'error');
+    } else {
+      showPlayersMessage('Could not save that player. Try again.', 'error');
+    }
+  }
+
+  async function removePlayer(player: AdminPlayer): Promise<void> {
+    savingId = player.id;
+    const result = await deletePlayer(player.id);
+    savingId = null;
+
+    if (result.ok) {
+      players = players.filter((item) => item.id !== player.id);
+      confirmingDeleteId = null;
+      showPlayersMessage(`Removed ${player.name}.`);
+      return;
+    }
+
+    if (result.error === 'unauthorized') {
+      showPlayersMessage('Admin session expired. Log out and sign in again.', 'error');
+    } else {
+      showPlayersMessage('Could not remove that player. Try again.', 'error');
+    }
+  }
+
+  function shortDate(value: string | null): string {
+    if (!value) return 'Unknown';
+    const date = new Date(value);
+    if (!Number.isFinite(date.getTime())) return 'Unknown';
+    return date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
   }
 
   function readAmount(): number | null {
@@ -202,6 +353,36 @@
       </button>
     </header>
 
+    <div class="flex gap-2" role="tablist" aria-label="Developer panel sections">
+      <button
+        type="button"
+        role="tab"
+        aria-selected={tab === 'credits' ? 'true' : 'false'}
+        onclick={() => (tab = 'credits')}
+        class={`inline-flex min-h-10 items-center rounded-xl px-4 text-sm font-semibold transition-colors ${
+          tab === 'credits'
+            ? 'bg-indigo-600 text-white'
+            : 'border border-slate-300 hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800'
+        }`}
+      >
+        Credits
+      </button>
+      <button
+        type="button"
+        role="tab"
+        aria-selected={tab === 'players' ? 'true' : 'false'}
+        onclick={openPlayers}
+        class={`inline-flex min-h-10 items-center rounded-xl px-4 text-sm font-semibold transition-colors ${
+          tab === 'players'
+            ? 'bg-indigo-600 text-white'
+            : 'border border-slate-300 hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800'
+        }`}
+      >
+        All players
+      </button>
+    </div>
+
+    {#if tab === 'credits'}
     <div class="grid gap-3 sm:grid-cols-3">
       <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
         <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Credits</p>
@@ -362,5 +543,161 @@
         </button>
       {/if}
     </section>
+    {:else}
+    <section class="space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 class="text-lg font-bold tracking-tight">All players</h2>
+          <p class="text-sm text-slate-600 dark:text-slate-300">
+            Shared weekly leaderboard · {players.length} {players.length === 1 ? 'player' : 'players'}
+            {#if players[0]} · {players[0].week}{/if}
+          </p>
+        </div>
+        <button
+          type="button"
+          onclick={refreshPlayers}
+          disabled={playersLoading}
+          class="inline-flex min-h-10 items-center rounded-xl border border-slate-300 px-4 text-sm font-semibold transition-colors hover:bg-slate-100 disabled:opacity-50 dark:border-slate-700 dark:hover:bg-slate-800"
+        >
+          Refresh
+        </button>
+      </div>
+
+      <p class="rounded-xl border border-slate-200 bg-white p-3 text-xs leading-relaxed text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300">
+        This edits the shared leaderboard account: display name and this week's XP. Local credits,
+        badges and streaks live in each visitor's browser, so they cannot be changed remotely.
+      </p>
+
+      {#if playersMessage}
+        <p
+          role="status"
+          class={`rounded-xl px-4 py-3 text-sm font-semibold ${
+            playersKind === 'error'
+              ? 'bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-200'
+              : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-200'
+          }`}
+        >
+          {playersMessage}
+        </p>
+      {/if}
+
+      {#if playersLoading}
+        <p class="text-sm text-slate-500 dark:text-slate-400">Loading players…</p>
+      {:else if players.length === 0}
+        {#if !playersMessage}
+          <p class="text-sm text-slate-500 dark:text-slate-400">
+            No players yet. They appear after someone answers a question and the leaderboard syncs.
+          </p>
+        {/if}
+      {:else}
+        <ul class="space-y-3">
+          {#each players as player (player.id)}
+            <li class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+              {#if editingId === player.id}
+                <div class="grid gap-3 sm:grid-cols-2">
+                  <label class="block text-sm font-semibold">
+                    Display name
+                    <input
+                      type="text"
+                      maxlength="20"
+                      bind:value={editName}
+                      class="mt-1 min-h-10 w-full rounded-xl border border-slate-300 bg-white px-3 text-sm font-normal outline-none transition-colors focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 dark:border-slate-700 dark:bg-slate-950"
+                    />
+                  </label>
+                  <label class="block text-sm font-semibold">
+                    Weekly XP
+                    <input
+                      type="text"
+                      inputmode="numeric"
+                      bind:value={editXp}
+                      class="mt-1 min-h-10 w-full rounded-xl border border-slate-300 bg-white px-3 text-sm font-normal outline-none transition-colors focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 dark:border-slate-700 dark:bg-slate-950"
+                    />
+                  </label>
+                </div>
+                <div class="mt-3 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onclick={() => saveEdit(player)}
+                    disabled={savingId === player.id}
+                    class="inline-flex min-h-9 items-center rounded-lg bg-indigo-600 px-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-700 disabled:opacity-50"
+                  >
+                    {savingId === player.id ? 'Saving…' : 'Save'}
+                  </button>
+                  <button
+                    type="button"
+                    onclick={cancelEdit}
+                    class="inline-flex min-h-9 items-center rounded-lg border border-slate-300 px-3 text-sm font-semibold transition-colors hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              {:else}
+                <div class="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <p class="font-bold">{player.name}</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">
+                      Last online {shortDate(player.lastOnline)} · {player.badges.length} badges ·
+                      {player.subjects.length} subjects · id {player.id.slice(0, 8)}
+                    </p>
+                  </div>
+                  <p class="text-xl font-bold tabular-nums">{format(player.xp)} XP</p>
+                </div>
+
+                {#if player.badges.length > 0 || player.subjects.length > 0}
+                  <details class="mt-3 rounded-xl bg-slate-50 p-3 text-xs text-slate-600 dark:bg-slate-950/60 dark:text-slate-300">
+                    <summary class="cursor-pointer font-semibold">Details</summary>
+                    {#if player.badges.length > 0}
+                      <p class="mt-2"><span class="font-semibold">Badges:</span> {player.badges.join(', ')}</p>
+                    {/if}
+                    {#if player.subjects.length > 0}
+                      <p class="mt-1">
+                        <span class="font-semibold">Subjects:</span>
+                        {player.subjects.map((item) => `${item.subject} (${item.attempts})`).join(', ')}
+                      </p>
+                    {/if}
+                  </details>
+                {/if}
+
+                <div class="mt-3 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onclick={() => beginEdit(player)}
+                    class="inline-flex min-h-9 items-center rounded-lg border border-slate-300 px-3 text-sm font-semibold transition-colors hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800"
+                  >
+                    Edit
+                  </button>
+                  {#if confirmingDeleteId === player.id}
+                    <button
+                      type="button"
+                      onclick={() => removePlayer(player)}
+                      disabled={savingId === player.id}
+                      class="inline-flex min-h-9 items-center rounded-lg bg-rose-700 px-3 text-sm font-semibold text-white transition-colors hover:bg-rose-800 disabled:opacity-50"
+                    >
+                      {savingId === player.id ? 'Removing…' : 'Yes, remove'}
+                    </button>
+                    <button
+                      type="button"
+                      onclick={() => (confirmingDeleteId = null)}
+                      class="inline-flex min-h-9 items-center rounded-lg border border-rose-300 px-3 text-sm font-semibold text-rose-900 transition-colors hover:bg-rose-100 dark:border-rose-800 dark:text-rose-100 dark:hover:bg-rose-950/60"
+                    >
+                      Cancel
+                    </button>
+                  {:else}
+                    <button
+                      type="button"
+                      onclick={() => (confirmingDeleteId = player.id)}
+                      class="inline-flex min-h-9 items-center rounded-lg border border-rose-300 px-3 text-sm font-semibold text-rose-900 transition-colors hover:bg-rose-100 dark:border-rose-800 dark:text-rose-100 dark:hover:bg-rose-950/60"
+                    >
+                      Remove
+                    </button>
+                  {/if}
+                </div>
+              {/if}
+            </li>
+          {/each}
+        </ul>
+      {/if}
+    </section>
+    {/if}
   </section>
 {/if}

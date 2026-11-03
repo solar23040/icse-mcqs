@@ -636,7 +636,9 @@ export async function POST(request: Request): Promise<Response> {
       commands.push([
         'SET',
         profileKey(profile.id),
-        JSON.stringify(profile),
+        // The token is stored for the admin endpoint only; public profile
+        // responses still expose just the sanitised fields above.
+        JSON.stringify({ ...profile, token }),
         'EX',
         PROFILE_TTL_SECONDS,
       ]);
