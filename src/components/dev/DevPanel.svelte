@@ -4,7 +4,6 @@
   import { getGame, resetGame, saveGame } from '../../lib/storage';
   import {
     addCredits,
-    devCredentialsConfigured,
     endDevSession,
     hasDevSession,
     isDevLogin,
@@ -16,7 +15,6 @@
 
   let mounted = $state(false);
   let authed = $state(false);
-  let configured = $state(true);
   let username = $state('');
   let password = $state('');
   let loginError = $state('');
@@ -51,12 +49,11 @@
     showStatus(message);
   }
 
-  function handleLogin(event: SubmitEvent): void {
+  async function handleLogin(event: SubmitEvent): Promise<void> {
     event.preventDefault();
-    if (!isDevLogin(username, password)) {
-      loginError = configured
-        ? 'Wrong username or password.'
-        : 'Dev login is not configured on this build. Set PUBLIC_DEV_USERNAME and PUBLIC_DEV_PASSWORD.';
+    const allowed = await isDevLogin(username, password);
+    if (!allowed) {
+      loginError = 'Wrong username or password.';
       return;
     }
 
@@ -121,7 +118,6 @@
 
   onMount(() => {
     mounted = true;
-    configured = devCredentialsConfigured();
     authed = hasDevSession();
     if (authed) refresh();
   });
@@ -139,13 +135,6 @@
       <p class="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
         Sign in to adjust credits for this browser.
       </p>
-
-      {#if !configured}
-        <p class="mt-4 rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950 dark:border-amber-500/60 dark:bg-amber-950/40 dark:text-amber-50">
-          This build has no dev credentials. Set <code>PUBLIC_DEV_USERNAME</code> and
-          <code>PUBLIC_DEV_PASSWORD</code> before building.
-        </p>
-      {/if}
 
       <form class="mt-6 space-y-4" onsubmit={handleLogin}>
         <div>

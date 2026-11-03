@@ -7,12 +7,21 @@ export const DEV_SESSION_KEY = 'icse:dev:session';
 export const MAX_DEV_CREDITS = 1_000_000_000;
 
 /**
- * Credentials come from PUBLIC_DEV_USERNAME / PUBLIC_DEV_PASSWORD at build
- * time. These values end up in the public JavaScript bundle, so this gate
- * only stops casual access. Never use a real account password here.
+ * A salted SHA-256 gate is baked in so /dev still works on hosts that build
+ * without PUBLIC_DEV_* variables (for example Vercel, which never sees the
+ * gitignored .env.local). The hash ships in the public bundle and a short PIN
+ * can be brute-forced offline, so this only stops casual access. Set
+ * PUBLIC_DEV_USERNAME / PUBLIC_DEV_PASSWORD at build time to override it.
  */
-export function devCredentialsConfigured(): boolean {
-  return Boolean(import.meta.env.PUBLIC_DEV_USERNAME && import.meta.env.PUBLIC_DEV_PASSWORD);
+const DEV_SALT = 'icse-dev-v1:';
+export const DEV_USERNAME_HASH = '1280903e5653cb53a3ea2fb8594d41634dab58afbcb6de938c6b105846289fd7';
+export const DEV_PASSWORD_HASH = 'a04aa5bc8f5dd88c50abe4f60214b4e3f928bd0ee5955bbb06f41a4be55b4ade';
+
+async function sha256Hex(value: string): Promise<string> {
+  const subtle = globalThis.crypto?.subtle;
+  if (!subtle) return '';
+  const digest = await subtle.digest('SHA-256', new TextEncoder().encode(value));
+  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join('');
 }
 
 /** Constant-time string comparison for the tiny credential check. */
@@ -40,13 +49,30 @@ export function credentialsMatch(
   );
 }
 
-export function isDevLogin(username: string, password: string): boolean {
-  return credentialsMatch(
-    username,
-    password,
-    import.meta.env.PUBLIC_DEV_USERNAME ?? '',
-    import.meta.env.PUBLIC_DEV_PASSWORD ?? '',
-  );
+export function isDevLogin(username: string, password: string): Promise<boolean> {
+  const expectedUsername = import.meta.env.PUBLIC_DEV_USERNAME ?? '';
+  const expectedPassword = import.meta.env.PUBLIC_DEV_PASSWORD ?? '';
+
+  if (expectedUsername && expectedPassword) {
+    return Promise.resolve(
+      credentialsMatch(username, password, expectedUsername, expectedPassword),
+    );
+  }
+  return credentialsMatchHashed(username, password);
+}
+
+/** Matcher for the baked hash, used when no build-time credentials are set. */
+export async function credentialsMatchHashed(
+  username: string,
+  password: string,
+): Promise<boolean> {
+  if (!DEV_USERNAME_HASH || !DEV_PASSWORD_HASH) return false;
+
+  const [usernameHash, passwordHash] = await Promise.all([
+    sha256Hex(DEV_SALT + username.trim()),
+    sha256Hex(DEV_SALT + password),
+  ]);
+  return fixedEqual(usernameHash, DEV_USERNAME_HASH) && fixedEqual(passwordHash, DEV_PASSWORD_HASH);
 }
 
 export function hasDevSession(): boolean {

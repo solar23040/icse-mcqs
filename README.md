@@ -349,7 +349,13 @@ Progress can be exported as a base64 code containing game state, seen ids and st
 
 `/dev` is a hidden, `noindex` login for adjusting **credits** (spendable XP), lifetime XP and level for the browser you are using. It is meant for development and demos: game progress is local-only, so it cannot change another visitor's credits.
 
-Credentials come from the build-time variables `PUBLIC_DEV_USERNAME` and `PUBLIC_DEV_PASSWORD`. Set them in `.env.local` for local builds, or in the host's environment settings before deploying. They are compiled into the public JavaScript bundle, so treat them as a casual-access gate rather than a secret. Leave both blank to disable the panel.
+Credentials use a salted SHA-256 hash committed in `src/lib/dev.ts`, so `/dev` works on hosts that build without extra environment variables (Vercel never sees the gitignored `.env.local`). The hash ships in the public JavaScript bundle and a short PIN can be brute-forced offline, so treat this as a casual-access gate rather than a secret. To change the login without editing code, set the build-time variables `PUBLIC_DEV_USERNAME` and `PUBLIC_DEV_PASSWORD` in the host's environment settings; they override the baked hash. To rotate the baked credentials, update `DEV_USERNAME_HASH` and `DEV_PASSWORD_HASH` with:
+
+```bash
+node -e "const c=require('crypto');const s='icse-dev-v1:';console.log(c.createHash('sha256').update(s+process.argv[1]).digest('hex'))" YOUR_VALUE
+```
+
+The salt is `DEV_SALT` in `src/lib/dev.ts`; keep it in sync with that command.
 
 ### Mastery and ranks
 
@@ -371,4 +377,4 @@ npm run validate
 - Set `verified` to `true` only for questions you have checked.
 - Run `npm run validate`, `npm test`, and `npm run build`.
 - Check a deployed preview on a phone, since the site is designed for quick practice sessions.
-- Change or blank the `PUBLIC_DEV_USERNAME` / `PUBLIC_DEV_PASSWORD` variables if the `/dev` panel should not be usable in production.
+- Change the baked hash in `src/lib/dev.ts` (or override it with `PUBLIC_DEV_USERNAME` / `PUBLIC_DEV_PASSWORD`) if the `/dev` panel should not use the current credentials in production.

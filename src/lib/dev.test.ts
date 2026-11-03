@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { addCredits, credentialsMatch, resetCredits, setCredits, toCredits } from './dev';
+import {
+  addCredits,
+  credentialsMatch,
+  credentialsMatchHashed,
+  isDevLogin,
+  resetCredits,
+  setCredits,
+  toCredits,
+} from './dev';
 import { defaultGameState, levelFromXp } from './gamification';
 
 describe('dev credentials', () => {
@@ -17,6 +25,23 @@ describe('dev credentials', () => {
     expect(credentialsMatch('devansh', '000000', 'devansh', '181011')).toBe(false);
     expect(credentialsMatch('', '', 'devansh', '181011')).toBe(false);
     expect(credentialsMatch('devansh', '181011', '', '')).toBe(false);
+  });
+
+  it('accepts the baked hash when no build-time credentials are set', async () => {
+    expect(await credentialsMatchHashed('devansh', '181011')).toBe(true);
+    expect(await credentialsMatchHashed('  devansh  ', '181011')).toBe(true);
+  });
+
+  it('rejects wrong input against the baked hash', async () => {
+    expect(await credentialsMatchHashed('devansh', '181010')).toBe(false);
+    expect(await credentialsMatchHashed('someone', '181011')).toBe(false);
+    expect(await credentialsMatchHashed('devansh', ' 181011 ')).toBe(false);
+    expect(await credentialsMatchHashed('', '')).toBe(false);
+  });
+
+  it('logs in through the public helper', async () => {
+    await expect(isDevLogin('devansh', '181011')).resolves.toBe(true);
+    await expect(isDevLogin('devansh', 'nope')).resolves.toBe(false);
   });
 });
 
