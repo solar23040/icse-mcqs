@@ -367,6 +367,92 @@ describe('leaderboard API', () => {
     expect(response.status).toBe(404);
   });
 
+  it('supports following and unfollowing a user on the server', async () => {
+    // Player 1 creates profile
+    const p1 = await POST(
+      apiRequest('POST', {
+        body: {
+          weeklyXp: 50,
+          name: 'Player One',
+          profile: { badges: [], subjects: [] },
+        },
+      }),
+    );
+    const p1Id = String(meOf(await payload(p1)).id);
+
+    // Player 2 follows Player 1
+    const p2Token = 'token-player-two';
+    const followRes = await POST(
+      apiRequest('POST', {
+        cookie: p2Token,
+        body: {
+          action: 'follow',
+          targetId: p1Id,
+        },
+      }),
+    );
+    expect(followRes.status).toBe(200);
+    const followBody = await payload(followRes);
+    expect(followBody.success).toBe(true);
+    expect(followBody.followersCount).toBe(1);
+
+    // Verify Player 1's profile now includes Player 2 as follower
+    const getP1 = await GET(apiRequest('GET', { path: `/api/leaderboard?profile=${p1Id}` }));
+    const p1Profile = (await payload(getP1)).profile as Record<string, unknown>;
+    expect(p1Profile.followersCount).toBe(1);
+    const followers = p1Profile.followers as Array<{ id: string; name: string }>;
+    expect(followers).toHaveLength(1);
+
+    // Unfollow
+    const unfollowRes = await POST(
+      apiRequest('POST', {
+        cookie: p2Token,
+        body: {
+          action: 'unfollow',
+          targetId: p1Id,
+        },
+      }),
+    );
+    expect(unfollowRes.status).toBe(200);
+    const unfollowBody = await payload(unfollowRes);
+    expect(unfollowBody.followersCount).toBe(0);
+
+    const getP1After = await GET(apiRequest('GET', { path: `/api/leaderboard?profile=${p1Id}` }));
+    const p1ProfileAfter = (await payload(getP1After)).profile as Record<string, unknown>;
+    expect(p1ProfileAfter.followersCount).toBe(0);
+    expect(p1ProfileAfter.followers).toEqual([]);
+  });
+
+  it('prevents following self or invalid targets', async () => {
+    const p1 = await POST(
+      apiRequest('POST', {
+        body: {
+          weeklyXp: 20,
+          name: 'Solo Player',
+          profile: { badges: [], subjects: [] },
+        },
+      }),
+    );
+    const token = cookieToken(p1);
+    const p1Id = String(meOf(await payload(p1)).id);
+
+    const selfFollow = await POST(
+      apiRequest('POST', {
+        cookie: token,
+        body: { action: 'follow', targetId: p1Id },
+      }),
+    );
+    expect(selfFollow.status).toBe(400);
+
+    const invalidFollow = await POST(
+      apiRequest('POST', {
+        cookie: token,
+        body: { action: 'follow', targetId: 'invalid-id' },
+      }),
+    );
+    expect(invalidFollow.status).toBe(400);
+  });
+
   it('uses ISO week keys across year boundaries', () => {
     expect(isoWeek(new Date('2025-12-29T12:00:00Z'))).toBe('2026-W01');
     expect(isoWeek(new Date('2026-01-04T12:00:00Z'))).toBe('2026-W01');

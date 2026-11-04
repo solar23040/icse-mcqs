@@ -22,6 +22,12 @@ export interface ProfileSubject {
   attempts: number;
 }
 
+export interface FollowerUser {
+  id: string;
+  name: string;
+  followedAt: string;
+}
+
 export interface PublicProfile {
   id: string;
   name: string;
@@ -30,6 +36,8 @@ export interface PublicProfile {
   badges: string[];
   subjects: ProfileSubject[];
   description?: string | null;
+  followers?: FollowerUser[];
+  followersCount?: number;
 }
 
 export interface ProfileSubmission {
@@ -159,12 +167,39 @@ export function normaliseProfile(value: unknown): PublicProfile | null {
       ? profile.description.trim().slice(0, 300)
       : null;
 
+  const safeFollowers: FollowerUser[] = [];
+  if (Array.isArray(profile.followers)) {
+    for (const item of profile.followers) {
+      if (typeof item !== 'object' || item === null) continue;
+      const { id: fId, name: fName, followedAt: fTime } = item as {
+        id?: unknown;
+        name?: unknown;
+        followedAt?: unknown;
+      };
+      if (typeof fId !== 'string' || !PROFILE_ID_PATTERN.test(fId)) continue;
+      if (typeof fName !== 'string' || fName.trim().length === 0) continue;
+      const safeTime = isTimestamp(fTime) ? fTime : new Date().toISOString();
+      safeFollowers.push({
+        id: fId,
+        name: fName.trim().slice(0, 20),
+        followedAt: safeTime,
+      });
+    }
+  }
+
+  const followersCount =
+    typeof profile.followersCount === 'number' && Number.isFinite(profile.followersCount)
+      ? Math.max(0, Math.trunc(profile.followersCount))
+      : safeFollowers.length;
+
   return {
     id,
     name,
     lastOnline: safeLastOnline,
     badges: safeBadges,
     subjects: safeSubjects,
+    followers: safeFollowers,
+    followersCount,
     ...(safeDescription ? { description: safeDescription } : {}),
   };
 }
@@ -264,6 +299,70 @@ export async function loadProfile(id: string): Promise<PublicProfile | null> {
 
     const payload: unknown = await response.json();
     return normaliseProfile(payload);
+  } catch {
+    return null;
+  }
+}
+
+export async function followProfileApi(
+  targetId: string,
+): Promise<{ success: boolean; followersCount?: number; followers?: FollowerUser[] } | null> {
+  if (!PROFILE_ID_PATTERN.test(targetId)) return null;
+  try {
+    const response = await fetch(ENDPOINT, {
+      method: 'POST',
+      headers: {
+        accept: 'application/json',
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ action: 'follow', targetId }),
+      credentials: 'same-origin',
+      cache: 'no-store',
+      signal: AbortSignal.timeout(TIMEOUT_MS),
+    });
+    if (!response.ok) return null;
+    const payload: unknown = await response.json();
+    if (typeof payload === 'object' && payload !== null && (payload as { success?: boolean }).success) {
+      const p = payload as { followersCount?: number; followers?: FollowerUser[] };
+      return {
+        success: true,
+        followersCount: p.followersCount,
+        followers: p.followers,
+      };
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+export async function unfollowProfileApi(
+  targetId: string,
+): Promise<{ success: boolean; followersCount?: number; followers?: FollowerUser[] } | null> {
+  if (!PROFILE_ID_PATTERN.test(targetId)) return null;
+  try {
+    const response = await fetch(ENDPOINT, {
+      method: 'POST',
+      headers: {
+        accept: 'application/json',
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ action: 'unfollow', targetId }),
+      credentials: 'same-origin',
+      cache: 'no-store',
+      signal: AbortSignal.timeout(TIMEOUT_MS),
+    });
+    if (!response.ok) return null;
+    const payload: unknown = await response.json();
+    if (typeof payload === 'object' && payload !== null && (payload as { success?: boolean }).success) {
+      const p = payload as { followersCount?: number; followers?: FollowerUser[] };
+      return {
+        success: true,
+        followersCount: p.followersCount,
+        followers: p.followers,
+      };
+    }
+    return null;
   } catch {
     return null;
   }

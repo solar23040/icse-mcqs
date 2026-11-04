@@ -19,6 +19,9 @@ const TOP_LIMIT = 10;
 
 const PROFILE_KEY_PREFIX = 'leaderboard:profile:';
 const PROFILE_TTL_SECONDS = 60 * 60 * 24 * 90; // 90 days
+const FOLLOWERS_KEY_PREFIX = 'leaderboard:followers:';
+const FOLLOWERS_TTL_SECONDS = 60 * 60 * 24 * 90; // 90 days
+const MAX_FOLLOWERS = 100;
 const MAX_PROFILE_BADGES = 40;
 const MAX_PROFILE_SUBJECTS = 10;
 const MAX_PROFILE_DESCRIPTION = 300;
@@ -139,6 +142,12 @@ export interface ProfileSubject {
   attempts: number;
 }
 
+export interface FollowerUser {
+  id: string;
+  name: string;
+  followedAt: string;
+}
+
 export interface PublicProfile {
   id: string;
   name: string;
@@ -147,6 +156,8 @@ export interface PublicProfile {
   badges: string[];
   subjects: ProfileSubject[];
   description?: string | null;
+  followers?: FollowerUser[];
+  followersCount?: number;
 }
 
 function isToken(value: unknown): value is string {
@@ -355,6 +366,41 @@ function profileKey(id: string): string {
   return `${PROFILE_KEY_PREFIX}${id}`;
 }
 
+function followersKey(id: string): string {
+  return `${FOLLOWERS_KEY_PREFIX}${id}`;
+}
+
+function parseFollowers(raw: unknown): FollowerUser[] {
+  if (typeof raw !== 'string') return [];
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+
+    const followers: FollowerUser[] = [];
+    const seen = new Set<string>();
+
+    for (const item of parsed) {
+      if (typeof item !== 'object' || item === null) continue;
+      const { id, name, followedAt } = item as { id?: unknown; name?: unknown; followedAt?: unknown };
+      if (typeof id !== 'string' || !isPublicId(id) || seen.has(id)) continue;
+      const cleanName = sanitiseName(name);
+      if (!cleanName) continue;
+      const safeTime = isTimestamp(followedAt) ? followedAt : new Date().toISOString();
+
+      seen.add(id);
+      followers.push({
+        id,
+        name: cleanName,
+        followedAt: safeTime,
+      });
+    }
+
+    return followers.sort((a, b) => Date.parse(b.followedAt) - Date.parse(a.followedAt));
+  } catch {
+    return [];
+  }
+}
+
 function sanitiseBadges(value: unknown): string[] {
   if (!Array.isArray(value)) return [];
 
@@ -505,10 +551,25 @@ async function getProfile(id: string): Promise<Response> {
   if (!isPublicId(id)) return json({ configured: true, error: 'invalid_profile' }, 400);
 
   try {
-    const [raw] = await redisPipeline([['GET', profileKey(id)]]);
-    if (typeof raw === 'string') {
-      const stored = parseProfile(id, raw);
-      if (stored) return json({ configured: true, profile: stored });
+    const [rawProfile, rawFollowers] = await redisPipeline([
+      ['GET', profileKey(id)],
+      ['GET', followersKey(id)],
+    ]);
+
+    const followers = parseFollowers(rawFollowers);
+
+    if (typeof rawProfile === 'string') {
+      const stored = parseProfile(id, rawProfile);
+      if (stored) {
+        return json({
+          configured: true,
+          profile: {
+            ...stored,
+            followers,
+            followersCount: followers.length,
+          },
+        });
+      }
     }
 
     // Players who joined before profiles existed have no stored profile yet.
@@ -524,6 +585,8 @@ async function getProfile(id: string): Promise<Response> {
       lastOnline: null,
       badges: [],
       subjects: [],
+      followers,
+      followersCount: followers.length,
     };
     return json({ configured: true, profile });
   } catch {
@@ -575,29 +638,85 @@ export async function POST(request: Request): Promise<Response> {
   if (!sameOrigin(request)) return json({ error: 'forbidden' }, 403);
   if (!redisConfig()) return unconfigured();
 
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return json({ error: 'invalid_json' }, 400);
+  }
+
+  if (typeof body !== 'object' || body === null) {
+    return json({ error: 'invalid_json' }, 400);
+  }
+
+  const record = body as Record<string, unknown>;
+
+  // Handle follow/unfollow actions
+  if (record.action === 'follow' || record.action === 'unfollow') {
+    const targetId = record.targetId;
+    if (typeof targetId !== 'string' || !isPublicId(targetId)) {
+      return json({ error: 'invalid_target_id' }, 400);
+    }
+
+    const existing = readCookie(request);
+    const token = existing ?? crypto.randomUUID();
+    const followerId = publicIdFor(token);
+
+    if (followerId === targetId) {
+      return json({ error: 'cannot_follow_self' }, 400);
+    }
+
+    try {
+      const names = await fetchNames([token]);
+      const followerName = names.get(token) ?? nameFor(token);
+
+      const [rawFollowers] = await redisPipeline([['GET', followersKey(targetId)]]);
+      const currentFollowers = parseFollowers(rawFollowers);
+
+      let updatedFollowers: FollowerUser[];
+      if (record.action === 'follow') {
+        updatedFollowers = [
+          { id: followerId, name: followerName, followedAt: new Date().toISOString() },
+          ...currentFollowers.filter((f) => f.id !== followerId),
+        ].slice(0, MAX_FOLLOWERS);
+      } else {
+        updatedFollowers = currentFollowers.filter((f) => f.id !== followerId);
+      }
+
+      await redisPipeline([
+        ['SET', followersKey(targetId), JSON.stringify(updatedFollowers), 'EX', FOLLOWERS_TTL_SECONDS],
+      ]);
+
+      return json(
+        {
+          configured: true,
+          success: true,
+          followers: updatedFollowers,
+          followersCount: updatedFollowers.length,
+        },
+        200,
+        existing ? undefined : tokenCookie(token, request),
+      );
+    } catch {
+      return storageFailure();
+    }
+  }
+
   let weeklyXp: unknown;
   let submittedName: string | null = null;
   let submittedProfile: { badges?: unknown; subjects?: unknown; description?: unknown } | null = null;
-  try {
-    const body: unknown = await request.json();
-    if (typeof body === 'object' && body !== null) {
-      const b = body as { weeklyXp?: unknown; name?: unknown; profile?: unknown };
-      weeklyXp = b.weeklyXp;
-      submittedName = sanitiseName(b.name);
 
-      if (typeof b.profile === 'object' && b.profile !== null) {
-        const profile = b.profile as Record<string, unknown>;
-        submittedProfile = {
-          badges: profile.badges,
-          subjects: profile.subjects,
-          description: profile.description,
-        };
-      }
-    } else {
-      weeklyXp = null;
-    }
-  } catch {
-    return json({ error: 'invalid_json' }, 400);
+  const b = record as { weeklyXp?: unknown; name?: unknown; profile?: unknown };
+  weeklyXp = b.weeklyXp;
+  submittedName = sanitiseName(b.name);
+
+  if (typeof b.profile === 'object' && b.profile !== null) {
+    const profile = b.profile as Record<string, unknown>;
+    submittedProfile = {
+      badges: profile.badges,
+      subjects: profile.subjects,
+      description: profile.description,
+    };
   }
 
   if (
@@ -698,7 +817,11 @@ export async function DELETE(request: Request): Promise<Response> {
   try {
     const commands: RedisCommand[] = [];
     if (token) {
-      commands.push(['ZREM', key, token], ['DEL', profileKey(publicIdFor(token))]);
+      commands.push(
+        ['ZREM', key, token],
+        ['DEL', profileKey(publicIdFor(token))],
+        ['DEL', followersKey(publicIdFor(token))],
+      );
     }
     commands.push(['ZREVRANGE', key, 0, TOP_LIMIT - 1, 'WITHSCORES'], ['ZCARD', key]);
 

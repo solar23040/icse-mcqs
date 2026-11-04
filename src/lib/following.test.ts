@@ -1,12 +1,17 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
+  addFollower,
+  clearFollowers,
   clearFollowing,
   followUser,
+  getFollowers,
   getFollowing,
   isFollowing,
+  removeFollower,
   toggleFollow,
   unfollowUser,
 } from './following';
+import { setMyProfileId, setUserName } from './storage';
 
 beforeEach(() => {
   clearFollowing();
@@ -81,5 +86,66 @@ describe('following system', () => {
     expect(event.type).toBe('icse:followingChange');
     expect(event.detail).toEqual({ id: user1.id, following: true });
     vi.unstubAllGlobals();
+  });
+});
+
+describe('followers system', () => {
+  const targetId = '1111222233334444';
+  const follower1 = { id: '0123456789abcdef', name: 'Brave Owl' };
+  const follower2 = { id: 'fedcba9876543210', name: 'Clever Fox' };
+
+  it('starts with empty followers', () => {
+    expect(getFollowers(targetId)).toEqual([]);
+  });
+
+  it('adds and retrieves followers', () => {
+    expect(addFollower(targetId, follower1)).toBe(true);
+    const followers = getFollowers(targetId);
+    expect(followers).toHaveLength(1);
+    expect(followers[0].id).toBe(follower1.id);
+    expect(followers[0].name).toBe('Brave Owl');
+  });
+
+  it('rejects adding self as follower or invalid IDs', () => {
+    expect(addFollower(targetId, { id: targetId, name: 'Myself' })).toBe(false);
+    expect(addFollower('invalid-target', follower1)).toBe(false);
+    expect(addFollower(targetId, { id: 'bad-id', name: 'Valid Name' })).toBe(false);
+    expect(addFollower(targetId, { id: follower1.id, name: '   ' })).toBe(false);
+  });
+
+  it('removes followers', () => {
+    addFollower(targetId, follower1);
+    addFollower(targetId, follower2);
+    expect(getFollowers(targetId)).toHaveLength(2);
+
+    expect(removeFollower(targetId, follower1.id)).toBe(true);
+    const remaining = getFollowers(targetId);
+    expect(remaining).toHaveLength(1);
+    expect(remaining[0].id).toBe(follower2.id);
+
+    expect(removeFollower(targetId, follower1.id)).toBe(false);
+  });
+
+  it('clears followers for target or all', () => {
+    addFollower(targetId, follower1);
+    expect(getFollowers(targetId)).toHaveLength(1);
+
+    clearFollowers(targetId);
+    expect(getFollowers(targetId)).toEqual([]);
+  });
+
+  it('automatically mirrors followUser as a follower to target when myProfileId is set', () => {
+    const myId = '9999888877776666';
+    setMyProfileId(myId);
+    setUserName('Lead Student');
+
+    followUser({ id: targetId, name: 'Target Student' });
+    const targetFollowers = getFollowers(targetId);
+    expect(targetFollowers).toHaveLength(1);
+    expect(targetFollowers[0].id).toBe(myId);
+    expect(targetFollowers[0].name).toBe('Lead Student');
+
+    unfollowUser(targetId);
+    expect(getFollowers(targetId)).toHaveLength(0);
   });
 });

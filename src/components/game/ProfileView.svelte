@@ -37,11 +37,13 @@
   } from '../../lib/activity';
   import {
     followUser,
+    getFollowers,
     getFollowing,
     isFollowing,
     toggleFollow,
     unfollowUser,
     type FollowedUser,
+    type FollowerUser,
   } from '../../lib/following';
 
   let loading = $state(true);
@@ -81,8 +83,11 @@
     }>
   >([]);
 
-  // Following state
+  // Following & Followers state
   let followingList = $state<FollowedUser[]>([]);
+  let followersList = $state<FollowerUser[]>([]);
+  let otherFollowers = $state<FollowerUser[]>([]);
+  let activeSocialTab = $state<'followers' | 'following'>('followers');
   let suggestedUsers = $state<LeaderboardEntry[]>([]);
   let customFollowInput = $state('');
   let customFollowError = $state('');
@@ -156,6 +161,7 @@
     description = getUserDescription() ?? '';
     myId = getMyProfileId();
     followingList = getFollowing();
+    followersList = getFollowers(myId ?? undefined);
     weeklyComparison = getWeeklyComparison();
 
     let attempted = 0;
@@ -190,6 +196,21 @@
         if (snapshot.me.id) {
           myId = snapshot.me.id;
           setMyProfileId(snapshot.me.id);
+          followersList = getFollowers(snapshot.me.id);
+          void loadProfile(snapshot.me.id).then((selfProf) => {
+            if (selfProf?.followers) {
+              const local = getFollowers(snapshot.me.id);
+              const seen = new Set<string>();
+              const merged: FollowerUser[] = [];
+              for (const item of [...local, ...selfProf.followers]) {
+                if (!seen.has(item.id)) {
+                  seen.add(item.id);
+                  merged.push(item);
+                }
+              }
+              followersList = merged;
+            }
+          });
         }
       }
       if (snapshot?.top) {
@@ -236,9 +257,34 @@
     );
   }
 
+  function scrollToNetwork(tab: 'followers' | 'following'): void {
+    activeSocialTab = tab;
+    const el = document.getElementById('network-heading');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
   function handleToggleFollowOther(): void {
     if (!profile) return;
+    const willFollow = !isFollowingOther;
     isFollowingOther = toggleFollow({ id: profile.id, name: profile.name });
+    followingList = getFollowing();
+
+    if (willFollow) {
+      const myFollowerEntry: FollowerUser = {
+        id: myId ?? '0000000000000000',
+        name: displayName,
+        followedAt: new Date().toISOString(),
+      };
+      otherFollowers = [myFollowerEntry, ...otherFollowers.filter((f) => f.id !== (myId ?? '0000000000000000'))];
+    } else {
+      otherFollowers = otherFollowers.filter((f) => f.id !== (myId ?? '0000000000000000'));
+    }
+  }
+
+  function handleToggleFollowItem(target: { id: string; name: string }): void {
+    toggleFollow(target);
     followingList = getFollowing();
   }
 
@@ -247,6 +293,7 @@
     followingList = getFollowing();
     if (profile && profile.id === id) {
       isFollowingOther = false;
+      otherFollowers = otherFollowers.filter((f) => f.id !== myId);
     }
   }
 
@@ -320,6 +367,17 @@
           error = 'This profile is unavailable or has left the leaderboard.';
         } else {
           isFollowingOther = isFollowing(result.id);
+          const local = getFollowers(result.id);
+          const server = result.followers ?? [];
+          const seen = new Set<string>();
+          const merged: FollowerUser[] = [];
+          for (const item of [...local, ...server]) {
+            if (!seen.has(item.id)) {
+              seen.add(item.id);
+              merged.push(item);
+            }
+          }
+          otherFollowers = merged;
         }
       });
     });
@@ -328,8 +386,29 @@
       followingList = getFollowing();
       if (profile) isFollowingOther = isFollowing(profile.id);
     };
+    const handleFollowersChange = (): void => {
+      if (isSelf) {
+        followersList = getFollowers(myId ?? undefined);
+      } else if (profile) {
+        const local = getFollowers(profile.id);
+        const server = profile.followers ?? [];
+        const seen = new Set<string>();
+        const merged: FollowerUser[] = [];
+        for (const item of [...local, ...server]) {
+          if (!seen.has(item.id)) {
+            seen.add(item.id);
+            merged.push(item);
+          }
+        }
+        otherFollowers = merged;
+      }
+    };
     window.addEventListener('icse:followingChange', handleFollowingChange);
-    return () => window.removeEventListener('icse:followingChange', handleFollowingChange);
+    window.addEventListener('icse:followersChange', handleFollowersChange);
+    return () => {
+      window.removeEventListener('icse:followingChange', handleFollowingChange);
+      window.removeEventListener('icse:followersChange', handleFollowersChange);
+    };
   });
 </script>
 
@@ -401,9 +480,25 @@
             <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">
               Level {levelForGame(game)} · {Math.max(0, xpForLevel(levelForGame(game) + 1) - game.totalEarnedXP)} XP to Level {levelForGame(game) + 1}
             </p>
-            {#if myId}
-              <div class="mt-2 flex flex-wrap items-center gap-2">
-                <span class="font-mono text-xs text-slate-500 dark:text-slate-400">ID: {myId}</span>
+            <div class="mt-2 flex flex-wrap items-center gap-2 text-xs">
+              <button
+                type="button"
+                onclick={() => scrollToNetwork('followers')}
+                class="font-semibold text-slate-700 underline-offset-2 hover:underline hover:text-indigo-600 dark:text-slate-300 dark:hover:text-indigo-400"
+              >
+                <strong class="font-bold text-slate-900 dark:text-slate-100">{followersList.length}</strong> follower{followersList.length === 1 ? '' : 's'}
+              </button>
+              <span class="text-slate-400 dark:text-slate-600">·</span>
+              <button
+                type="button"
+                onclick={() => scrollToNetwork('following')}
+                class="font-semibold text-slate-700 underline-offset-2 hover:underline hover:text-indigo-600 dark:text-slate-300 dark:hover:text-indigo-400"
+              >
+                <strong class="font-bold text-slate-900 dark:text-slate-100">{followingList.length}</strong> following
+              </button>
+              {#if myId}
+                <span class="text-slate-400 dark:text-slate-600">·</span>
+                <span class="font-mono text-slate-500 dark:text-slate-400">ID: {myId}</span>
                 <button
                   type="button"
                   onclick={copyProfileLink}
@@ -411,8 +506,8 @@
                 >
                   {idCopied ? 'Link copied! ✓' : 'Share link'}
                 </button>
-              </div>
-            {/if}
+              {/if}
+            </div>
           </div>
         </div>
 
@@ -753,149 +848,239 @@
       </div>
     </section>
 
-    <!-- ==================== FOLLOWING PEOPLE ("FOLLOW PPL") ==================== -->
+    <!-- ==================== STUDY NETWORK (FOLLOWERS & FOLLOWING) ==================== -->
     <section
-      aria-labelledby="following-heading"
+      aria-labelledby="network-heading"
       class="mt-6 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6"
     >
-      <div class="flex flex-wrap items-baseline justify-between gap-2">
+      <div class="flex flex-wrap items-baseline justify-between gap-3">
         <div>
-          <h2 id="following-heading" class="text-xl font-bold tracking-tight">Following</h2>
+          <h2 id="network-heading" class="text-xl font-bold tracking-tight">Study network</h2>
           <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
-            Keep track of your study partners and top leaderboard rivals.
+            Connect with study partners, track peers, and grow your learning network.
           </p>
         </div>
-        <span
-          class="rounded-full bg-indigo-100 px-3 py-1 text-xs font-bold text-indigo-700 dark:bg-indigo-950/70 dark:text-indigo-300"
-        >
-          {followingList.length} followed
-        </span>
+
+        <div class="inline-flex rounded-xl bg-slate-100 p-1 dark:bg-slate-800" role="tablist">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeSocialTab === 'followers'}
+            onclick={() => (activeSocialTab = 'followers')}
+            class="rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors {activeSocialTab === 'followers'
+              ? 'bg-white text-indigo-600 shadow-sm dark:bg-slate-900 dark:text-indigo-400'
+              : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'}"
+          >
+            Followers ({followersList.length})
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeSocialTab === 'following'}
+            onclick={() => (activeSocialTab = 'following')}
+            class="rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors {activeSocialTab === 'following'
+              ? 'bg-white text-indigo-600 shadow-sm dark:bg-slate-900 dark:text-indigo-400'
+              : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'}"
+          >
+            Following ({followingList.length})
+          </button>
+        </div>
       </div>
 
-      {#if followingList.length > 0}
-        <ul class="mt-4 divide-y divide-slate-100 dark:divide-slate-800" role="list">
-          {#each followingList as user (user.id)}
-            <li class="flex flex-wrap items-center justify-between gap-3 py-3">
-              <div class="flex items-center gap-3">
-                <span
-                  aria-hidden="true"
-                  class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-indigo-600 text-sm font-bold text-white dark:bg-indigo-500"
-                >
-                  {user.name.charAt(0).toUpperCase()}
-                </span>
-                <div>
-                  <a
-                    href={`/profile?id=${user.id}`}
-                    class="font-semibold text-slate-900 underline-offset-2 hover:underline dark:text-slate-100"
-                  >
-                    {user.name}
-                  </a>
-                  <p class="text-xs text-slate-500 dark:text-slate-400">
-                    Followed {relativeTime(user.followedAt)}
-                  </p>
-                </div>
-              </div>
-
-              <div class="flex items-center gap-2">
-                <a
-                  href={`/profile?id=${user.id}`}
-                  class="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
-                >
-                  View profile
-                </a>
-                <button
-                  type="button"
-                  onclick={() => handleUnfollow(user.id)}
-                  class="rounded-lg px-2.5 py-1.5 text-xs font-semibold text-rose-600 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-950/40"
-                >
-                  Unfollow
-                </button>
-              </div>
-            </li>
-          {/each}
-        </ul>
-      {:else}
-        <div class="mt-4 rounded-2xl bg-slate-50 p-6 text-center dark:bg-slate-800/40">
-          <p class="text-sm font-semibold text-slate-800 dark:text-slate-200">
-            You aren’t following anyone yet.
-          </p>
-          <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
-            Follow friends or top students from the leaderboard to see their achievements and recent practice!
-          </p>
-        </div>
-      {/if}
-
-      <!-- Suggested players to follow from leaderboard -->
-      {#if suggestedUsers.length > 0}
-        <div class="mt-6 border-t border-slate-200 pt-5 dark:border-slate-800">
-          <h3 class="text-sm font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-            Suggested players to follow
-          </h3>
-          <ul class="mt-3 grid gap-2.5 sm:grid-cols-2" role="list">
-            {#each suggestedUsers as suggested (suggested.rank)}
-              <li
-                class="flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900"
-              >
-                <div class="flex min-w-0 items-center gap-2.5">
+      {#if activeSocialTab === 'followers'}
+        <!-- Followers Tab Content -->
+        {#if followersList.length > 0}
+          <ul class="mt-4 divide-y divide-slate-100 dark:divide-slate-800" role="list">
+            {#each followersList as follower (follower.id)}
+              {@const followBack = isFollowing(follower.id)}
+              <li class="flex flex-wrap items-center justify-between gap-3 py-3">
+                <div class="flex items-center gap-3">
                   <span
                     aria-hidden="true"
-                    class="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-indigo-100 text-xs font-bold text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300"
+                    class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-indigo-600 text-sm font-bold text-white dark:bg-indigo-500"
                   >
-                    #{suggested.rank}
+                    {follower.name.charAt(0).toUpperCase()}
                   </span>
-                  <div class="min-w-0">
-                    <p class="truncate text-sm font-semibold">{suggested.name}</p>
-                    <p class="text-xs text-slate-500">{suggested.xp} XP this week</p>
+                  <div>
+                    <a
+                      href={`/profile?id=${follower.id}`}
+                      class="font-semibold text-slate-900 underline-offset-2 hover:underline dark:text-slate-100"
+                    >
+                      {follower.name}
+                    </a>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">
+                      Followed {relativeTime(follower.followedAt)}
+                    </p>
                   </div>
                 </div>
 
-                {#if suggested.id}
-                  {@const alreadyFollowing = isFollowing(suggested.id)}
+                <div class="flex items-center gap-2">
+                  <a
+                    href={`/profile?id=${follower.id}`}
+                    class="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+                  >
+                    View profile
+                  </a>
                   <button
                     type="button"
-                    onclick={() => handleFollowSuggested(suggested)}
-                    disabled={alreadyFollowing}
-                    class="shrink-0 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors {alreadyFollowing
-                      ? 'border border-slate-200 text-slate-400 dark:border-slate-700'
+                    onclick={() => handleToggleFollowItem(follower)}
+                    class="rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors {followBack
+                      ? 'border border-emerald-300 bg-emerald-50 text-emerald-800 hover:border-rose-400 hover:bg-rose-50 hover:text-rose-700 dark:border-emerald-500/50 dark:bg-emerald-950/40 dark:text-emerald-300 dark:hover:bg-rose-950/40 dark:hover:text-rose-300'
                       : 'bg-indigo-600 text-white hover:bg-indigo-700'}"
                   >
-                    {alreadyFollowing ? 'Following ✓' : '+ Follow'}
+                    {followBack ? 'Following ✓' : '+ Follow back'}
                   </button>
-                {/if}
+                </div>
               </li>
             {/each}
           </ul>
+        {:else}
+          <div class="mt-4 rounded-2xl bg-slate-50 p-6 text-center dark:bg-slate-800/40">
+            <p class="text-sm font-semibold text-slate-800 dark:text-slate-200">
+              No followers yet.
+            </p>
+            <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+              Share your profile link or place on the weekly leaderboard to get study partners following you!
+            </p>
+            {#if myId}
+              <button
+                type="button"
+                onclick={copyProfileLink}
+                class="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-3.5 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-indigo-700"
+              >
+                <span>🔗</span>
+                {idCopied ? 'Link copied! ✓' : 'Copy profile link'}
+              </button>
+            {/if}
+          </div>
+        {/if}
+      {:else}
+        <!-- Following Tab Content (Existing Following List + Suggestions + Custom ID) -->
+        {#if followingList.length > 0}
+          <ul class="mt-4 divide-y divide-slate-100 dark:divide-slate-800" role="list">
+            {#each followingList as user (user.id)}
+              <li class="flex flex-wrap items-center justify-between gap-3 py-3">
+                <div class="flex items-center gap-3">
+                  <span
+                    aria-hidden="true"
+                    class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-indigo-600 text-sm font-bold text-white dark:bg-indigo-500"
+                  >
+                    {user.name.charAt(0).toUpperCase()}
+                  </span>
+                  <div>
+                    <a
+                      href={`/profile?id=${user.id}`}
+                      class="font-semibold text-slate-900 underline-offset-2 hover:underline dark:text-slate-100"
+                    >
+                      {user.name}
+                    </a>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">
+                      Followed {relativeTime(user.followedAt)}
+                    </p>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-2">
+                  <a
+                    href={`/profile?id=${user.id}`}
+                    class="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+                  >
+                    View profile
+                  </a>
+                  <button
+                    type="button"
+                    onclick={() => handleUnfollow(user.id)}
+                    class="rounded-lg px-2.5 py-1.5 text-xs font-semibold text-rose-600 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-950/40"
+                  >
+                    Unfollow
+                  </button>
+                </div>
+              </li>
+            {/each}
+          </ul>
+        {:else}
+          <div class="mt-4 rounded-2xl bg-slate-50 p-6 text-center dark:bg-slate-800/40">
+            <p class="text-sm font-semibold text-slate-800 dark:text-slate-200">
+              You aren’t following anyone yet.
+            </p>
+            <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+              Follow friends or top students from the leaderboard to see their achievements and recent practice!
+            </p>
+          </div>
+        {/if}
+
+        <!-- Suggested players to follow from leaderboard -->
+        {#if suggestedUsers.length > 0}
+          <div class="mt-6 border-t border-slate-200 pt-5 dark:border-slate-800">
+            <h3 class="text-sm font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              Suggested players to follow
+            </h3>
+            <ul class="mt-3 grid gap-2.5 sm:grid-cols-2" role="list">
+              {#each suggestedUsers as suggested (suggested.rank)}
+                <li
+                  class="flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900"
+                >
+                  <div class="flex min-w-0 items-center gap-2.5">
+                    <span
+                      aria-hidden="true"
+                      class="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-indigo-100 text-xs font-bold text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300"
+                    >
+                      #{suggested.rank}
+                    </span>
+                    <div class="min-w-0">
+                      <p class="truncate text-sm font-semibold">{suggested.name}</p>
+                      <p class="text-xs text-slate-500">{suggested.xp} XP this week</p>
+                    </div>
+                  </div>
+
+                  {#if suggested.id}
+                    {@const alreadyFollowing = isFollowing(suggested.id)}
+                    <button
+                      type="button"
+                      onclick={() => handleFollowSuggested(suggested)}
+                      disabled={alreadyFollowing}
+                      class="shrink-0 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors {alreadyFollowing
+                        ? 'border border-slate-200 text-slate-400 dark:border-slate-700'
+                        : 'bg-indigo-600 text-white hover:bg-indigo-700'}"
+                    >
+                      {alreadyFollowing ? 'Following ✓' : '+ Follow'}
+                    </button>
+                  {/if}
+                </li>
+              {/each}
+            </ul>
+          </div>
+        {/if}
+
+        <!-- Follow by ID form -->
+        <div class="mt-6 border-t border-slate-200 pt-5 dark:border-slate-800">
+          <label for="follow-id-input" class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+            Follow by Profile ID
+          </label>
+          <div class="mt-2 flex max-w-md gap-2">
+            <input
+              id="follow-id-input"
+              type="text"
+              bind:value={customFollowInput}
+              placeholder="e.g. 0123456789abcdef"
+              class="min-w-0 flex-1 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+            />
+            <button
+              type="button"
+              onclick={handleFollowCustomId}
+              class="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-indigo-700"
+            >
+              Follow
+            </button>
+          </div>
+          {#if customFollowError}
+            <p class="mt-1.5 text-xs text-rose-600 dark:text-rose-400">{customFollowError}</p>
+          {/if}
+          {#if customFollowSuccess}
+            <p class="mt-1.5 text-xs text-emerald-600 dark:text-emerald-400">{customFollowSuccess}</p>
+          {/if}
         </div>
       {/if}
-
-      <!-- Follow by ID form -->
-      <div class="mt-6 border-t border-slate-200 pt-5 dark:border-slate-800">
-        <label for="follow-id-input" class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-          Follow by Profile ID
-        </label>
-        <div class="mt-2 flex max-w-md gap-2">
-          <input
-            id="follow-id-input"
-            type="text"
-            bind:value={customFollowInput}
-            placeholder="e.g. 0123456789abcdef"
-            class="min-w-0 flex-1 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
-          />
-          <button
-            type="button"
-            onclick={handleFollowCustomId}
-            class="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-indigo-700"
-          >
-            Follow
-          </button>
-        </div>
-        {#if customFollowError}
-          <p class="mt-1.5 text-xs text-rose-600 dark:text-rose-400">{customFollowError}</p>
-        {/if}
-        {#if customFollowSuccess}
-          <p class="mt-1.5 text-xs text-emerald-600 dark:text-emerald-400">{customFollowSuccess}</p>
-        {/if}
-      </div>
     </section>
 
     <!-- ==================== ACHIEVEMENTS / BADGES ==================== -->
@@ -961,6 +1146,13 @@
             {:else}
               <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">Last online unknown</p>
             {/if}
+            <div class="mt-2 flex flex-wrap items-center gap-2 text-xs">
+              <span class="font-semibold text-slate-700 dark:text-slate-300">
+                <strong class="font-bold text-slate-900 dark:text-slate-100">{otherFollowers.length}</strong> follower{otherFollowers.length === 1 ? '' : 's'}
+              </span>
+              <span class="text-slate-400 dark:text-slate-600">·</span>
+              <span class="font-mono text-slate-500 dark:text-slate-400">ID: {profile.id}</span>
+            </div>
           </div>
         </div>
 
@@ -1047,6 +1239,114 @@
         </ul>
       {:else}
         <p class="mt-3 text-sm text-slate-600 dark:text-slate-300">No practice recorded yet.</p>
+      {/if}
+    </section>
+
+    <!-- ==================== OTHER PLAYER'S FOLLOWERS ==================== -->
+    <section
+      aria-labelledby="other-followers-heading"
+      class="mt-6 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6"
+    >
+      <div class="flex flex-wrap items-baseline justify-between gap-2">
+        <div>
+          <h2 id="other-followers-heading" class="text-xl font-bold tracking-tight">Followers</h2>
+          <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+            Students following {profile.name}’s practice and achievements.
+          </p>
+        </div>
+        <span
+          class="rounded-full bg-indigo-100 px-3 py-1 text-xs font-bold text-indigo-700 dark:bg-indigo-950/70 dark:text-indigo-300"
+        >
+          {otherFollowers.length} follower{otherFollowers.length === 1 ? '' : 's'}
+        </span>
+      </div>
+
+      {#if otherFollowers.length > 0}
+        <ul class="mt-4 divide-y divide-slate-100 dark:divide-slate-800" role="list">
+          {#each otherFollowers as follower (follower.id)}
+            {@const followerIsFollowed = isFollowing(follower.id)}
+            <li class="flex flex-wrap items-center justify-between gap-3 py-3">
+              <div class="flex items-center gap-3">
+                <span
+                  aria-hidden="true"
+                  class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-indigo-600 text-sm font-bold text-white dark:bg-indigo-500"
+                >
+                  {follower.name.charAt(0).toUpperCase()}
+                </span>
+                <div>
+                  <div class="flex items-center gap-2">
+                    {#if follower.id === myId}
+                      <a
+                        href="/profile"
+                        class="font-semibold text-slate-900 underline-offset-2 hover:underline dark:text-slate-100"
+                      >
+                        {follower.name}
+                      </a>
+                      <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
+                        You
+                      </span>
+                    {:else}
+                      <a
+                        href={`/profile?id=${follower.id}`}
+                        class="font-semibold text-slate-900 underline-offset-2 hover:underline dark:text-slate-100"
+                      >
+                        {follower.name}
+                      </a>
+                    {/if}
+                  </div>
+                  <p class="text-xs text-slate-500 dark:text-slate-400">
+                    Followed {relativeTime(follower.followedAt)}
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2">
+                {#if follower.id === myId}
+                  <a
+                    href="/profile"
+                    class="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+                  >
+                    Your profile
+                  </a>
+                {:else}
+                  <a
+                    href={`/profile?id=${follower.id}`}
+                    class="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+                  >
+                    View profile
+                  </a>
+                  <button
+                    type="button"
+                    onclick={() => handleToggleFollowItem(follower)}
+                    class="rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors {followerIsFollowed
+                      ? 'border border-emerald-300 bg-emerald-50 text-emerald-800 hover:border-rose-400 hover:bg-rose-50 hover:text-rose-700 dark:border-emerald-500/50 dark:bg-emerald-950/40 dark:text-emerald-300 dark:hover:bg-rose-950/40 dark:hover:text-rose-300'
+                      : 'bg-indigo-600 text-white hover:bg-indigo-700'}"
+                  >
+                    {followerIsFollowed ? 'Following ✓' : '+ Follow'}
+                  </button>
+                {/if}
+              </div>
+            </li>
+          {/each}
+        </ul>
+      {:else}
+        <div class="mt-4 rounded-2xl bg-slate-50 p-6 text-center dark:bg-slate-800/40">
+          <p class="text-sm font-semibold text-slate-800 dark:text-slate-200">
+            No followers yet.
+          </p>
+          <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+            Be the first study partner to follow {profile.name}!
+          </p>
+          {#if !isFollowingOther}
+            <button
+              type="button"
+              onclick={handleToggleFollowOther}
+              class="mt-3 rounded-lg bg-indigo-600 px-3.5 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-indigo-700"
+            >
+              + Follow {profile.name}
+            </button>
+          {/if}
+        </div>
       {/if}
     </section>
   {/if}

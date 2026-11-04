@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
+  followProfileApi,
   leaveLeaderboard,
   loadLeaderboard,
   loadProfile,
@@ -7,6 +8,7 @@ import {
   normaliseProfile,
   submitWeeklyXp,
   syncLeaderboard,
+  unfollowProfileApi,
 } from './leaderboard-api';
 import { getLeaderboardState } from './leaderboard';
 import { defaultGameState } from './gamification';
@@ -273,5 +275,50 @@ describe('profile API client', () => {
       expect.objectContaining({ cache: 'no-store' }),
     );
     expect(await loadProfile('bad id')).toBeNull();
+  });
+
+  it('normalises followers and followersCount in profiles', () => {
+    const profile = normaliseProfile({
+      configured: true,
+      profile: {
+        id: '0123456789abcdef',
+        name: 'Brave Owl 42',
+        lastOnline: '2026-10-31T12:00:00.000Z',
+        badges: [],
+        subjects: [],
+        followers: [
+          { id: '1111222233334444', name: 'Study Buddy', followedAt: '2026-11-01T10:00:00.000Z' },
+          { id: 'invalid-id', name: 'Bad User' },
+        ],
+        followersCount: 1,
+      },
+    });
+
+    expect(profile).not.toBeNull();
+    expect(profile?.followersCount).toBe(1);
+    expect(profile?.followers).toEqual([
+      { id: '1111222233334444', name: 'Study Buddy', followedAt: '2026-11-01T10:00:00.000Z' },
+    ]);
+  });
+
+  it('calls followProfileApi and unfollowProfileApi', async () => {
+    const fetchMock = vi.fn(async () =>
+      response({
+        configured: true,
+        success: true,
+        followersCount: 1,
+      }),
+    );
+    vi.stubGlobal('fetch', fetchMock as unknown as typeof fetch);
+
+    const followRes = await followProfileApi('0123456789abcdef');
+    expect(followRes?.success).toBe(true);
+    expect(followRes?.followersCount).toBe(1);
+
+    const unfollowRes = await unfollowProfileApi('0123456789abcdef');
+    expect(unfollowRes?.success).toBe(true);
+
+    expect(await followProfileApi('bad-id')).toBeNull();
+    expect(await unfollowProfileApi('bad-id')).toBeNull();
   });
 });

@@ -16,6 +16,7 @@ export const config = { runtime: 'nodejs' };
 const WEEK_KEY_PREFIX = 'leaderboard:week:';
 const NAME_KEY_PREFIX = 'leaderboard:name:';
 const PROFILE_KEY_PREFIX = 'leaderboard:profile:';
+const FOLLOWERS_KEY_PREFIX = 'leaderboard:followers:';
 const WEEK_TTL_SECONDS = 60 * 60 * 24 * 14;
 const NAME_TTL_SECONDS = 60 * 60 * 24 * 90;
 const PROFILE_TTL_SECONDS = 60 * 60 * 24 * 90;
@@ -236,6 +237,10 @@ function nameKey(token: string): string {
 
 function profileKey(id: string): string {
   return `${PROFILE_KEY_PREFIX}${id}`;
+}
+
+function followersKey(id: string): string {
+  return `${FOLLOWERS_KEY_PREFIX}${id}`;
 }
 
 function hashToken(token: string): number {
@@ -658,7 +663,7 @@ async function deleteUser(body: Record<string, unknown>): Promise<Response> {
   const week = isoWeek(new Date());
   const token = await resolveToken(id, week);
 
-  const commands: RedisCommand[] = [['DEL', profileKey(id)]];
+  const commands: RedisCommand[] = [['DEL', profileKey(id)], ['DEL', followersKey(id)]];
 
   if (token) {
     const weekKeys = await scanKeys(`${WEEK_KEY_PREFIX}*`);
