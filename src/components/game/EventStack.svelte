@@ -6,7 +6,7 @@
   function describe(event: GameEvent): string {
     switch (event.type) {
       case 'xp':
-        return `+${event.amount} XP`;
+        return `${event.amount > 0 ? '+' : ''}${event.amount} XP`;
       case 'levelUp':
         return `Level ${event.level} reached`;
       case 'badge':

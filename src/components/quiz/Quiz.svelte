@@ -509,33 +509,36 @@
         answerHint = 'Still in your Wrong box. Available again in 2 days.';
       }
     } else if (!retryMode) {
-      if (wrongRemoved) {
-        answerHint = 'Mistake cleared! Removed from your Wrong box.';
-      } else {
-        const previousBox = game.boxes[question.id] ?? 0;
-        try {
-          const result = applyAnswer(game, {
-            questionId: question.id,
-            subject,
-            correct,
-            combo: correct ? streak : 0,
-            today: currentDay(),
-            hour: new Date().getHours()
-          });
-          game = result.state;
-          saveGame(game);
-          recordGameEvents(result.events);
+      const previousBox = game.boxes[question.id] ?? 0;
+      try {
+        // Normal and review sessions always award game progress, including
+        // when correct answers clear a question from the Wrong box.
+        const result = applyAnswer(game, {
+          questionId: question.id,
+          subject,
+          correct,
+          combo: correct ? streak : 0,
+          today: currentDay(),
+          hour: new Date().getHours()
+        });
+        game = result.state;
+        saveGame(game);
+        recordGameEvents(result.events);
 
-          if (result.events.some((event) => event.type === 'mastered')) {
-            answerHint = 'Mastered!';
-          } else if (!correct) {
-            answerHint = 'Added to review';
-          } else if (previousBox <= 1) {
-            answerHint = `Box ${game.boxes[question.id] ?? 1} of 3`;
-          }
-        } catch {
-          // Gamification is fail-soft; the quiz itself keeps working.
+        const mastered = result.events.some((event) => event.type === 'mastered');
+        if (wrongRemoved) {
+          answerHint = mastered
+            ? 'Mistake cleared! Mastered!'
+            : 'Mistake cleared! Removed from your Wrong box.';
+        } else if (mastered) {
+          answerHint = 'Mastered!';
+        } else if (!correct) {
+          answerHint = 'Added to review';
+        } else if (previousBox <= 1) {
+          answerHint = `Box ${game.boxes[question.id] ?? 1} of 3`;
         }
+      } catch {
+        // Gamification is fail-soft; the quiz itself keeps working.
       }
     }
   }
