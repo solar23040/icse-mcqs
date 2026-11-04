@@ -308,6 +308,7 @@ Progress is stored locally under `icse:game:v1`. It is separate from seen questi
 | Rule | Value |
 | --- | --- |
 | Correct answer | 2 XP |
+| Daily challenge correct answer | 10 XP (flat, first play each day) |
 | Combo | x1 for 1-2 in a row, x1.5 from 3, x2 from 6 (cap x2) |
 | Missed-question bonus | +1 XP the first time you get a previously missed question right |
 | Wrong answer | 0 XP (never negative) |

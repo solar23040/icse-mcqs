@@ -19,6 +19,8 @@ export const XP_CORRECT_BASE = 2;
 export const XP_MISSED_BONUS = 1;
 export const XP_SESSION_COMPLETE = 4;
 export const XP_MASTERED_CAP = 1;
+/** Flat XP for every correct answer in the once-a-day daily challenge. */
+export const XP_DAILY_CORRECT = 10;
 /** XP deducted for the first hint of the day. */
 export const HINT_COST_XP = 50;
 /** Extra XP added to the second hint of the same day (50 + 50 = 100). */

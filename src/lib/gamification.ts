@@ -58,6 +58,8 @@ export interface AnswerInput {
   today: string;
   /** Optional local hour (0-23) for time-of-day badges. */
   hour?: number;
+  /** Optional flat XP for a correct answer, bypassing combo and mastery caps. */
+  flatXp?: number;
 }
 
 export interface SessionInput {
@@ -336,7 +338,7 @@ function resetDailyIfNeeded(state: GameState, today: string): GameState {
 }
 
 export function applyAnswer(state: GameState, input: AnswerInput): GameResult {
-  const { questionId, subject, correct, combo, today, hour } = input;
+  const { questionId, subject, correct, combo, today, hour, flatXp } = input;
   const events: GameEvent[] = [];
 
   let next = cloneState(resetDailyIfNeeded(state, today));
@@ -344,8 +346,9 @@ export function applyAnswer(state: GameState, input: AnswerInput): GameResult {
 
   const wasMissed = next.missed[questionId] === true;
   const previousBox = next.boxes[questionId] ?? 0;
-  let gained = answerXp(correct, combo, wasMissed);
-  if (correct && previousBox === 3) gained = Math.min(gained, XP_MASTERED_CAP);
+  const useFlatXp = typeof flatXp === 'number' && Number.isFinite(flatXp);
+  let gained = useFlatXp ? (correct ? Math.max(0, Math.trunc(flatXp)) : 0) : answerXp(correct, combo, wasMissed);
+  if (!useFlatXp && correct && previousBox === 3) gained = Math.min(gained, XP_MASTERED_CAP);
 
   let masteredNow = false;
   if (correct) {

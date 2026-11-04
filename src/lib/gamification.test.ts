@@ -220,6 +220,33 @@ describe('applyAnswer', () => {
     expect(result.events).toEqual([{ type: 'xp', amount: 3 }]);
   });
 
+  it('awards flat daily challenge XP regardless of combo, mastery or missed bonus', () => {
+    const state = defaultGameState();
+    state.missed.q1 = true;
+    state.boxes.q1 = 3;
+
+    const correct = applyAnswer(state, {
+      questionId: 'q1',
+      subject: 'maths',
+      correct: true,
+      combo: 6,
+      today: '2026-01-01',
+      flatXp: 10,
+    });
+    expect(correct.events).toEqual([{ type: 'xp', amount: 10 }]);
+
+    const wrong = applyAnswer(state, {
+      questionId: 'q2',
+      subject: 'maths',
+      correct: false,
+      combo: 0,
+      today: '2026-01-01',
+      flatXp: 10,
+    });
+    expect(wrong.events).toEqual([]);
+    expect(wrong.state.xp).toBe(0);
+  });
+
   it('does not pay the missed bonus twice', () => {
     const state = defaultGameState();
     state.missed.q1 = true;

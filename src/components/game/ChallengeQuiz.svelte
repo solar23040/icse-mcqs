@@ -2,6 +2,7 @@
   import { onDestroy, onMount, tick } from 'svelte';
   import { buildDailyChallenge, sprintScore } from '../../lib/engine';
   import { localDay } from '../../lib/date';
+  import { XP_DAILY_CORRECT } from '../../lib/config';
   import { recordSubjectPractice } from '../../lib/activity';
   import { syncLeaderboard } from '../../lib/leaderboard-api';
   import { applyAnswer, applySession, defaultGameState, levelForGame, type GameEvent, type GameState } from '../../lib/gamification';
@@ -185,7 +186,8 @@
           correct,
           combo: correct ? streak : 0,
           today: currentDay(),
-          hour: new Date().getHours()
+          hour: new Date().getHours(),
+          flatXp: mode === 'daily' ? XP_DAILY_CORRECT : undefined
         });
         game = result.state;
         if (mode === 'daily' && !dailyAlready) {
