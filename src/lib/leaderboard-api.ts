@@ -10,7 +10,7 @@ import {
   type LeaderboardSnapshot,
 } from './leaderboard';
 import { getRecentSubjects } from './activity';
-import { getGame, getStats, getUserName } from './storage';
+import { getGame, getStats, getUserDescription, getUserName, setMyProfileId } from './storage';
 
 const ENDPOINT = '/api/leaderboard';
 const TIMEOUT_MS = 5000;
@@ -29,11 +29,13 @@ export interface PublicProfile {
   lastOnline: string | null;
   badges: string[];
   subjects: ProfileSubject[];
+  description?: string | null;
 }
 
 export interface ProfileSubmission {
   badges: string[];
   subjects: ProfileSubject[];
+  description?: string | null;
 }
 
 function toCount(value: unknown): number {
@@ -152,12 +154,18 @@ export function normaliseProfile(value: unknown): PublicProfile | null {
     (left, right) => Date.parse(right.lastPracticed) - Date.parse(left.lastPracticed),
   );
 
+  const safeDescription =
+    typeof profile.description === 'string' && profile.description.trim().length > 0
+      ? profile.description.trim().slice(0, 300)
+      : null;
+
   return {
     id,
     name,
     lastOnline: safeLastOnline,
     badges: safeBadges,
     subjects: safeSubjects,
+    ...(safeDescription ? { description: safeDescription } : {}),
   };
 }
 
@@ -199,8 +207,9 @@ export function buildProfileSubmission(): ProfileSubmission {
     lastPracticed,
     attempts: getStats(subject).attempted,
   }));
+  const description = getUserDescription();
 
-  return { badges, subjects };
+  return { badges, subjects, ...(description ? { description } : {}) };
 }
 
 export function submitWeeklyXp(
@@ -220,7 +229,7 @@ export function submitWeeklyXp(
  * with their current total as the baseline. That keeps all local XP untouched
  * while only counting XP earned from this point on towards the weekly board.
  */
-export function syncLeaderboard(now = new Date()): Promise<LeaderboardSnapshot | null> {
+export async function syncLeaderboard(now = new Date()): Promise<LeaderboardSnapshot | null> {
   const state = getLeaderboardState(now);
   const week = currentIsoWeek(now);
   const game = getGame();
@@ -229,7 +238,11 @@ export function syncLeaderboard(now = new Date()): Promise<LeaderboardSnapshot |
   const advanced = advanceWeeklyXp(joined, game.totalEarnedXP, week);
   saveLeaderboardState(advanced);
 
-  return submitWeeklyXp(advanced.weeklyXp, buildProfileSubmission());
+  const snapshot = await submitWeeklyXp(advanced.weeklyXp, buildProfileSubmission());
+  if (snapshot?.me?.id) {
+    setMyProfileId(snapshot.me.id);
+  }
+  return snapshot;
 }
 
 export function leaveLeaderboard(): Promise<LeaderboardSnapshot | null> {

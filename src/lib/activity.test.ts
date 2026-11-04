@@ -83,4 +83,31 @@ describe('weekly activity', () => {
     expect(summary.activeDays).toBe(1);
     expect(summary.days[6]).toEqual({ day: '2026-11-01', answered: 2, correct: 1 });
   });
+
+  it('summarises last week (prior 7-day period) and calculates comparison', () => {
+    // Activity in last week's window: Oct 20 - Oct 26 (prior to Oct 27 - Nov 02)
+    activity.recordSubjectPractice('physics', new Date('2026-10-24T10:00:00'), true);
+    activity.recordSubjectPractice('physics', new Date('2026-10-24T11:00:00'), false);
+    // Activity in this week's window:
+    activity.recordSubjectPractice('maths', new Date('2026-10-28T10:00:00'), true);
+    activity.recordSubjectPractice('maths', new Date('2026-10-29T10:00:00'), true);
+    activity.recordSubjectPractice('history', new Date('2026-11-01T10:00:00'), true);
+
+    const now = new Date('2026-11-02T12:00:00');
+    const lastWeek = activity.getLastWeekActivity(now);
+    expect(lastWeek.days).toHaveLength(7);
+    expect(lastWeek.answered).toBe(2);
+    expect(lastWeek.correct).toBe(1);
+    expect(lastWeek.activeDays).toBe(1);
+    expect(lastWeek.subjects).toEqual([{ subject: 'physics', answered: 2 }]);
+
+    const comp = activity.getWeeklyComparison(now);
+    expect(comp.thisWeek.answered).toBe(3);
+    expect(comp.thisWeek.correct).toBe(3);
+    expect(comp.lastWeek.answered).toBe(2);
+    expect(comp.answeredDelta).toBe(1);
+    expect(comp.correctDelta).toBe(2);
+    expect(comp.accuracyDelta).toBe(50); // 100% vs 50%
+    expect(comp.activeDaysDelta).toBe(2); // 3 vs 1
+  });
 });

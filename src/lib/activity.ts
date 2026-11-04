@@ -234,6 +234,38 @@ export function getWeeklyActivity(now = new Date(), dayCount = 7): WeeklySummary
   };
 }
 
+/** Summary of the 7 local days prior to the current 7-day window. */
+export function getLastWeekActivity(now = new Date()): WeeklySummary {
+  const lastWeekDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
+  return getWeeklyActivity(lastWeekDate, 7);
+}
+
+export interface WeeklyComparison {
+  thisWeek: WeeklySummary;
+  lastWeek: WeeklySummary;
+  answeredDelta: number;
+  correctDelta: number;
+  accuracyDelta: number;
+  activeDaysDelta: number;
+}
+
+/** Compare the current 7 days with the prior 7 days. */
+export function getWeeklyComparison(now = new Date()): WeeklyComparison {
+  const thisWeek = getWeeklyActivity(now, 7);
+  const lastWeek = getLastWeekActivity(now);
+  const thisAcc = thisWeek.answered > 0 ? Math.round((thisWeek.correct / thisWeek.answered) * 100) : 0;
+  const lastAcc = lastWeek.answered > 0 ? Math.round((lastWeek.correct / lastWeek.answered) * 100) : 0;
+
+  return {
+    thisWeek,
+    lastWeek,
+    answeredDelta: thisWeek.answered - lastWeek.answered,
+    correctDelta: thisWeek.correct - lastWeek.correct,
+    accuracyDelta: thisAcc - lastAcc,
+    activeDaysDelta: thisWeek.activeDays - lastWeek.activeDays,
+  };
+}
+
 /** Most recently practised subjects first. */
 export function getRecentSubjects(limit = 5): SubjectActivity[] {
   const entries = Object.entries(getActivity().subjects)

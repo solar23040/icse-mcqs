@@ -385,3 +385,32 @@ describe('sessions across storage', () => {
     expect(exhausted.poolExhausted).toBe(true);
   });
 });
+
+describe('user description and profile ID', () => {
+  it('reads and writes description with trimming and length limit', () => {
+    vi.stubGlobal('localStorage', new FakeStorage());
+
+    expect(storage.getUserDescription()).toBeNull();
+    storage.setUserDescription('   Studying hard for ICSE 10th!   ');
+    expect(storage.getUserDescription()).toBe('Studying hard for ICSE 10th!');
+
+    storage.setUserDescription('   ');
+    expect(storage.getUserDescription()).toBeNull();
+
+    const longDesc = 'a'.repeat(300);
+    storage.setUserDescription(longDesc);
+    expect(storage.getUserDescription()?.length).toBe(250);
+  });
+
+  it('reads and writes valid profile IDs', () => {
+    vi.stubGlobal('localStorage', new FakeStorage());
+
+    expect(storage.getMyProfileId()).toBeNull();
+    storage.setMyProfileId('0123456789abcdef');
+    expect(storage.getMyProfileId()).toBe('0123456789abcdef');
+
+    // Invalid id is ignored
+    storage.setMyProfileId('not-a-valid-id');
+    expect(storage.getMyProfileId()).toBe('0123456789abcdef');
+  });
+});

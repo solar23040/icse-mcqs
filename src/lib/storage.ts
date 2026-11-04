@@ -415,3 +415,39 @@ export function setUserName(name: string): void {
   const clean = name.trim().slice(0, 20);
   if (clean) writeRaw(USER_NAME_KEY, clean);
 }
+
+/* ── User description / bio ───────────────────────────────────────────── */
+
+const USER_DESCRIPTION_KEY = 'icse:description:v1';
+
+/** Returns the user's bio/description, or null if not set. */
+export function getUserDescription(): string | null {
+  return readRaw(USER_DESCRIPTION_KEY);
+}
+
+/** Persists or clears the user's bio/description (max 250 chars, trimmed). */
+export function setUserDescription(description: string): void {
+  const clean = description.trim().slice(0, 250);
+  if (clean) {
+    writeRaw(USER_DESCRIPTION_KEY, clean);
+  } else {
+    removeRaw(USER_DESCRIPTION_KEY);
+  }
+}
+
+/* ── Public profile ID ────────────────────────────────────────────────── */
+
+const MY_PROFILE_ID_KEY = 'icse:my_profile_id:v1';
+
+/** Returns the user's public profile ID if known. */
+export function getMyProfileId(): string | null {
+  return readRaw(MY_PROFILE_ID_KEY);
+}
+
+/** Remembers the user's public profile ID received from the leaderboard. */
+export function setMyProfileId(id: string): void {
+  const clean = id.trim();
+  if (/^[a-f0-9]{16}$/.test(clean)) {
+    writeRaw(MY_PROFILE_ID_KEY, clean);
+  }
+}

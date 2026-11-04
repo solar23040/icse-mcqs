@@ -1,8 +1,9 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { getUserName } from '../../lib/storage';
-  import type { LeaderboardSnapshot } from '../../lib/leaderboard';
+  import type { LeaderboardEntry, LeaderboardSnapshot } from '../../lib/leaderboard';
   import { syncLeaderboard } from '../../lib/leaderboard-api';
+  import { getFollowing, toggleFollow } from '../../lib/following';
 
   let mounted = $state(false);
   let busy = $state(false);
@@ -10,6 +11,17 @@
   let message = $state('');
   let failed = $state(false);
   let displayName = $state<string | null>(null);
+  let followingSet = $state<Set<string>>(new Set());
+
+  function refreshFollowing(): void {
+    followingSet = new Set(getFollowing().map((u) => u.id));
+  }
+
+  function handleToggleFollow(entry: LeaderboardEntry): void {
+    if (!entry.id) return;
+    toggleFollow({ id: entry.id, name: entry.name });
+    refreshFollowing();
+  }
 
   async function sync(): Promise<void> {
     busy = true;
@@ -35,6 +47,7 @@
   onMount(() => {
     mounted = true;
     displayName = getUserName();
+    refreshFollowing();
     void sync();
 
     // Re-sync when user sets their name via the modal
@@ -42,9 +55,16 @@
       displayName = (e as CustomEvent<{ name: string }>).detail.name;
       void sync();
     };
+    const handleFollowingChange = (): void => {
+      refreshFollowing();
+    };
+
     window.addEventListener('icse:nameSet', handleNameSet);
-    // Return cleanup so the listener is removed when the component unmounts
-    return () => window.removeEventListener('icse:nameSet', handleNameSet);
+    window.addEventListener('icse:followingChange', handleFollowingChange);
+    return () => {
+      window.removeEventListener('icse:nameSet', handleNameSet);
+      window.removeEventListener('icse:followingChange', handleFollowingChange);
+    };
   });
 </script>
 
@@ -97,14 +117,12 @@
                 You are {displayName ?? snapshot.me.name}
               </p>
               <div class="flex items-center gap-3">
-                {#if snapshot.me.id}
-                  <a
-                    href={`/profile?id=${snapshot.me.id}`}
-                    class="text-xs font-semibold text-indigo-600 underline-offset-2 hover:underline dark:text-indigo-400"
-                  >
-                    View profile
-                  </a>
-                {/if}
+                <a
+                  href="/profile"
+                  class="text-xs font-semibold text-indigo-600 underline-offset-2 hover:underline dark:text-indigo-400"
+                >
+                  View profile
+                </a>
                 <button
                   type="button"
                   on:click={() => window.dispatchEvent(new CustomEvent('icse:openNameModal'))}
@@ -144,16 +162,30 @@
               {@const rowName = snapshot.me?.rank === entry.rank ? (displayName ?? entry.name) : entry.name}
               <li>
                 {#if entry.id}
-                  <a
-                    href={`/profile?id=${entry.id}`}
-                    aria-label={`View ${rowName}'s profile`}
-                    class="{rowClass} transition-colors hover:bg-indigo-50 dark:hover:bg-slate-700"
-                  >
+                  <div class="{rowClass} transition-colors hover:bg-indigo-50/60 dark:hover:bg-slate-800">
                     <span class="w-8 shrink-0 text-slate-500 dark:text-slate-400">#{entry.rank}</span>
-                    <span class="min-w-0 flex-1 truncate">{rowName}</span>
+                    <a
+                      href={`/profile?id=${entry.id}`}
+                      aria-label={`View ${rowName}'s profile`}
+                      class="min-w-0 flex-1 truncate underline-offset-2 hover:underline"
+                    >
+                      {rowName}
+                    </a>
                     <span class="shrink-0 text-indigo-700 dark:text-indigo-300">{entry.xp} XP</span>
-                    <span aria-hidden="true" class="shrink-0 text-slate-400">›</span>
-                  </a>
+                    {#if snapshot.me?.rank !== entry.rank}
+                      {@const isFollowed = followingSet.has(entry.id)}
+                      <button
+                        type="button"
+                        on:click={() => handleToggleFollow(entry)}
+                        aria-label={isFollowed ? `Unfollow ${rowName}` : `Follow ${rowName}`}
+                        class="shrink-0 rounded-lg px-2.5 py-1 text-xs font-semibold transition-colors {isFollowed
+                          ? 'border border-emerald-400 bg-emerald-50 text-emerald-800 hover:border-rose-400 hover:bg-rose-50 hover:text-rose-700 dark:border-emerald-500/50 dark:bg-emerald-950/40 dark:text-emerald-300 dark:hover:bg-rose-950/40 dark:hover:text-rose-300'
+                          : 'border border-slate-300 bg-white text-slate-700 hover:border-indigo-400 hover:text-indigo-600 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200'}"
+                      >
+                        {isFollowed ? 'Following ✓' : '+ Follow'}
+                      </button>
+                    {/if}
+                  </div>
                 {:else}
                   <div class={rowClass}>
                     <span class="w-8 shrink-0 text-slate-500 dark:text-slate-400">#{entry.rank}</span>

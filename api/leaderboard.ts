@@ -21,6 +21,7 @@ const PROFILE_KEY_PREFIX = 'leaderboard:profile:';
 const PROFILE_TTL_SECONDS = 60 * 60 * 24 * 90; // 90 days
 const MAX_PROFILE_BADGES = 40;
 const MAX_PROFILE_SUBJECTS = 10;
+const MAX_PROFILE_DESCRIPTION = 300;
 
 const BADGE_IDS = new Set([
   'first-steps',
@@ -145,6 +146,7 @@ export interface PublicProfile {
   lastOnline: string | null;
   badges: string[];
   subjects: ProfileSubject[];
+  description?: string | null;
 }
 
 function isToken(value: unknown): value is string {
@@ -155,6 +157,12 @@ function sanitiseName(value: unknown): string | null {
   if (typeof value !== 'string') return null;
   const clean = value.replace(/[^\p{L}\p{N} ._-]/gu, '').trim().slice(0, 20);
   return clean.length >= 1 ? clean : null;
+}
+
+function sanitiseDescription(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const clean = value.replace(/[\r\n\t]+/g, ' ').trim().slice(0, MAX_PROFILE_DESCRIPTION);
+  return clean.length > 0 ? clean : null;
 }
 
 function toCount(value: unknown): number {
@@ -412,12 +420,16 @@ function parseProfile(id: string, raw: string): PublicProfile | null {
           : undefined;
     if (lastOnline === undefined) return null;
 
+    const description =
+      typeof record.description === 'string' ? sanitiseDescription(record.description) : null;
+
     return {
       id,
       name,
       lastOnline,
       badges: sanitiseBadges(record.badges),
       subjects: sanitiseSubjects(record.subjects, new Date()),
+      ...(description ? { description } : {}),
     };
   } catch {
     return null;
@@ -565,7 +577,7 @@ export async function POST(request: Request): Promise<Response> {
 
   let weeklyXp: unknown;
   let submittedName: string | null = null;
-  let submittedProfile: { badges?: unknown; subjects?: unknown } | null = null;
+  let submittedProfile: { badges?: unknown; subjects?: unknown; description?: unknown } | null = null;
   try {
     const body: unknown = await request.json();
     if (typeof body === 'object' && body !== null) {
@@ -575,7 +587,11 @@ export async function POST(request: Request): Promise<Response> {
 
       if (typeof b.profile === 'object' && b.profile !== null) {
         const profile = b.profile as Record<string, unknown>;
-        submittedProfile = { badges: profile.badges, subjects: profile.subjects };
+        submittedProfile = {
+          badges: profile.badges,
+          subjects: profile.subjects,
+          description: profile.description,
+        };
       }
     } else {
       weeklyXp = null;
@@ -626,12 +642,14 @@ export async function POST(request: Request): Promise<Response> {
       commands.push(['SET', nameKey(token), submittedName, 'EX', NAME_TTL_SECONDS]);
     }
     if (submittedProfile) {
+      const description = sanitiseDescription(submittedProfile.description);
       const profile: PublicProfile = {
         id: publicIdFor(token),
         name: submittedName ?? nameFor(token),
         lastOnline: now.toISOString(),
         badges: sanitiseBadges(submittedProfile.badges),
         subjects: sanitiseSubjects(submittedProfile.subjects, now),
+        ...(description ? { description } : {}),
       };
       commands.push([
         'SET',

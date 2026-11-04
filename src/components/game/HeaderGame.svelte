@@ -13,11 +13,11 @@
 </script>
 
 <a
-  href="/"
+  href="/profile"
   class="flex items-center gap-3 rounded-lg px-2 py-1 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-200/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:text-slate-200 dark:hover:bg-slate-800"
   aria-label={mounted
-    ? `Level ${levelForGame(game)}, ${game.streak.count}-day streak`
-    : 'Your level and streak'}
+    ? `Level ${levelForGame(game)}, ${game.streak.count}-day streak. View profile.`
+    : 'Your level and streak. View profile.'}
 >
   <span class="inline-flex items-center gap-1" aria-hidden="true">
     <span>🔥</span>

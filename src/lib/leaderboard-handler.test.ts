@@ -292,6 +292,7 @@ describe('leaderboard API', () => {
           name: 'Aryan',
           profile: {
             badges: ['first-steps', 'century', 'not-a-badge'],
+            description: 'Aspiring computer scientist',
             subjects: [
               { subject: 'maths', lastPracticed: '2026-10-30T12:00:00.000Z', attempts: 4 },
               { subject: 'history', lastPracticed: '2026-10-31T12:00:00.000Z', attempts: 7 },
@@ -318,6 +319,7 @@ describe('leaderboard API', () => {
       { subject: 'history', lastPracticed: '2026-10-31T12:00:00.000Z', attempts: 7 },
       { subject: 'maths', lastPracticed: '2026-10-30T12:00:00.000Z', attempts: 4 },
     ]);
+    expect(profile.description).toBe('Aspiring computer scientist');
     expect(typeof profile.lastOnline).toBe('string');
   });
 

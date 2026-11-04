@@ -256,6 +256,7 @@ describe('profile API client', () => {
           id: '0123456789abcdef',
           name: 'Brave Owl 42',
           lastOnline: '2026-10-31T12:00:00.000Z',
+          description: 'Aiming for 99% in ICSE',
           badges: ['first-steps'],
           subjects: [],
         },
@@ -266,6 +267,7 @@ describe('profile API client', () => {
     const profile = await loadProfile('0123456789abcdef');
 
     expect(profile?.name).toBe('Brave Owl 42');
+    expect(profile?.description).toBe('Aiming for 99% in ICSE');
     expect(fetchMock).toHaveBeenCalledWith(
       '/api/leaderboard?profile=0123456789abcdef',
       expect.objectContaining({ cache: 'no-store' }),
