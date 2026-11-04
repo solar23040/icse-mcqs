@@ -103,32 +103,32 @@ describe('spending XP on hints', () => {
 describe('daily hint pricing', () => {
   const today = '2026-01-01';
 
-  it('charges 250 then 500, then the whole balance', () => {
+  it('charges 50 then 100, then the whole balance', () => {
     const state = defaultGameState();
     state.xp = 5_000;
 
-    expect(hintCost(state, today)).toEqual({ cost: 250, usedToday: 0, allCredits: false });
+    expect(hintCost(state, today)).toEqual({ cost: 50, usedToday: 0, allCredits: false });
 
     const first = spendHint(state, today);
     expect(first.purchased).toBe(true);
-    expect(first.cost).toBe(250);
-    expect(first.state.xp).toBe(4_750);
+    expect(first.cost).toBe(50);
+    expect(first.state.xp).toBe(4_950);
     expect(hintsUsedToday(first.state, today)).toBe(1);
     expect(hintCost(first.state, today)).toEqual({
-      cost: 500,
+      cost: 100,
       usedToday: 1,
       allCredits: false,
     });
 
     const second = spendHint(first.state, today);
-    expect(second.cost).toBe(500);
-    expect(second.state.xp).toBe(4_250);
+    expect(second.cost).toBe(100);
+    expect(second.state.xp).toBe(4_850);
     expect(hintsUsedToday(second.state, today)).toBe(2);
 
     const third = spendHint(second.state, today);
     expect(third.purchased).toBe(true);
     expect(third.allCredits).toBe(true);
-    expect(third.cost).toBe(4_250);
+    expect(third.cost).toBe(4_850);
     expect(third.state.xp).toBe(0);
     expect(hintsUsedToday(third.state, today)).toBe(3);
 
@@ -145,7 +145,7 @@ describe('daily hint pricing', () => {
     const second = spendHint(first.state, today);
 
     expect(hintCost(second.state, '2026-01-02')).toEqual({
-      cost: 250,
+      cost: 50,
       usedToday: 0,
       allCredits: false,
     });
@@ -153,7 +153,7 @@ describe('daily hint pricing', () => {
 
   it('does not buy a hint when XP is short', () => {
     const state = defaultGameState();
-    state.xp = 249;
+    state.xp = 49;
 
     const result = spendHint(state, today);
 
@@ -171,7 +171,7 @@ describe('daily hint pricing', () => {
 
     const result = spendHint(state, today);
 
-    expect(result.state.xp).toBe(750);
+    expect(result.state.xp).toBe(950);
     expect(result.state.totalEarnedXP).toBe(5_000);
     expect(levelForGame(result.state)).toBe(levelForGame(state));
   });
@@ -179,12 +179,12 @@ describe('daily hint pricing', () => {
 
 describe('answerXp', () => {
   it('applies the combo tiers and caps at x2', () => {
-    expect(answerXp(true, 1, false)).toBe(10);
-    expect(answerXp(true, 2, false)).toBe(10);
-    expect(answerXp(true, 3, false)).toBe(15);
-    expect(answerXp(true, 5, false)).toBe(15);
-    expect(answerXp(true, 6, false)).toBe(20);
-    expect(answerXp(true, 99, false)).toBe(20);
+    expect(answerXp(true, 1, false)).toBe(2);
+    expect(answerXp(true, 2, false)).toBe(2);
+    expect(answerXp(true, 3, false)).toBe(3);
+    expect(answerXp(true, 5, false)).toBe(3);
+    expect(answerXp(true, 6, false)).toBe(4);
+    expect(answerXp(true, 99, false)).toBe(4);
   });
 
   it('never awards XP for a wrong answer', () => {
@@ -193,8 +193,8 @@ describe('answerXp', () => {
   });
 
   it('adds the missed bonus', () => {
-    expect(answerXp(true, 1, true)).toBe(15);
-    expect(answerXp({ correct: true, combo: 3, missed: true })).toBe(20);
+    expect(answerXp(true, 1, true)).toBe(3);
+    expect(answerXp({ correct: true, combo: 3, missed: true })).toBe(4);
   });
 });
 
@@ -214,10 +214,10 @@ describe('applyAnswer', () => {
     expect(result.state).not.toBe(state);
     expect(state.xp).toBe(0);
     expect(state.missed.q1).toBe(true);
-    expect(result.state.xp).toBe(15);
+    expect(result.state.xp).toBe(3);
     expect(result.state.missed.q1).toBeUndefined();
     expect(result.state.daily.answered).toBe(1);
-    expect(result.events).toEqual([{ type: 'xp', amount: 15 }]);
+    expect(result.events).toEqual([{ type: 'xp', amount: 3 }]);
   });
 
   it('does not pay the missed bonus twice', () => {
@@ -239,13 +239,13 @@ describe('applyAnswer', () => {
       today: '2026-01-01',
     });
 
-    expect(first.events).toEqual([{ type: 'xp', amount: 15 }]);
-    expect(second.events).toEqual([{ type: 'xp', amount: 10 }]);
+    expect(first.events).toEqual([{ type: 'xp', amount: 3 }]);
+    expect(second.events).toEqual([{ type: 'xp', amount: 2 }]);
   });
 
   it('emits levelUp when crossing a level boundary', () => {
     const state = defaultGameState();
-    state.xp = 45;
+    state.xp = 48;
 
     const result = applyAnswer(state, {
       questionId: 'q1',
@@ -255,9 +255,9 @@ describe('applyAnswer', () => {
       today: '2026-01-01',
     });
 
-    expect(result.state.xp).toBe(55);
+    expect(result.state.xp).toBe(50);
     expect(result.events).toEqual([
-      { type: 'xp', amount: 10 },
+      { type: 'xp', amount: 2 },
       { type: 'levelUp', level: 2 },
     ]);
   });
@@ -359,7 +359,7 @@ describe('streaks', () => {
 });
 
 describe('applySession', () => {
-  it('awards 20 XP and counts the streak even below the daily goal', () => {
+  it('awards 4 XP and counts the streak even below the daily goal', () => {
     const state = withDaily(defaultGameState(), '2026-01-01', 0);
 
     const result = applySession(state, {
@@ -369,10 +369,10 @@ describe('applySession', () => {
       today: '2026-01-01',
     });
 
-    expect(result.state.xp).toBe(20);
+    expect(result.state.xp).toBe(4);
     expect(result.state.streak.count).toBe(1);
     expect(result.state.counters.sessions).toBe(1);
-    expect(result.events).toEqual([{ type: 'xp', amount: 20 }, { type: 'streak', count: 1 }]);
+    expect(result.events).toEqual([{ type: 'xp', amount: 4 }, { type: 'streak', count: 1 }]);
   });
 
   it('does nothing for an empty session', () => {
@@ -430,7 +430,7 @@ describe('applySession', () => {
     });
 
     expect(second.state.streak.count).toBe(1);
-    expect(second.state.xp).toBe(40);
+    expect(second.state.xp).toBe(8);
   });
 });
 
@@ -505,7 +505,7 @@ describe('Leitner boxes', () => {
     expect(fourth.events.some((event) => event.type === 'mastered')).toBe(false);
   });
 
-  it('caps XP at 2 for a question already in box 3', () => {
+  it('caps XP at 1 for a question already in box 3', () => {
     const state = defaultGameState();
     state.boxes.q1 = 3;
     state.xp = 100;
@@ -518,8 +518,8 @@ describe('Leitner boxes', () => {
       today: '2026-01-01',
     });
 
-    expect(result.state.xp).toBe(102);
-    expect(result.events).toContainEqual({ type: 'xp', amount: 2 });
+    expect(result.state.xp).toBe(101);
+    expect(result.events).toContainEqual({ type: 'xp', amount: 1 });
   });
 });
 

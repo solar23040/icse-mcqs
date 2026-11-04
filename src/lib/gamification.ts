@@ -231,7 +231,7 @@ export function hintsUsedToday(state: GameState, today: string): number {
 }
 
 /**
- * Price the next hint: 250 XP for the first, 500 XP for the second, then the
+ * Price the next hint: 50 XP for the first, 100 XP for the second, then the
  * whole balance for every later hint on the same day.
  */
 export function hintCost(state: GameState, today: string): HintQuote {

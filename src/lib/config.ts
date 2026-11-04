@@ -9,15 +9,20 @@ export const EXAM_DATE = '2027-03-01';
 /** A question answered wrong can be retried after this cooldown. */
 export const WRONG_BOX_LOCK_MS = 48 * 60 * 60 * 1000;
 
-/** XP tuning constants. */
-export const XP_CORRECT_BASE = 10;
-export const XP_MISSED_BONUS = 5;
-export const XP_SESSION_COMPLETE = 20;
-export const XP_MASTERED_CAP = 2;
+/**
+ * XP tuning constants. XP (shown as credits) accrues slowly on purpose:
+ * correct answers start at 2 XP instead of 10, so a session takes about
+ * five times as long to earn the same balance. Existing balances are not
+ * touched by these values.
+ */
+export const XP_CORRECT_BASE = 2;
+export const XP_MISSED_BONUS = 1;
+export const XP_SESSION_COMPLETE = 4;
+export const XP_MASTERED_CAP = 1;
 /** XP deducted for the first hint of the day. */
-export const HINT_COST_XP = 250;
-/** Extra XP added to the second hint of the same day (250 + 250 = 500). */
-export const HINT_SECOND_EXTRA_XP = 250;
+export const HINT_COST_XP = 50;
+/** Extra XP added to the second hint of the same day (50 + 50 = 100). */
+export const HINT_SECOND_EXTRA_XP = 50;
 
 /** Combo multiplier tiers. A tier is reached every COMBO_STEP consecutive correct answers. */
 export const COMBO_TIER_1 = 1;

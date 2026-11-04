@@ -307,11 +307,11 @@ Progress is stored locally under `icse:game:v1`. It is separate from seen questi
 
 | Rule | Value |
 | --- | --- |
-| Correct answer | 10 XP |
+| Correct answer | 2 XP |
 | Combo | x1 for 1-2 in a row, x1.5 from 3, x2 from 6 (cap x2) |
-| Missed-question bonus | +5 XP the first time you get a previously missed question right |
+| Missed-question bonus | +1 XP the first time you get a previously missed question right |
 | Wrong answer | 0 XP (never negative) |
-| Session completion | +20 XP |
+| Session completion | +4 XP |
 | Level | `floor(sqrt(xp / 50)) + 1` |
 | Streak | Counts a day when you complete a session or hit your daily goal |
 | Streak gap | One missed day is free; longer gaps spend one freeze per missed day |
@@ -363,7 +363,7 @@ The admin endpoint keeps its own copy of the credential hash in `api/admin.ts`; 
 
 ### Mastery and ranks
 
-Each question sits in a Leitner box. A wrong answer sends it to box 0 (and onto the review list); each correct answer moves it up one box, to a maximum of box 3. Box 3 questions count as mastered. Answering an already-mastered question gives only 2 XP, so repeating mastered questions cannot farm XP.
+Each question sits in a Leitner box. A wrong answer sends it to box 0 (and onto the review list); each correct answer moves it up one box, to a maximum of box 3. Box 3 questions count as mastered. Answering an already-mastered question gives only 1 XP, so repeating mastered questions cannot farm XP.
 
 **Review weak spots** draws box 0-1 questions first, then box 2, then unseen questions. Mastery percentage per subject is `mastered / total questions`. Ranks are: below 25% Beginner, below 50% Learner, below 75% Scholar, 75% or more Topper. Placeholder subjects never show a rank.
 
