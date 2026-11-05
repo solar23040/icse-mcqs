@@ -220,6 +220,15 @@ function snapshotSize(data: unknown): number {
   }
 }
 
+function isSnapshot(value: unknown): boolean {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    !Array.isArray(value) &&
+    (value as { v?: unknown }).v === 1
+  );
+}
+
 function syncPayload(sync: StoredSync | null): Record<string, unknown> {
   return {
     ok: true,
@@ -239,7 +248,7 @@ async function register(body: Record<string, unknown>): Promise<Response> {
   }
 
   const data = body.data;
-  if (data === undefined || data === null) return fail('invalid_payload', 400);
+  if (!isSnapshot(data)) return fail('invalid_payload', 400);
   if (snapshotSize(data) > MAX_SNAPSHOT_BYTES) return fail('payload_too_large', 413);
 
   const salt = randomBytes(16).toString('hex');
@@ -302,7 +311,7 @@ async function push(request: Request, body: Record<string, unknown>): Promise<Re
   if (!user) return fail('unauthorized', 401);
 
   const data = body.data;
-  if (data === undefined || data === null || snapshotSize(data) > MAX_SNAPSHOT_BYTES) {
+  if (!isSnapshot(data) || snapshotSize(data) > MAX_SNAPSHOT_BYTES) {
     return fail('invalid_payload', 400);
   }
 
