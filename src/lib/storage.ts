@@ -1,3 +1,4 @@
+import { scopedKey } from './accounts';
 import { DAILY_GOAL_OPTIONS, WRONG_BOX_LOCK_MS } from './config';
 import { defaultGameState, levelFromXp, type GameState } from './gamification';
 import type { Subject } from './types';
@@ -73,19 +74,19 @@ function removeRaw(key: string): void {
 }
 
 function seenKey(subject: Subject): string {
-  return `mcq:${subject}:seen`;
+  return scopedKey(`mcq:${subject}:seen`);
 }
 
 function statsKey(subject: Subject): string {
-  return `mcq:${subject}:stats`;
+  return scopedKey(`mcq:${subject}:stats`);
 }
 
 function wrongKey(subject: Subject): string {
-  return `mcq:${subject}:wrong`;
+  return scopedKey(`mcq:${subject}:wrong`);
 }
 
 function wrongAtKey(subject: Subject): string {
-  return `mcq:${subject}:wrong_at`;
+  return scopedKey(`mcq:${subject}:wrong_at`);
 }
 
 function emptyStats(): Stats {
@@ -225,6 +226,35 @@ export function resetWrong(subject: Subject): void {
   removeRaw(wrongAtKey(subject));
 }
 
+/**
+ * Replaces the whole wrong-question state for a subject. Used by
+ * cross-device sync; normal callers use markWrong/unmarkWrong.
+ */
+export function saveWrongState(
+  subject: Subject,
+  ids: readonly string[],
+  timestamps: Record<string, number> = {},
+): void {
+  const unique = [...new Set(ids.filter((id) => typeof id === 'string' && id.length > 0))];
+  if (unique.length === 0) {
+    removeRaw(wrongKey(subject));
+  } else {
+    writeRaw(wrongKey(subject), JSON.stringify(unique));
+  }
+
+  const cleanTimestamps: Record<string, number> = {};
+  for (const [id, timestamp] of Object.entries(timestamps)) {
+    const clean = toTimestamp(timestamp);
+    if (unique.includes(id) && clean > 0) cleanTimestamps[id] = clean;
+  }
+
+  if (Object.keys(cleanTimestamps).length === 0) {
+    removeRaw(wrongAtKey(subject));
+  } else {
+    writeRaw(wrongAtKey(subject), JSON.stringify(cleanTimestamps));
+  }
+}
+
 export interface WrongAnswerResult {
   removed: boolean;
   /** Epoch ms when the question last went into the Wrong box, or null. */
@@ -289,7 +319,9 @@ export function saveStats(subject: Subject, stats: { attempted: number; correct:
   );
 }
 
-const GAME_KEY = 'icse:game:v1';
+function gameKey(): string {
+  return scopedKey('icse:game:v1');
+}
 
 function toDay(value: unknown): string {
   return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : '';
@@ -379,18 +411,18 @@ function parseGame(raw: string): GameState {
 }
 
 export function getGame(): GameState {
-  const raw = readRaw(GAME_KEY);
+  const raw = readRaw(gameKey());
   return raw === null ? defaultGameState() : parseGame(raw);
 }
 
 /** Persist game state. Callers own the pure state; this only writes it. */
 export function saveGame(state: GameState): void {
-  writeRaw(GAME_KEY, JSON.stringify(state));
+  writeRaw(gameKey(), JSON.stringify(state));
 }
 
 /** Reset game progress only. Seen ids and stats are deliberately untouched. */
 export function resetGame(): void {
-  removeRaw(GAME_KEY);
+  removeRaw(gameKey());
 }
 /* Friendly aliases for callers that prefer the plural/question wording. */
 export const getWrongIds = getWrong;
@@ -403,35 +435,41 @@ export const clearWrong = resetWrong;
 
 /* ── User display name ────────────────────────────────────────────────── */
 
-const USER_NAME_KEY = 'icse:username:v1';
+function userNameKey(): string {
+  return scopedKey('icse:username:v1');
+}
 
 /** Returns the user's chosen display name, or null if not yet set. */
 export function getUserName(): string | null {
-  return readRaw(USER_NAME_KEY);
+  return readRaw(userNameKey());
 }
 
 /** Persists the user's display name (max 20 chars, whitespace-trimmed). */
 export function setUserName(name: string): void {
   const clean = name.trim().slice(0, 20);
-  if (clean) writeRaw(USER_NAME_KEY, clean);
+  if (clean) writeRaw(userNameKey(), clean);
 }
 
 /* ── User description / bio ───────────────────────────────────────────── */
 
 const USER_DESCRIPTION_KEY = 'icse:description:v1';
 
+function userDescriptionKey(): string {
+  return scopedKey(USER_DESCRIPTION_KEY);
+}
+
 /** Returns the user's bio/description, or null if not set. */
 export function getUserDescription(): string | null {
-  return readRaw(USER_DESCRIPTION_KEY);
+  return readRaw(userDescriptionKey());
 }
 
 /** Persists or clears the user's bio/description (max 250 chars, trimmed). */
 export function setUserDescription(description: string): void {
   const clean = description.trim().slice(0, 250);
   if (clean) {
-    writeRaw(USER_DESCRIPTION_KEY, clean);
+    writeRaw(userDescriptionKey(), clean);
   } else {
-    removeRaw(USER_DESCRIPTION_KEY);
+    removeRaw(userDescriptionKey());
   }
 }
 
@@ -439,15 +477,19 @@ export function setUserDescription(description: string): void {
 
 const MY_PROFILE_ID_KEY = 'icse:my_profile_id:v1';
 
+function myProfileIdKey(): string {
+  return scopedKey(MY_PROFILE_ID_KEY);
+}
+
 /** Returns the user's public profile ID if known. */
 export function getMyProfileId(): string | null {
-  return readRaw(MY_PROFILE_ID_KEY);
+  return readRaw(myProfileIdKey());
 }
 
 /** Remembers the user's public profile ID received from the leaderboard. */
 export function setMyProfileId(id: string): void {
   const clean = id.trim();
   if (/^[a-f0-9]{16}$/.test(clean)) {
-    writeRaw(MY_PROFILE_ID_KEY, clean);
+    writeRaw(myProfileIdKey(), clean);
   }
 }

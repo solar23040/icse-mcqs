@@ -120,8 +120,13 @@
   onMount(() => {
     refresh();
     const handlePageShow = (): void => refresh();
+    const handleSync = (): void => refresh();
     window.addEventListener('pageshow', handlePageShow);
-    return () => window.removeEventListener('pageshow', handlePageShow);
+    window.addEventListener('icse:syncFinished', handleSync);
+    return () => {
+      window.removeEventListener('pageshow', handlePageShow);
+      window.removeEventListener('icse:syncFinished', handleSync);
+    };
   });
 </script>
 

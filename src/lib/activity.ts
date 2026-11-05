@@ -1,9 +1,14 @@
+import { scopedKey } from './accounts';
 import { localDay } from './date';
 import { SUBJECTS } from './subjects';
 import type { Subject } from './types';
 
 /** Local record of when each subject was last practised, shared by the quiz and profile pages. */
 const ACTIVITY_KEY = 'icse:activity:v1';
+
+function activityKey(): string {
+  return scopedKey(ACTIVITY_KEY);
+}
 const MAX_SUBJECTS = 20;
 /** Keep a rolling window so the stored history cannot grow forever. */
 const MAX_DAYS = 90;
@@ -61,9 +66,9 @@ function readRaw(): string | null {
   const storage = getStorage();
   if (storage) {
     try {
-      const value = storage.getItem(ACTIVITY_KEY);
+      const value = storage.getItem(activityKey());
       if (value !== null) {
-        memory.set(ACTIVITY_KEY, value);
+        memory.set(activityKey(), value);
         removed = false;
         return value;
       }
@@ -72,18 +77,18 @@ function readRaw(): string | null {
     }
   }
   if (removed) return null;
-  return memory.get(ACTIVITY_KEY) ?? null;
+  return memory.get(activityKey()) ?? null;
 }
 
 function writeRaw(value: string): void {
-  memory.set(ACTIVITY_KEY, value);
+  memory.set(activityKey(), value);
   removed = false;
 
   const storage = getStorage();
   if (!storage) return;
 
   try {
-    storage.setItem(ACTIVITY_KEY, value);
+    storage.setItem(activityKey(), value);
   } catch {
     // The memory copy above is the fallback.
   }
