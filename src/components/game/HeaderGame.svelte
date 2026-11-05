@@ -9,6 +9,12 @@
   onMount(() => {
     game = getGame();
     mounted = true;
+
+    const handleSync = (): void => {
+      game = getGame();
+    };
+    window.addEventListener('icse:syncFinished', handleSync);
+    return () => window.removeEventListener('icse:syncFinished', handleSync);
   });
 </script>
 

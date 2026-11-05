@@ -301,6 +301,24 @@ GitHub Pages needs two things that other hosts do not: a `base` path for project
 
 If you deploy from a `gh-pages` branch instead of Actions, add an empty `.nojekyll` file to the published output so GitHub Pages does not ignore Astro's `_astro/` directory.
 
+## Local accounts and optional cross-device sync
+
+Open **Settings** in the header (or `/settings`) to manage accounts. Progress is stored locally, and each account has its own game state, seen questions, mistakes, accuracy, display name and leaderboard settings.
+
+- The first account keeps the original unscoped keys (`mcq:*`, `icse:game:v1`, `icse:username:v1`, `icse:leaderboard:v1`), so existing visitors keep their progress. Additional accounts use the same key names with an `::acct:<id>` suffix.
+- Adding an account creates an empty profile. Switching accounts reloads the page so every component reads the right keys.
+- Any account can be renamed. An account can be deleted when more than one exists; deleting it removes only that account's local progress. Deleting the original account removes the legacy unscoped progress keys.
+
+Cross-device sync is **off by default** and requires a deliberate opt-in per account. A visitor can create a sync login (username + password) or sign in to an existing one on another device.
+
+- The browser never stores the password. It stores a random bearer token, and the password is sent once over HTTPS for verification.
+- Passwords are hashed server-side with scrypt and a random salt. The server stores the username, password hash, and the account's progress snapshot in Upstash Redis.
+- Signing in on a device that already has progress merges both snapshots: XP is the maximum, seen/wrong sets are unioned, and counters/stats take the larger value. XP is never summed, so repeated syncs cannot inflate it.
+- **Sync now** pulls, merges, applies locally, then pushes the merged snapshot. Automatic sync, when enabled, repeats this when the page opens or the tab becomes visible.
+- Turning sync off removes the token from that device but leaves the server copy. The password is not recoverable through the app, so choose one you can remember.
+- Sync requires the same `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` variables as the poll and leaderboard. Without them, the Settings page reports that sync is not configured and local accounts continue to work.
+- The API is `api/account.ts` with `register`, `login`, `pull`, `push` and `logout` actions. Sessions expire after 30 days.
+
 ## Gamification
 
 Progress is stored locally under `icse:game:v1`. It is separate from seen questions and accuracy, so resetting seen questions never clears XP, levels, streaks or badges. Use **Reset game progress** on the home page to clear game state only.
@@ -344,7 +362,7 @@ Everyone is enrolled on the weekly leaderboard automatically; there is no separa
 
 ### Progress export and import
 
-Progress can be exported as a base64 code containing game state, seen ids and stats, with a version and checksum. Tampered or unknown-version codes are rejected. Use the settings hook to wire export/import into the UI.
+Progress can be exported as a base64 code containing game state, seen ids and stats, with a version and checksum. Tampered or unknown-version codes are rejected. The export/import controls live in **Backup & restore** on the home page and operate on the active account. Use **Settings** if you want automatic cross-device sync instead of copying a code.
 
 ### Developer panel (`/dev`)
 

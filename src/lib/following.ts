@@ -1,3 +1,4 @@
+import { scopedKey } from './accounts';
 import { getMyProfileId, getUserName } from './storage';
 import { followProfileApi, unfollowProfileApi } from './leaderboard-api';
 
@@ -15,6 +16,14 @@ export interface FollowerUser {
 
 const FOLLOWING_KEY = 'icse:following:v1';
 const FOLLOWERS_MAP_KEY = 'icse:followers_map:v1';
+
+function followingKey(): string {
+  return scopedKey(FOLLOWING_KEY);
+}
+
+function followersMapKey(): string {
+  return scopedKey(FOLLOWERS_MAP_KEY);
+}
 const MAX_FOLLOWING = 100;
 const PROFILE_ID_PATTERN = /^[a-f0-9]{16}$/;
 
@@ -35,9 +44,9 @@ function readRaw(): string | null {
   const storage = getStorage();
   if (storage) {
     try {
-      const value = storage.getItem(FOLLOWING_KEY);
+      const value = storage.getItem(followingKey());
       if (value !== null) {
-        memory.set(FOLLOWING_KEY, value);
+        memory.set(followingKey(), value);
         removed = false;
         return value;
       }
@@ -47,18 +56,18 @@ function readRaw(): string | null {
   }
 
   if (removed) return null;
-  return memory.get(FOLLOWING_KEY) ?? null;
+  return memory.get(followingKey()) ?? null;
 }
 
 function writeRaw(value: string): void {
-  memory.set(FOLLOWING_KEY, value);
+  memory.set(followingKey(), value);
   removed = false;
 
   const storage = getStorage();
   if (!storage) return;
 
   try {
-    storage.setItem(FOLLOWING_KEY, value);
+    storage.setItem(followingKey(), value);
   } catch {
     // Memory copy is fallback
   }
@@ -68,9 +77,9 @@ function readFollowersMapRaw(): string | null {
   const storage = getStorage();
   if (storage) {
     try {
-      const value = storage.getItem(FOLLOWERS_MAP_KEY);
+      const value = storage.getItem(followersMapKey());
       if (value !== null) {
-        memory.set(FOLLOWERS_MAP_KEY, value);
+        memory.set(followersMapKey(), value);
         followersRemoved = false;
         return value;
       }
@@ -80,18 +89,18 @@ function readFollowersMapRaw(): string | null {
   }
 
   if (followersRemoved) return null;
-  return memory.get(FOLLOWERS_MAP_KEY) ?? null;
+  return memory.get(followersMapKey()) ?? null;
 }
 
 function writeFollowersMapRaw(value: string): void {
-  memory.set(FOLLOWERS_MAP_KEY, value);
+  memory.set(followersMapKey(), value);
   followersRemoved = false;
 
   const storage = getStorage();
   if (!storage) return;
 
   try {
-    storage.setItem(FOLLOWERS_MAP_KEY, value);
+    storage.setItem(followersMapKey(), value);
   } catch {
     // Memory copy is fallback
   }
@@ -339,12 +348,12 @@ export function clearFollowers(targetId?: string): void {
       writeFollowersMapRaw(JSON.stringify(map));
     }
   } else {
-    memory.delete(FOLLOWERS_MAP_KEY);
+    memory.delete(followersMapKey());
     followersRemoved = true;
     const storage = getStorage();
     if (storage) {
       try {
-        storage.removeItem(FOLLOWERS_MAP_KEY);
+        storage.removeItem(followersMapKey());
       } catch {
         // Ignored
       }
@@ -354,13 +363,13 @@ export function clearFollowers(targetId?: string): void {
 
 /** Reset followed list and followers map. Useful for tests. */
 export function clearFollowing(): void {
-  memory.delete(FOLLOWING_KEY);
+  memory.delete(followingKey());
   removed = true;
   clearFollowers();
   const storage = getStorage();
   if (storage) {
     try {
-      storage.removeItem(FOLLOWING_KEY);
+      storage.removeItem(followingKey());
     } catch {
       // Ignored
     }

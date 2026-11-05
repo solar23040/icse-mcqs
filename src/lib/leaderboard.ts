@@ -1,3 +1,5 @@
+import { scopedKey } from './accounts';
+
 export const LEADERBOARD_STORAGE_KEY = 'icse:leaderboard:v1';
 
 export interface LeaderboardEntry {
@@ -90,7 +92,7 @@ function readRaw(): string | null {
 
   if (storage) {
     try {
-      const value = storage.getItem(LEADERBOARD_STORAGE_KEY);
+      const value = storage.getItem(scopedKey(LEADERBOARD_STORAGE_KEY));
       if (value !== null) {
         memoryValue = value;
         removed = false;
@@ -113,7 +115,7 @@ function writeRaw(value: string): void {
   if (!storage) return;
 
   try {
-    storage.setItem(LEADERBOARD_STORAGE_KEY, value);
+    storage.setItem(scopedKey(LEADERBOARD_STORAGE_KEY), value);
   } catch {
     // The memory copy above is the fallback.
   }
