@@ -417,7 +417,21 @@ export function validateProject(projectRoot: string = process.cwd()): Validation
   }
 
   const report = validateSubjects(subjects);
-  return { ...report, errors: [...loadErrors, ...report.errors] };
+  const errors = [...loadErrors, ...report.errors];
+  // Fail if any removed id reappears in data files.
+  try {
+    const removedRaw = readFileSync(join(projectRoot, 'src/data/removed-ids.txt'), 'utf8');
+    const removed = removedRaw.split(/\\r?\\n/).map((s) => s.trim()).filter(Boolean);
+    const present = new Set(report.ids);
+    for (const id of removed) {
+      if (present.has(id)) {
+        errors.push({ file: 'src/data/removed-ids.txt', subject: 'removed-ids', index: null, id, message: `removed id "${id}" reappeared in data files` });
+      }
+    }
+  } catch {
+    // no removed-ids file: nothing to check
+  }
+  return { ...report, errors };
 }
 
 export function writeDuplicatesReport(warnings: readonly NearDuplicate[], filePath: string): void {
