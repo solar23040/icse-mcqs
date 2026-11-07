@@ -6,6 +6,7 @@ import {
   isDevLogin,
   resetCredits,
   setCredits,
+  syncDevCreditsToLeaderboard,
   toCredits,
 } from './dev';
 import { defaultGameState, levelFromXp } from './gamification';
@@ -96,5 +97,19 @@ describe('credit controls', () => {
     // Other progress is untouched.
     expect(next.badges).toBe(state.badges);
     expect(next.streak).toBe(state.streak);
+  });
+
+  it('syncs dev credits to leaderboard state', () => {
+    const game = setCredits(defaultGameState(), 1500);
+    const lbState = syncDevCreditsToLeaderboard(game);
+
+    expect(lbState.weeklyXp).toBe(1500);
+    expect(lbState.lastTotalXp).toBe(1500);
+    expect(lbState.optedIn).toBe(true);
+
+    const resetGame = resetCredits(game);
+    const resetLbState = syncDevCreditsToLeaderboard(resetGame);
+    expect(resetLbState.weeklyXp).toBe(0);
+    expect(resetLbState.lastTotalXp).toBe(0);
   });
 });

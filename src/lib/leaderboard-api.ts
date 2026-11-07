@@ -10,7 +10,9 @@ import {
   type LeaderboardSnapshot,
 } from './leaderboard';
 import { getRecentSubjects } from './activity';
-import { getGame, getStats, getUserDescription, getUserName, setMyProfileId } from './storage';
+import { getAdminToken, hasAdminToken } from './admin-api';
+import { hasDevSession, setCredits, syncDevCreditsToLeaderboard } from './dev';
+import { getGame, getStats, getUserDescription, getUserName, saveGame, setMyProfileId } from './storage';
 
 const ENDPOINT = '/api/leaderboard';
 const TIMEOUT_MS = 5000;
@@ -205,12 +207,14 @@ export function normaliseProfile(value: unknown): PublicProfile | null {
 }
 
 async function request(method: 'GET' | 'POST' | 'DELETE', body?: unknown): Promise<LeaderboardSnapshot | null> {
+  const token = getAdminToken();
   try {
     const response = await fetch(ENDPOINT, {
       method,
       headers: {
         accept: 'application/json',
         ...(body === undefined ? {} : { 'content-type': 'application/json' }),
+        ...(token ? { authorization: `Bearer ${token}` } : {}),
       },
       body: body === undefined ? undefined : JSON.stringify(body),
       credentials: 'same-origin',
@@ -265,9 +269,22 @@ export function submitWeeklyXp(
  * while only counting XP earned from this point on towards the weekly board.
  */
 export async function syncLeaderboard(now = new Date()): Promise<LeaderboardSnapshot | null> {
-  const state = getLeaderboardState(now);
   const week = currentIsoWeek(now);
-  const game = getGame();
+  let game = getGame();
+  let state = getLeaderboardState(now);
+
+  const isDevOutdated =
+    Boolean(game.counters?.devCredits) ||
+    hasDevSession() ||
+    hasAdminToken() ||
+    (state.optedIn &&
+      state.week === week &&
+      state.weeklyXp < game.totalEarnedXP &&
+      state.lastTotalXp === game.totalEarnedXP);
+
+  if (isDevOutdated) {
+    state = syncDevCreditsToLeaderboard(game, now);
+  }
 
   const joined = state.optedIn ? state : startLeaderboard(state, game.totalEarnedXP, week);
   const advanced = advanceWeeklyXp(joined, game.totalEarnedXP, week);
@@ -277,6 +294,13 @@ export async function syncLeaderboard(now = new Date()): Promise<LeaderboardSnap
   if (snapshot?.me?.id) {
     setMyProfileId(snapshot.me.id);
   }
+
+  if (snapshot?.me?.xp && snapshot.me.xp > game.totalEarnedXP) {
+    const nextGame = setCredits(game, snapshot.me.xp);
+    saveGame(nextGame);
+    syncDevCreditsToLeaderboard(nextGame, now);
+  }
+
   return snapshot;
 }
 

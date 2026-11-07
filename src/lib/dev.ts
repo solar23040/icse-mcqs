@@ -1,4 +1,11 @@
 import { levelForGame, levelFromXp, type GameState } from './gamification';
+import {
+  currentIsoWeek,
+  getLeaderboardState,
+  saveLeaderboardState,
+  type LeaderboardState,
+} from './leaderboard';
+import { getGame, saveGame } from './storage';
 
 /** Session-only login marker: closing the tab logs the admin out. */
 export const DEV_SESSION_KEY = 'icse:dev:session';
@@ -126,6 +133,10 @@ export function setCredits(game: GameState, credits: number): GameState {
       levelFromXp(totalEarnedXP),
       levelFromXp(xp),
     ),
+    counters: {
+      ...game.counters,
+      devCredits: 1,
+    },
   };
 }
 
@@ -142,5 +153,81 @@ export function resetCredits(game: GameState): GameState {
     xp: 0,
     totalEarnedXP: 0,
     highestLevelReached: 1,
+    counters: {
+      ...game.counters,
+      devCredits: 1,
+    },
   };
+}
+
+/**
+ * Ensures the weekly leaderboard reflects dev-added or dev-adjusted credits.
+ * Sets the weekly XP and baseline to match the game's totalEarnedXP.
+ */
+export function syncDevCreditsToLeaderboard(
+  game: GameState,
+  now = new Date(),
+): LeaderboardState {
+  const week = currentIsoWeek(now);
+  const state = getLeaderboardState(now);
+  const targetXp = toCredits(game.totalEarnedXP);
+
+  const updated: LeaderboardState = {
+    ...state,
+    v: 1,
+    optedIn: true,
+    week,
+    weeklyXp: targetXp,
+    lastTotalXp: targetXp,
+  };
+  saveLeaderboardState(updated);
+  return updated;
+}
+
+/** Exposes developer functions on window for direct browser dev console use. */
+export function initDevConsoleHelpers(): void {
+  if (typeof window === 'undefined') return;
+  const w = window as unknown as Record<string, unknown>;
+
+  w.addCredits = (amount: number) => {
+    const current = getGame();
+    const next = addCredits(current, amount);
+    saveGame(next);
+    syncDevCreditsToLeaderboard(next);
+    const msg = `Added ${amount} credits. Balance: ${next.xp} XP. Lifetime: ${next.totalEarnedXP} XP.`;
+    console.log(msg);
+    return msg;
+  };
+
+  w.setCredits = (amount: number) => {
+    const current = getGame();
+    const next = setCredits(current, amount);
+    saveGame(next);
+    syncDevCreditsToLeaderboard(next);
+    const msg = `Credits set to ${next.xp} XP.`;
+    console.log(msg);
+    return msg;
+  };
+
+  w.resetCredits = () => {
+    const current = getGame();
+    const next = resetCredits(current);
+    saveGame(next);
+    syncDevCreditsToLeaderboard(next);
+    const msg = 'Credits and level reset to 0.';
+    console.log(msg);
+    return msg;
+  };
+
+  w.syncCredits = () => {
+    const current = getGame();
+    syncDevCreditsToLeaderboard(current);
+    const msg = `Credits synced: Game XP = ${current.xp}, Lifetime = ${current.totalEarnedXP}`;
+    console.log(msg);
+    return msg;
+  };
+}
+
+if (typeof window !== 'undefined') {
+  initDevConsoleHelpers();
 }

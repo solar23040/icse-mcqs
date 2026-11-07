@@ -418,11 +418,25 @@ export function getGame(): GameState {
 /** Persist game state. Callers own the pure state; this only writes it. */
 export function saveGame(state: GameState): void {
   writeRaw(gameKey(), JSON.stringify(state));
+  if (typeof window !== 'undefined' && typeof CustomEvent === 'function') {
+    try {
+      window.dispatchEvent(new CustomEvent('icse:gameUpdate', { detail: state }));
+    } catch {
+      // Best-effort event notification
+    }
+  }
 }
 
 /** Reset game progress only. Seen ids and stats are deliberately untouched. */
 export function resetGame(): void {
   removeRaw(gameKey());
+  if (typeof window !== 'undefined' && typeof CustomEvent === 'function') {
+    try {
+      window.dispatchEvent(new CustomEvent('icse:gameUpdate', { detail: defaultGameState() }));
+    } catch {
+      // Best-effort event notification
+    }
+  }
 }
 /* Friendly aliases for callers that prefer the plural/question wording. */
 export const getWrongIds = getWrong;

@@ -12,6 +12,7 @@ import {
 } from './leaderboard-api';
 import { getLeaderboardState } from './leaderboard';
 import { defaultGameState } from './gamification';
+import { setCredits } from './dev';
 import { saveGame } from './storage';
 
 class FakeStorage implements Storage {
@@ -178,6 +179,37 @@ describe('automatic leaderboard enrolment', () => {
       JSON.parse(String((init as RequestInit | undefined)?.body)) as { weeklyXp: number },
     );
     expect(submitted.map((body) => body.weeklyXp)).toEqual([0, 50]);
+  });
+
+  it('synchronises dev credits with the weekly leaderboard so quiz and leaderboard match', async () => {
+    vi.stubGlobal('localStorage', new FakeStorage());
+    const fetchMock = vi.fn(async (_input: RequestInfo | URL, _init?: RequestInit) =>
+      response({
+        configured: true,
+        week: '2026-W01',
+        top: [],
+        me: { xp: 1000, name: 'Brave Owl 42', rank: 1, percentile: 1 },
+      }),
+    );
+    vi.stubGlobal('fetch', fetchMock as unknown as typeof fetch);
+
+    const now = new Date('2026-01-01T12:00:00Z');
+    // Simulate user setting 1000 credits via dev console
+    const devGame = setCredits(defaultGameState(), 1000);
+    saveGame(devGame);
+
+    const snapshot = await syncLeaderboard(now);
+
+    const lbState = getLeaderboardState(now);
+    expect(lbState.weeklyXp).toBe(1000);
+    expect(lbState.lastTotalXp).toBe(1000);
+    expect(snapshot?.me?.xp).toBe(1000);
+
+    const lastCall = fetchMock.mock.calls.at(-1);
+    const body = JSON.parse(String((lastCall?.[1] as RequestInit | undefined)?.body)) as {
+      weeklyXp: number;
+    };
+    expect(body.weeklyXp).toBe(1000);
   });
 });
 

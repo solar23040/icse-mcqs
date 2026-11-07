@@ -320,6 +320,26 @@ function nameKey(token: string): string {
   return `${NAME_KEY_PREFIX}${token}`;
 }
 
+const ADMIN_SESSION_KEY_PREFIX = 'admin:session:';
+
+function bearerToken(request: Request): string | null {
+  const header = request.headers.get('authorization') ?? '';
+  const [scheme, token] = header.split(' ');
+  if (scheme?.toLowerCase() !== 'bearer' || !/^[a-f0-9]{32}$/.test(token)) return null;
+  return token;
+}
+
+async function isAdminRequest(request: Request): Promise<boolean> {
+  const token = bearerToken(request);
+  if (!token) return false;
+  try {
+    const [value] = await redisPipeline([['GET', `${ADMIN_SESSION_KEY_PREFIX}${token}`]]);
+    return value === '1';
+  } catch {
+    return false;
+  }
+}
+
 /** ISO week in UTC, e.g. 2026-W01. UTC keeps every visitor on the same week. */
 export function isoWeek(date: Date): string {
   const target = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
@@ -762,25 +782,37 @@ export async function POST(request: Request): Promise<Response> {
   const day = dayKey(week, token, now);
 
   try {
+    const admin = await isAdminRequest(request);
     const [currentRaw, usedRaw] = await redisPipeline([
       ['ZSCORE', key, token],
       ['GET', day],
     ]);
 
     const current = toCount(currentRaw);
-    const requested = Math.max(0, weeklyXp - current);
-    const delta = Math.min(requested, MAX_SUBMISSION_XP);
-    const used = toCount(usedRaw);
-    const remaining = Math.max(0, MAX_LEADERBOARD_XP - current);
-    const allowed = Math.min(delta, remaining, Math.max(0, MAX_LEADERBOARD_XP - used));
-
     const commands: RedisCommand[] = [];
-    if (allowed > 0) {
-      commands.push(
-        ['ZINCRBY', key, allowed, token],
-        ['EXPIRE', key, WEEK_TTL_SECONDS],
-        ['SET', day, used + allowed, 'EX', DAY_TTL_SECONDS],
-      );
+
+    if (admin) {
+      const targetScore = Math.min(MAX_LEADERBOARD_XP, weeklyXp);
+      if (targetScore !== current) {
+        commands.push(
+          ['ZADD', key, targetScore, token],
+          ['EXPIRE', key, WEEK_TTL_SECONDS],
+        );
+      }
+    } else {
+      const requested = Math.max(0, weeklyXp - current);
+      const delta = Math.min(requested, MAX_SUBMISSION_XP);
+      const used = toCount(usedRaw);
+      const remaining = Math.max(0, MAX_LEADERBOARD_XP - current);
+      const allowed = Math.min(delta, remaining, Math.max(0, MAX_LEADERBOARD_XP - used));
+
+      if (allowed > 0) {
+        commands.push(
+          ['ZINCRBY', key, allowed, token],
+          ['EXPIRE', key, WEEK_TTL_SECONDS],
+          ['SET', day, used + allowed, 'EX', DAY_TTL_SECONDS],
+        );
+      }
     }
     // Store custom name if provided
     if (submittedName) {

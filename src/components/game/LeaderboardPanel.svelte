@@ -58,12 +58,17 @@
     const handleFollowingChange = (): void => {
       refreshFollowing();
     };
+    const handleGameUpdate = (): void => {
+      void sync();
+    };
 
     window.addEventListener('icse:nameSet', handleNameSet);
     window.addEventListener('icse:followingChange', handleFollowingChange);
+    window.addEventListener('icse:gameUpdate', handleGameUpdate);
     return () => {
       window.removeEventListener('icse:nameSet', handleNameSet);
       window.removeEventListener('icse:followingChange', handleFollowingChange);
+      window.removeEventListener('icse:gameUpdate', handleGameUpdate);
     };
   });
 </script>

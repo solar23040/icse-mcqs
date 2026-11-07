@@ -56,6 +56,10 @@ export function hasAdminToken(): boolean {
   return Boolean(readToken());
 }
 
+export function getAdminToken(): string | null {
+  return readToken();
+}
+
 export function clearAdminToken(): void {
   writeToken(null);
 }

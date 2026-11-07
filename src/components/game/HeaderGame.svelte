@@ -14,7 +14,11 @@
       game = getGame();
     };
     window.addEventListener('icse:syncFinished', handleSync);
-    return () => window.removeEventListener('icse:syncFinished', handleSync);
+    window.addEventListener('icse:gameUpdate', handleSync);
+    return () => {
+      window.removeEventListener('icse:syncFinished', handleSync);
+      window.removeEventListener('icse:gameUpdate', handleSync);
+    };
   });
 </script>
 

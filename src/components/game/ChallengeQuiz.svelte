@@ -284,14 +284,40 @@
     }
   }
 
+  function handleGameUpdate(e: Event): void {
+    const updated = (e as CustomEvent<GameState>).detail;
+    if (updated) game = updated;
+    else game = getGame();
+  }
+
+  function handleStorage(e: StorageEvent): void {
+    if (e.key === 'icse:game:v1' || !e.key) {
+      game = getGame();
+    }
+  }
+
+  function handlePageShow(): void {
+    game = getGame();
+  }
+
   onMount(() => {
     today = localDay(new Date());
     game = getGame();
+
+    window.addEventListener('icse:gameUpdate', handleGameUpdate);
+    window.addEventListener('storage', handleStorage);
+    window.addEventListener('pageshow', handlePageShow);
   });
 
   onDestroy(() => {
     stopTimer();
     stopElapsedTimer();
+
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('icse:gameUpdate', handleGameUpdate);
+      window.removeEventListener('storage', handleStorage);
+      window.removeEventListener('pageshow', handlePageShow);
+    }
   });
 </script>
 

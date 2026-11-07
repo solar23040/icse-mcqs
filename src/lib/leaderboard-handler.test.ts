@@ -46,6 +46,14 @@ function execute(redis: FakeRedis, command: Command): unknown {
   switch (String(name).toUpperCase()) {
     case 'ZSCORE':
       return redis.scores.get(key)?.get(String(args[1])) ?? null;
+    case 'ZADD': {
+      const score = Number(args[1]);
+      const member = String(args[2]);
+      const set = redis.scores.get(key) ?? new Map<string, number>();
+      redis.scores.set(key, set);
+      set.set(member, score);
+      return 1;
+    }
     case 'ZINCRBY': {
       const increment = Number(args[1]);
       const member = String(args[2]);
@@ -201,6 +209,38 @@ describe('leaderboard API', () => {
     const response = await POST(apiRequest('POST', { body: { weeklyXp: 5000 } }));
 
     expect(meOf(await payload(response)).xp).toBe(500);
+  });
+
+  it('allows authenticated admin requests to bypass submission cap and set exact XP', async () => {
+    const adminSessionId = '0123456789abcdef0123456789abcdef';
+    redis.values.set(`admin:session:${adminSessionId}`, '1');
+
+    const response = await POST(
+      new Request('https://icse.example/api/leaderboard', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          authorization: `Bearer ${adminSessionId}`,
+        },
+        body: JSON.stringify({ weeklyXp: 5000 }),
+      }),
+    );
+
+    expect(meOf(await payload(response)).xp).toBe(5000);
+
+    const token = cookieToken(response);
+    const resetResponse = await POST(
+      new Request('https://icse.example/api/leaderboard', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          authorization: `Bearer ${adminSessionId}`,
+          cookie: token ? `icse_lb_id=${token}` : '',
+        },
+        body: JSON.stringify({ weeklyXp: 0 }),
+      }),
+    );
+    expect(meOf(await payload(resetResponse)).xp).toBe(0);
   });
 
   it('caps the total leaderboard XP at 20,000', async () => {

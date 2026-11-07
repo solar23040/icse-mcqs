@@ -409,11 +409,21 @@
         otherFollowers = mergeFollowers(getFollowers(profile.id), otherServerFollowers);
       }
     };
+    const handleGameUpdate = (): void => {
+      game = getGame();
+      void syncLeaderboard().then((snap) => {
+        if (snap?.me && isSelf) {
+          myLeaderboard = snap.me;
+        }
+      });
+    };
     window.addEventListener('icse:followingChange', handleFollowingChange);
     window.addEventListener('icse:followersChange', handleFollowersChange);
+    window.addEventListener('icse:gameUpdate', handleGameUpdate);
     return () => {
       window.removeEventListener('icse:followingChange', handleFollowingChange);
       window.removeEventListener('icse:followersChange', handleFollowersChange);
+      window.removeEventListener('icse:gameUpdate', handleGameUpdate);
     };
   });
 </script>

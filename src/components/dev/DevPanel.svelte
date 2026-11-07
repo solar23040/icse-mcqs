@@ -1,7 +1,9 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { defaultGameState, levelForGame, type GameState } from '../../lib/gamification';
-  import { getGame, resetGame, saveGame } from '../../lib/storage';
+  import { getGame, getMyProfileId, resetGame, saveGame } from '../../lib/storage';
+  import { getLeaderboardState } from '../../lib/leaderboard';
+  import { syncLeaderboard } from '../../lib/leaderboard-api';
   import {
     adminLogin,
     adminLogout,
@@ -19,6 +21,7 @@
     resetCredits,
     setCredits,
     startDevSession,
+    syncDevCreditsToLeaderboard,
     toCredits,
   } from '../../lib/dev';
 
@@ -53,9 +56,13 @@
     return value.toLocaleString('en-US');
   }
 
+  let leaderboardXp = $state(0);
+
   function refresh(): void {
     game = getGame();
     exact = String(game.xp);
+    const lb = getLeaderboardState();
+    leaderboardXp = lb.weeklyXp;
   }
 
   function showStatus(message: string, kind: 'ok' | 'error' = 'ok'): void {
@@ -63,11 +70,27 @@
     statusKind = kind;
   }
 
-  function commit(next: GameState, message: string): void {
+  async function commit(next: GameState, message: string): Promise<void> {
     saveGame(next);
     game = next;
     exact = String(next.xp);
+    const lb = syncDevCreditsToLeaderboard(next);
+    leaderboardXp = lb.weeklyXp;
     showStatus(message);
+
+    try {
+      const myId = getMyProfileId();
+      if (hasAdminToken() && myId) {
+        await updatePlayer(myId, { xp: lb.weeklyXp });
+      } else {
+        const snapshot = await syncLeaderboard();
+        if (hasAdminToken() && snapshot?.me?.id && snapshot.me.xp !== lb.weeklyXp) {
+          await updatePlayer(snapshot.me.id, { xp: lb.weeklyXp });
+        }
+      }
+    } catch {
+      // Best-effort server sync
+    }
   }
 
   async function handleLogin(event: SubmitEvent): Promise<void> {
@@ -182,6 +205,18 @@
         item.id === result.data.player.id ? result.data.player : item,
       );
       editingId = null;
+
+      const myId = getMyProfileId();
+      if (myId && player.id === myId) {
+        const nextXp = Math.trunc(xp);
+        const nextGame = setCredits(game, nextXp);
+        saveGame(nextGame);
+        game = nextGame;
+        exact = String(nextGame.xp);
+        syncDevCreditsToLeaderboard(nextGame);
+        leaderboardXp = nextXp;
+      }
+
       showPlayersMessage(
         result.data.xpApplied
           ? `Saved ${result.data.player.name}.`
@@ -260,11 +295,24 @@
     confirmingCreditsReset = false;
   }
 
-  function applyFullReset(): void {
+  async function applyFullReset(): Promise<void> {
     resetGame();
+    const nextGame = defaultGameState();
+    syncDevCreditsToLeaderboard(nextGame);
     refresh();
     showStatus('All game progress reset for this browser.');
     confirmingFullReset = false;
+
+    try {
+      const myId = getMyProfileId();
+      if (hasAdminToken() && myId) {
+        await updatePlayer(myId, { xp: 0 });
+      } else {
+        await syncLeaderboard();
+      }
+    } catch {
+      // Best effort
+    }
   }
 
   onMount(() => {
@@ -383,7 +431,7 @@
     </div>
 
     {#if tab === 'credits'}
-    <div class="grid gap-3 sm:grid-cols-3">
+    <div class="grid gap-3 sm:grid-cols-4">
       <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
         <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Credits</p>
         <p class="mt-1 text-2xl font-bold tabular-nums">{format(game.xp)}</p>
@@ -396,6 +444,20 @@
         <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Level</p>
         <p class="mt-1 text-2xl font-bold tabular-nums">{level}</p>
       </div>
+      <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Leaderboard XP</p>
+        <p class="mt-1 text-2xl font-bold tabular-nums text-indigo-600 dark:text-indigo-400">{format(leaderboardXp)}</p>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-end">
+      <button
+        type="button"
+        onclick={() => commit(game, 'Credits and leaderboard synced.')}
+        class="inline-flex min-h-8 items-center rounded-lg border border-slate-300 px-3 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+      >
+        Sync with leaderboard
+      </button>
     </div>
 
     <section class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
