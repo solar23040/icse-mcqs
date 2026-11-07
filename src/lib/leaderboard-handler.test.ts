@@ -453,6 +453,43 @@ describe('leaderboard API', () => {
     expect(invalidFollow.status).toBe(400);
   });
 
+  it('refuses to follow a profile that does not exist', async () => {
+    const missingId = 'aaaaaaaaaaaaaaaa';
+    const response = await POST(
+      apiRequest('POST', {
+        cookie: 'token-player-two',
+        body: { action: 'follow', targetId: missingId },
+      }),
+    );
+
+    expect(response.status).toBe(404);
+    expect(redis.values.has(`leaderboard:followers:${missingId}`)).toBe(false);
+  });
+
+  it('does not create a follower key when an unfollow changes nothing', async () => {
+    const p1 = await POST(
+      apiRequest('POST', {
+        body: {
+          weeklyXp: 30,
+          name: 'Idle Player',
+          profile: { badges: [], subjects: [] },
+        },
+      }),
+    );
+    const p1Id = String(meOf(await payload(p1)).id);
+
+    const response = await POST(
+      apiRequest('POST', {
+        cookie: 'token-player-two',
+        body: { action: 'unfollow', targetId: p1Id },
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect((await payload(response)).followersCount).toBe(0);
+    expect(redis.values.has(`leaderboard:followers:${p1Id}`)).toBe(false);
+  });
+
   it('uses ISO week keys across year boundaries', () => {
     expect(isoWeek(new Date('2025-12-29T12:00:00Z'))).toBe('2026-W01');
     expect(isoWeek(new Date('2026-01-04T12:00:00Z'))).toBe('2026-W01');

@@ -276,6 +276,9 @@ export function followUser(user: { id: string; name: string; followedAt?: string
   const cleanName = user.name.trim().slice(0, 20);
   if (!cleanName) return false;
 
+  const myId = getMyProfileId();
+  if (myId && user.id === myId) return false;
+
   const current = getFollowing();
   if (current.some((entry) => entry.id === user.id)) return false;
 
@@ -289,8 +292,7 @@ export function followUser(user: { id: string; name: string; followedAt?: string
   writeRaw(JSON.stringify(updated));
 
   // Mirror as a follower to the target profile if our own profile ID is known
-  const myId = getMyProfileId();
-  if (myId && myId !== user.id) {
+  if (myId) {
     const myName = getUserName() ?? 'You';
     addFollower(user.id, { id: myId, name: myName, followedAt: entry.followedAt });
   }

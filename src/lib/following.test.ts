@@ -148,4 +148,13 @@ describe('followers system', () => {
     unfollowUser(targetId);
     expect(getFollowers(targetId)).toHaveLength(0);
   });
+
+  it('rejects following your own profile', () => {
+    const myId = '9999888877776666';
+    setMyProfileId(myId);
+
+    expect(followUser({ id: myId, name: 'Myself' })).toBe(false);
+    expect(isFollowing(myId)).toBe(false);
+    expect(getFollowers(myId)).toEqual([]);
+  });
 });

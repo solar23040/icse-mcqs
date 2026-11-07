@@ -667,10 +667,26 @@ export async function POST(request: Request): Promise<Response> {
     }
 
     try {
+      const [rawTargetProfile, rawFollowers] = await redisPipeline([
+        ['GET', profileKey(targetId)],
+        ['GET', followersKey(targetId)],
+      ]);
+
+      // Only allow following profiles that actually exist: either a stored
+      // profile or an entry on the current week's board. Without this check a
+      // scripted client could create unlimited `leaderboard:followers:*` keys.
+      let targetExists = typeof rawTargetProfile === 'string';
+      if (!targetExists) {
+        const week = isoWeek(new Date());
+        targetExists = (await findTokenByPublicId(targetId, weekKey(week))) !== null;
+      }
+      if (!targetExists) {
+        return json({ configured: true, error: 'target_not_found' }, 404);
+      }
+
       const names = await fetchNames([token]);
       const followerName = names.get(token) ?? nameFor(token);
 
-      const [rawFollowers] = await redisPipeline([['GET', followersKey(targetId)]]);
       const currentFollowers = parseFollowers(rawFollowers);
 
       let updatedFollowers: FollowerUser[];
@@ -681,6 +697,16 @@ export async function POST(request: Request): Promise<Response> {
         ].slice(0, MAX_FOLLOWERS);
       } else {
         updatedFollowers = currentFollowers.filter((f) => f.id !== followerId);
+      }
+
+      // Nothing changed: skip the write so an unfollow cannot create a key.
+      if (record.action === 'unfollow' && updatedFollowers.length === currentFollowers.length) {
+        return json({
+          configured: true,
+          success: true,
+          followers: currentFollowers,
+          followersCount: currentFollowers.length,
+        });
       }
 
       await redisPipeline([

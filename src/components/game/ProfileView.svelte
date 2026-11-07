@@ -87,6 +87,9 @@
   let followingList = $state<FollowedUser[]>([]);
   let followersList = $state<FollowerUser[]>([]);
   let otherFollowers = $state<FollowerUser[]>([]);
+  // Last server snapshot, kept separate so local follow actions don't wipe it.
+  let selfServerFollowers = $state<FollowerUser[]>([]);
+  let otherServerFollowers = $state<FollowerUser[]>([]);
   let activeSocialTab = $state<'followers' | 'following'>('followers');
   let suggestedUsers = $state<LeaderboardEntry[]>([]);
   let customFollowInput = $state('');
@@ -155,6 +158,18 @@
     return Math.max(1, ...days.map((day) => day.answered));
   }
 
+  /** Merge local optimistic followers with the last server snapshot, newest first. */
+  function mergeFollowers(primary: FollowerUser[], secondary: FollowerUser[]): FollowerUser[] {
+    const seen = new Set<string>();
+    const merged: FollowerUser[] = [];
+    for (const item of [...primary, ...secondary]) {
+      if (seen.has(item.id)) continue;
+      seen.add(item.id);
+      merged.push(item);
+    }
+    return merged.sort((a, b) => Date.parse(b.followedAt) - Date.parse(a.followedAt));
+  }
+
   function loadSelfData(): void {
     game = getGame();
     displayName = getUserName() ?? 'You';
@@ -196,27 +211,22 @@
         if (snapshot.me.id) {
           myId = snapshot.me.id;
           setMyProfileId(snapshot.me.id);
-          followersList = getFollowers(snapshot.me.id);
-          void loadProfile(snapshot.me.id).then((selfProf) => {
-            if (selfProf?.followers) {
-              const local = getFollowers(snapshot.me.id);
-              const seen = new Set<string>();
-              const merged: FollowerUser[] = [];
-              for (const item of [...local, ...selfProf.followers]) {
-                if (!seen.has(item.id)) {
-                  seen.add(item.id);
-                  merged.push(item);
-                }
-              }
-              followersList = merged;
-            }
-          });
         }
       }
       if (snapshot?.top) {
         // Exclude current user from suggestions
         suggestedUsers = snapshot.top.filter((entry) => entry.id && entry.id !== myId).slice(0, 5);
       }
+
+      // Fetch followers from the server even when the user has no entry on the
+      // current week's board yet (a new week resets the board).
+      const profileId = myId;
+      if (!profileId) return;
+      void loadProfile(profileId).then((selfProf) => {
+        if (!selfProf) return;
+        selfServerFollowers = selfProf.followers ?? [];
+        followersList = mergeFollowers(getFollowers(profileId), selfServerFollowers);
+      });
     });
   }
 
@@ -271,16 +281,22 @@
     isFollowingOther = toggleFollow({ id: profile.id, name: profile.name });
     followingList = getFollowing();
 
-    if (willFollow) {
-      const myFollowerEntry: FollowerUser = {
-        id: myId ?? '0000000000000000',
-        name: displayName,
-        followedAt: new Date().toISOString(),
-      };
-      otherFollowers = [myFollowerEntry, ...otherFollowers.filter((f) => f.id !== (myId ?? '0000000000000000'))];
-    } else {
-      otherFollowers = otherFollowers.filter((f) => f.id !== (myId ?? '0000000000000000'));
+    // Keep the server snapshot in sync with our own action so a later merge
+    // from a followers-change event does not resurrect a stale entry.
+    if (myId) {
+      if (willFollow) {
+        const entry: FollowerUser = {
+          id: myId,
+          name: getUserName() ?? displayName,
+          followedAt: new Date().toISOString(),
+        };
+        otherServerFollowers = [entry, ...otherServerFollowers.filter((f) => f.id !== myId)];
+      } else {
+        otherServerFollowers = otherServerFollowers.filter((f) => f.id !== myId);
+      }
     }
+
+    otherFollowers = mergeFollowers(getFollowers(profile.id), otherServerFollowers);
   }
 
   function handleToggleFollowItem(target: { id: string; name: string }): void {
@@ -291,7 +307,7 @@
   function handleUnfollow(id: string): void {
     unfollowUser(id);
     followingList = getFollowing();
-    if (profile && profile.id === id) {
+    if (profile && profile.id === id && myId) {
       isFollowingOther = false;
       otherFollowers = otherFollowers.filter((f) => f.id !== myId);
     }
@@ -323,12 +339,16 @@
       return;
     }
 
-    // Attempt to load their name from server
+    // Load the target so we only follow profiles that exist on the server.
     const fetched = await loadProfile(id);
-    const targetName = fetched ? fetched.name : `Player ${id.slice(0, 4)}`;
-    followUser({ id, name: targetName });
+    if (!fetched) {
+      customFollowError = 'Could not find that profile. Check the ID and try again.';
+      return;
+    }
+
+    followUser({ id, name: fetched.name });
     followingList = getFollowing();
-    customFollowSuccess = `Following ${targetName}!`;
+    customFollowSuccess = `Following ${fetched.name}!`;
     customFollowInput = '';
     setTimeout(() => {
       customFollowSuccess = '';
@@ -338,7 +358,8 @@
   onMount(() => {
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id')?.trim() ?? '';
-    const savedId = getMyProfileId();
+    myId = getMyProfileId();
+    const savedId = myId;
 
     // If no ID is specified, or ID matches our saved public ID, show our own profile
     if (!id || (savedId && id === savedId)) {
@@ -350,9 +371,13 @@
 
     // Otherwise, check if ID matches current user via leaderboard snapshot or load external profile
     void loadLeaderboard().then((snapshot) => {
-      if (snapshot?.me?.id && snapshot.me.id === id) {
-        isSelf = true;
+      if (snapshot?.me?.id) {
+        myId = snapshot.me.id;
         setMyProfileId(snapshot.me.id);
+      }
+
+      if (snapshot?.me?.id === id) {
+        isSelf = true;
         loadSelfData();
         loading = false;
         return;
@@ -367,17 +392,8 @@
           error = 'This profile is unavailable or has left the leaderboard.';
         } else {
           isFollowingOther = isFollowing(result.id);
-          const local = getFollowers(result.id);
-          const server = result.followers ?? [];
-          const seen = new Set<string>();
-          const merged: FollowerUser[] = [];
-          for (const item of [...local, ...server]) {
-            if (!seen.has(item.id)) {
-              seen.add(item.id);
-              merged.push(item);
-            }
-          }
-          otherFollowers = merged;
+          otherServerFollowers = result.followers ?? [];
+          otherFollowers = mergeFollowers(getFollowers(result.id), otherServerFollowers);
         }
       });
     });
@@ -388,19 +404,9 @@
     };
     const handleFollowersChange = (): void => {
       if (isSelf) {
-        followersList = getFollowers(myId ?? undefined);
+        followersList = mergeFollowers(getFollowers(myId ?? undefined), selfServerFollowers);
       } else if (profile) {
-        const local = getFollowers(profile.id);
-        const server = profile.followers ?? [];
-        const seen = new Set<string>();
-        const merged: FollowerUser[] = [];
-        for (const item of [...local, ...server]) {
-          if (!seen.has(item.id)) {
-            seen.add(item.id);
-            merged.push(item);
-          }
-        }
-        otherFollowers = merged;
+        otherFollowers = mergeFollowers(getFollowers(profile.id), otherServerFollowers);
       }
     };
     window.addEventListener('icse:followingChange', handleFollowingChange);
