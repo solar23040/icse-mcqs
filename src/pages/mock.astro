@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import MockExam from '../components/exam/MockExam.svelte';
+import { SUBJECTS } from '../lib/subjects';
+import { toClientQuestions } from '../lib/questions';
+import type { ExamPool } from '../lib/exam';
+import type { Question } from '../lib/types';
+
+const modules = import.meta.glob<Question>('../data/*.json', { eager: true, import: 'default' });
+const pools: ExamPool[] = SUBJECTS.map(({ slug }) => ({
+  subject: slug,
+  questions: toClientQuestions(modules[`../data/${slug}.json`] ?? []),
+})).filter((pool) => pool.questions.length > 0);
+---
+
+<Base
+  title="Mock exam"
+  description="Attempt a timed, mixed-subject ICSE Class 10 MCQ paper and get a full score breakdown with explanations."
+>
+  <section class="mb-6 max-w-2xl">
+    <p class="text-sm font-semibold uppercase tracking-widest text-indigo-600 dark:text-indigo-400">ICSE Class 10</p>
+    <h1 class="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">Mock exam</h1>
+    <p class="mt-3 text-base leading-relaxed text-slate-600 dark:text-slate-400">
+      Mixed questions from every subject, a single timer, and no feedback until you submit. Answers are marked at the
+      end with a per-subject and per-topic breakdown, so you know exactly what to revise next.
+    </p>
+  </section>
+
+  <MockExam client:load pools={pools} />
+</Base>

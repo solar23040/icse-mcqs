@@ -29,6 +29,24 @@ const allQuestionIds = Object.values(questionIds).flat();
 
   <HomeGamePanel client:load questionIds={allQuestionIds} />
 
+  <a
+    href="/mock"
+    class="mb-8 flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-indigo-200 bg-indigo-50 p-5 transition-colors hover:border-indigo-400 hover:bg-indigo-100 dark:border-indigo-500/40 dark:bg-indigo-950/30 dark:hover:border-indigo-400 dark:hover:bg-indigo-950/50 sm:p-6"
+  >
+    <div class="max-w-xl">
+      <p class="text-sm font-semibold uppercase tracking-wide text-indigo-700 dark:text-indigo-300">Mock exam</p>
+      <p class="mt-1 text-lg font-bold tracking-tight">Sit a timed, mixed-subject paper</p>
+      <p class="mt-1 text-sm text-indigo-900/80 dark:text-indigo-200/80">
+        One timer, no hints, then a full score breakdown by subject and topic.
+      </p>
+    </div>
+    <span
+      class="inline-flex min-h-11 items-center rounded-xl bg-indigo-600 px-5 text-sm font-semibold text-white shadow-sm"
+    >
+      Start a paper →
+    </span>
+  </a>
+
   <LeaderboardPanel client:load />
 
   <SubjectGrid client:load subjects={SUBJECTS} questionIds={questionIds} />

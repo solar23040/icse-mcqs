@@ -9,6 +9,9 @@ export const EXAM_DATE = '2027-03-01';
 /** A question answered wrong can be retried after this cooldown. */
 export const WRONG_BOX_LOCK_MS = 48 * 60 * 60 * 1000;
 
+/** Mock exam time allowance: one minute per question. */
+export const EXAM_SECONDS_PER_QUESTION = 60;
+
 /**
  * XP tuning constants. XP (shown as credits) accrues slowly on purpose:
  * correct answers start at 2 XP instead of 10, so a session takes about
