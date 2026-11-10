@@ -25,6 +25,7 @@ function makeQuestion(overrides: Record<string, unknown> = {}): Record<string, u
     options: ['Paris', 'London', 'Rome', 'Berlin'],
     answer: 0,
     explanation: 'Paris is the capital of France.',
+    topic: 'general',
     verified: false,
     ...overrides,
   };
@@ -165,6 +166,12 @@ describe('validateSubjects', () => {
     expect(text).toContain('field "source" must be a string when present');
   });
 
+  it('requires a topic that exists in the subject registry', () => {
+    expect(messages(validateOne([makeQuestion({ topic: '' })]))).toContain('field "topic" must be a non-empty string');
+    expect(messages(validateOne([makeQuestion({ topic: 'not-a-topic' })]))).toContain('unknown topic "not-a-topic"');
+    expect(validateOne([makeQuestion({ topic: 'civics' })]).errors).toEqual([]);
+  });
+
   it('fails when the top-level value is not an array', () => {
     expect(messages(validateOne({ questions: [] }))).toContain('must be an array of questions');
   });
@@ -265,8 +272,8 @@ describe('project files', () => {
     const report = validateProject(projectRoot);
 
     expect(report.errors).toEqual([]);
-    expect(report.total).toBe(510);
-    expect(report.counts.map((item) => item.count)).toEqual([74, 60, 37, 44, 32, 100, 95, 0, 68]);
+    expect(report.total).toBe(509);
+    expect(report.counts.map((item) => item.count)).toEqual([73, 60, 37, 44, 32, 100, 95, 0, 68]);
   });
 });
 

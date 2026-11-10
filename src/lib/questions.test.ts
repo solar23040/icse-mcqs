@@ -8,6 +8,7 @@ const question: Question = {
   options: ['A', 'B', 'C', 'D'],
   answer: 0,
   explanation: 'Because A.',
+  topic: 'civics',
   verified: true,
   source: 'icse-class-10-history-2025.pdf',
 };
@@ -22,6 +23,7 @@ describe('toClientQuestions', () => {
       options: ['A', 'B', 'C', 'D'],
       answer: 0,
       explanation: 'Because A.',
+      topic: 'civics',
       verified: true,
     });
     expect(clientQuestion).not.toHaveProperty('source');

@@ -11,6 +11,7 @@ export function toClientQuestions(questions: readonly Question[]): Question[] {
     options: question.options,
     answer: question.answer,
     explanation: question.explanation,
+    topic: question.topic,
     verified: question.verified,
   }));
 }

@@ -15,6 +15,8 @@ export interface Question {
   options: string[]; /* exactly 4 */
   answer: number; /* index into options, 0-3 */
   explanation: string;
+  /** Canonical topic slug from src/lib/topics.ts for this subject. */
+  topic: string;
   verified: boolean;
   source?: string; /* INTERNAL ONLY, never render */
 }
@@ -25,4 +27,5 @@ export interface SessionQuestion {
   options: string[];
   correctIndex: number;
   explanation: string;
+  topic: string;
 }

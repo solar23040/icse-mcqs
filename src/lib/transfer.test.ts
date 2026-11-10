@@ -25,7 +25,7 @@ afterEach(() => {
 });
 
 describe('transfer', () => {
-  it('round-trips game, seen and stats', () => {
+  it('round-trips game, seen, stats, bookmarks and question stats', () => {
     vi.stubGlobal('localStorage', new FakeStorage());
 
     const game = storage.getGame();
@@ -33,20 +33,59 @@ describe('transfer', () => {
     storage.saveGame(game);
     storage.markSeen('maths', 'm1');
     storage.recordAnswer('maths', true);
+    storage.toggleBookmark('m1');
+    storage.recordQuestionResult('maths', 'm1', true);
 
     const code = transfer.exportProgress();
     expect(typeof code).toBe('string');
 
     storage.resetGame();
     storage.resetSeen('maths');
+    storage.resetBookmarks();
     expect(storage.getGame().xp).toBe(0);
     expect(storage.getSeen('maths')).toEqual([]);
+    expect(storage.getBookmarks()).toEqual([]);
 
     const result = transfer.importProgress(code);
     expect(result).toEqual({ ok: true });
     expect(storage.getGame().xp).toBe(123);
     expect(storage.getSeen('maths')).toEqual(['m1']);
     expect(storage.getStats('maths')).toEqual({ attempted: 1, correct: 1 });
+    expect(storage.getBookmarks()).toEqual(['m1']);
+    expect(storage.getQuestionStats('maths')).toEqual({ m1: { attempted: 1, correct: 1 } });
+  });
+
+  it('imports codes exported before bookmarks existed', () => {
+    vi.stubGlobal('localStorage', new FakeStorage());
+
+    const game = storage.getGame();
+    game.xp = 50;
+    storage.saveGame(game);
+    storage.markSeen('maths', 'm1');
+    storage.recordAnswer('maths', true);
+
+    // Legacy payload: only game/seen/stats in the checksum.
+    const core = {
+      game,
+      seen: { maths: ['m1'] },
+      stats: { maths: { attempted: 1, correct: 1 } },
+    };
+    let hash = 2166136261;
+    const text = JSON.stringify(core);
+    for (let index = 0; index < text.length; index += 1) {
+      hash ^= text.charCodeAt(index);
+      hash = Math.imul(hash, 16777619);
+    }
+    const legacy = btoa(
+      unescape(
+        encodeURIComponent(
+          JSON.stringify({ v: 1, checksum: (hash >>> 0).toString(16), ...core }),
+        ),
+      ),
+    );
+
+    expect(transfer.importProgress(legacy)).toEqual({ ok: true });
+    expect(storage.getGame().xp).toBe(50);
   });
 
   it('rejects tampered codes', () => {

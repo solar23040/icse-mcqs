@@ -55,6 +55,7 @@ function makeQuestion(id: string): Question {
     options: ['A', 'B', 'C', 'D'],
     answer: 0,
     explanation: `Explanation ${id}`,
+    topic: 'general',
     verified: true,
   };
 }
@@ -383,6 +384,54 @@ describe('sessions across storage', () => {
     expect(exhausted.questions).toEqual([]);
     expect(exhausted.unseenCount).toBe(0);
     expect(exhausted.poolExhausted).toBe(true);
+  });
+});
+
+describe('bookmarks and per-question stats', () => {
+  it('toggles bookmarks and survives corrupt JSON', () => {
+    const fake = new FakeStorage();
+    vi.stubGlobal('localStorage', fake);
+
+    expect(storage.getBookmarks()).toEqual([]);
+    expect(storage.toggleBookmark('hist-001')).toBe(true);
+    expect(storage.isBookmarked('hist-001')).toBe(true);
+    expect(storage.getBookmarks()).toEqual(['hist-001']);
+
+    storage.toggleBookmark('hist-001');
+    expect(storage.getBookmarks()).toEqual([]);
+
+    fake.setItem('icse:bookmarks:v1', '{not json');
+    expect(storage.getBookmarks()).toEqual([]);
+  });
+
+  it('records per-question attempts and clamps correct to attempted', () => {
+    vi.stubGlobal('localStorage', new FakeStorage());
+
+    storage.recordQuestionResult('maths', 'm1', false);
+    storage.recordQuestionResult('maths', 'm1', true);
+    expect(storage.getQuestionStats('maths')).toEqual({
+      m1: { attempted: 2, correct: 1 },
+    });
+
+    storage.saveQuestionStats('maths', {
+      m1: { attempted: 1, correct: 5 },
+      m2: { attempted: 0, correct: 0 },
+    });
+    expect(storage.getQuestionStats('maths')).toEqual({
+      m1: { attempted: 1, correct: 1 },
+    });
+  });
+
+  it('keeps bookmarks and question stats in memory when localStorage throws', () => {
+    vi.stubGlobal('localStorage', unavailableStorage());
+
+    storage.toggleBookmark('phys-004');
+    storage.recordQuestionResult('physics', 'phys-004', true);
+
+    expect(storage.getBookmarks()).toEqual(['phys-004']);
+    expect(storage.getQuestionStats('physics')).toEqual({
+      'phys-004': { attempted: 1, correct: 1 },
+    });
   });
 });
 

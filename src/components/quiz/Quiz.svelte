@@ -15,23 +15,28 @@
     type GameState
   } from '../../lib/gamification';
   import {
+    getBookmarks,
     getGame,
     getSeen,
     getWrong,
     getWrongTimestamps,
+    isBookmarked,
     isWrongLockedAt,
     markSeen,
     markWrong,
     recordAnswer,
+    recordQuestionResult,
     recordWrongAnswerResult,
     resetSeen,
     saveGame,
     resetWrong,
+    toggleBookmark,
     unmarkWrong,
     wrongUnlockTime
   } from '../../lib/storage';
   import type { Question, SessionQuestion, Subject } from '../../lib/types';
   import { badgeInfo } from '../../lib/badges';
+  import { isKnownTopic, topicLabel } from '../../lib/topics';
   import ComboBadge from '../game/ComboBadge.svelte';
   import EventStack from '../game/EventStack.svelte';
   import ShareCard from '../game/ShareCard.svelte';
@@ -92,6 +97,8 @@
   $: hint = hintCost(game, today || localDay(new Date()));
   let sessionXp = 0;
   let sessionBadges: string[] = [];
+  let bookmarkedIds: string[] = [];
+  let topicFilter: string | null = null;
 
   let elapsedSeconds = 0;
   let totalSeconds = 0;
@@ -118,6 +125,13 @@
   $: wrongIdSet = new Set(wrongIds);
   $: wrongQuestions = questions.filter((question) => wrongIdSet.has(question.id));
   $: wrongCount = wrongQuestions.length;
+  $: bookmarkedQuestions = questions.filter((question) => bookmarkedIds.includes(question.id));
+  $: bookmarkedCount = bookmarkedQuestions.length;
+  $: topicQuestions = topicFilter
+    ? questions.filter((question) => question.topic === topicFilter)
+    : [];
+  $: topicTitle = topicFilter ? topicLabel(subject, topicFilter) : '';
+  $: currentBookmarked = current ? bookmarkedIds.includes(current.id) : false;
   $: wrongDueQuestions = wrongQuestions.filter((question) => !isWrongLocked(question.id));
   $: wrongLockedQuestions = wrongQuestions.filter((question) => isWrongLocked(question.id));
   $: nextWrongUnlock = wrongLockedQuestions.reduce(
@@ -183,6 +197,11 @@
     }, 60_000);
     if (new URLSearchParams(window.location.search).get('mode') === 'review') {
       selectedMode = 'review';
+    }
+
+    const topicParam = new URLSearchParams(window.location.search).get('topic');
+    if (topicParam && isKnownTopic(subject, topicParam)) {
+      topicFilter = topicParam;
     }
 
     window.addEventListener('icse:gameUpdate', handleGameUpdate);
@@ -344,9 +363,11 @@
     try {
       wrongIds = getWrong(subject);
       wrongAt = getWrongTimestamps(subject);
+      bookmarkedIds = getBookmarks();
     } catch {
       wrongIds = [];
       wrongAt = {};
+      bookmarkedIds = [];
     }
   }
 
@@ -408,6 +429,29 @@
 
   function handleStart(): void {
     startError = '';
+
+    if (topicFilter) {
+      if (topicQuestions.length === 0) {
+        startError = 'No questions are tagged with this topic yet.';
+        return;
+      }
+
+      let topicSession: ReturnType<typeof buildWrongSession>;
+      try {
+        topicSession = buildWrongSession(topicQuestions, selectedLength);
+      } catch {
+        startError = 'The topic drill could not start. Please try again.';
+        return;
+      }
+
+      if (topicSession.questions.length === 0) {
+        startError = 'No questions are tagged with this topic yet.';
+        return;
+      }
+
+      startQuestions(topicSession.questions, false);
+      return;
+    }
 
     if (mode === 'wrong') {
       if (wrongDueQuestions.length === 0) {
@@ -566,7 +610,10 @@
 
       // Practice and retry modes are study aids, so they must not
       // double-count saved stats.
-      if (!retryMode && !wrongMode) recordAnswer(subject, correct);
+      if (!retryMode && !wrongMode) {
+        recordAnswer(subject, correct);
+        recordQuestionResult(subject, question.id, correct);
+      }
     } catch {
       // A storage failure must not break the quiz.
     }
@@ -705,6 +752,39 @@
       startQuestions(nextSession.questions, false);
     } catch {
       startError = 'The review session could not start. Please try again.';
+    }
+  }
+
+  function handleBookmarkSession(): void {
+    if (bookmarkedQuestions.length === 0) return;
+    try {
+      const nextSession = buildWrongSession(bookmarkedQuestions, selectedLength);
+      if (nextSession.questions.length === 0) return;
+      startQuestions(nextSession.questions, false);
+    } catch {
+      startError = 'The bookmarked session could not start. Please try again.';
+    }
+  }
+
+  function handleBookmarkToggle(): void {
+    const question = current;
+    if (!question) return;
+    try {
+      const saved = toggleBookmark(question.id);
+      bookmarkedIds = getBookmarks();
+      liveMessage = saved ? 'Question saved for later.' : 'Question removed from saved.';
+    } catch {
+      // Storage is fail-soft; leave the current list unchanged.
+    }
+  }
+
+  function clearTopicFilter(): void {
+    topicFilter = null;
+    startError = '';
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      url.searchParams.delete('topic');
+      window.history.replaceState(null, '', url.toString());
     }
   }
 
@@ -910,6 +990,29 @@
           </button>
         </div>
       {:else}
+        {#if topicFilter}
+          <div
+            class="flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-indigo-200 bg-indigo-50 p-4 dark:border-indigo-500/40 dark:bg-indigo-950/30"
+          >
+            <div>
+              <p class="text-sm font-semibold text-indigo-900 dark:text-indigo-100">
+                Topic drill: {topicTitle}
+              </p>
+              <p class="text-xs text-indigo-700 dark:text-indigo-300">
+                {topicQuestions.length} question{topicQuestions.length === 1 ? '' : 's'} tagged with this
+                topic.
+              </p>
+            </div>
+            <button
+              type="button"
+              on:click={clearTopicFilter}
+              class="min-h-9 rounded-lg border border-indigo-300 bg-white px-3 text-xs font-semibold text-indigo-800 transition-colors hover:bg-indigo-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:border-indigo-500/50 dark:bg-slate-900 dark:text-indigo-200 dark:focus-visible:ring-offset-slate-900"
+            >
+              Clear topic
+            </button>
+          </div>
+        {/if}
+
         <div class="space-y-2">
           <p id="practice-mode-label" class="text-sm font-semibold">Practice mode</p>
           <div role="group" aria-labelledby="practice-mode-label" class="grid grid-cols-2 gap-2">
@@ -932,6 +1035,14 @@
               Practice mistakes ({wrongCount})
             </button>
           </div>
+          <button
+            type="button"
+            on:click={handleBookmarkSession}
+            disabled={bookmarkedCount === 0}
+            class="min-h-12 w-full rounded-xl border border-amber-300 bg-amber-50 px-3 text-sm font-semibold text-amber-900 transition-colors hover:border-amber-400 hover:bg-amber-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-amber-500/60 dark:bg-amber-950/40 dark:text-amber-100 dark:focus-visible:ring-offset-slate-900"
+          >
+            Practise bookmarked ({bookmarkedCount})
+          </button>
         </div>
 
         <div class="space-y-2">
@@ -1085,7 +1196,9 @@
         >
           {mode === 'wrong'
             ? `Practise ready questions (${wrongDueQuestions.length})`
-            : 'Start session'}
+            : topicFilter
+              ? `Start ${topicTitle} drill`
+              : 'Start session'}
         </button>
 
         {#if mode === 'wrong' && wrongDueQuestions.length === 0 && nextWrongUnlock !== null}
@@ -1165,6 +1278,48 @@
             style={`width: ${progressPercent}%`}
           ></div>
         </div>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <div class="flex flex-wrap items-center gap-2">
+          {#if topicFilter}
+            <span
+              class="rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold text-indigo-800 dark:bg-indigo-500/20 dark:text-indigo-200"
+            >
+              Topic: {topicTitle}
+            </span>
+          {:else}
+            <span
+              class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600 dark:bg-slate-800 dark:text-slate-300"
+            >
+              {topicLabel(subject, current.topic)}
+            </span>
+          {/if}
+        </div>
+        <button
+          type="button"
+          aria-pressed={currentBookmarked}
+          on:click={handleBookmarkToggle}
+          class="flex min-h-9 items-center gap-1.5 rounded-full border px-3 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 {currentBookmarked
+            ? 'border-amber-400 bg-amber-100 text-amber-900 dark:border-amber-500/60 dark:bg-amber-500/20 dark:text-amber-100'
+            : 'border-slate-300 bg-white text-slate-700 hover:border-amber-400 hover:bg-amber-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-amber-400 dark:hover:bg-slate-700'}"
+        >
+          <svg
+            class="h-4 w-4"
+            viewBox="0 0 20 20"
+            fill={currentBookmarked ? 'currentColor' : 'none'}
+            stroke="currentColor"
+            stroke-width="1.8"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M5 3.5h10a1 1 0 0 1 1 1V17l-6-3.5L4 17V4.5a1 1 0 0 1 1-1z"
+            />
+          </svg>
+          {currentBookmarked ? 'Saved' : 'Save question'}
+        </button>
       </div>
 
       <h2

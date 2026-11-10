@@ -1,6 +1,7 @@
 [
   {
     "id": "chem-001",
+    "topic": "periodic",
     "question": "The element with highest ionization potential is:",
     "options": [
       "Hydrogen",
@@ -15,6 +16,7 @@
   },
   {
     "id": "chem-002",
+    "topic": "electrochemistry",
     "question": "The inert electrode used in the electrolysis of acidified water is:",
     "options": [
       "Nickel",
@@ -29,6 +31,7 @@
   },
   {
     "id": "chem-003",
+    "topic": "bonding",
     "question": "A compound with low boiling point is:",
     "options": [
       "Sodium chloride",
@@ -43,6 +46,7 @@
   },
   {
     "id": "chem-004",
+    "topic": "acids-bases",
     "question": "The acid which can produce carbon from cane sugar is:",
     "options": [
       "Concentrated Hydrochloric acid",
@@ -57,6 +61,7 @@
   },
   {
     "id": "chem-005",
+    "topic": "bonding",
     "question": "The organic compound having a triple carbon-carbon covalent bond is:",
     "options": [
       "C3H4",
@@ -71,6 +76,7 @@
   },
   {
     "id": "chem-006",
+    "topic": "periodic",
     "question": "An element in period 3, whose electron affinity is zero:",
     "options": [
       "Neon",
@@ -85,6 +91,7 @@
   },
   {
     "id": "chem-007",
+    "topic": "periodic",
     "question": "An element with the largest atomic radius among the following is:",
     "options": [
       "Carbon",
@@ -99,6 +106,7 @@
   },
   {
     "id": "chem-008",
+    "topic": "metals",
     "question": "The compound that is not an ore of aluminium:",
     "options": [
       "Cryolite",
@@ -113,6 +121,7 @@
   },
   {
     "id": "chem-009",
+    "topic": "stoichiometry",
     "question": "The vapour density of CH3OH is:",
     "options": [
       "32",
@@ -127,6 +136,7 @@
   },
   {
     "id": "chem-010",
+    "topic": "electrochemistry",
     "question": "Which of the following reactions takes place at the anode during the electroplating of an article with silver?",
     "options": [
       "Ag - 1e- -> Ag1+",
@@ -141,6 +151,7 @@
   },
   {
     "id": "chem-011",
+    "topic": "acids-bases",
     "question": "The metallic hydroxide which forms a deep inky blue solution with excess ammonium hydroxide solution is:",
     "options": [
       "Fe(OH)2",
@@ -155,6 +166,7 @@
   },
   {
     "id": "chem-012",
+    "topic": "organic",
     "question": "An example of a cyclic organic compound is:",
     "options": [
       "Propene",
@@ -169,6 +181,7 @@
   },
   {
     "id": "chem-013",
+    "topic": "acids-bases",
     "question": "In the laboratory preparation, HCl gas is dried by passing through:",
     "options": [
       "dilute nitric acid",
@@ -183,6 +196,7 @@
   },
   {
     "id": "chem-014",
+    "topic": "metals",
     "question": "The nitrate which on thermal decomposition leaves behind a residue which is yellow when hot and white when cold:",
     "options": [
       "Lead nitrate",
@@ -197,6 +211,7 @@
   },
   {
     "id": "chem-015",
+    "topic": "acids-bases",
     "question": "The salt formed when concentrated sulphuric acid reacts with KNO3 above 200 degrees C:",
     "options": [
       "K2SO4",
@@ -211,6 +226,7 @@
   },
   {
     "id": "chem-016",
+    "topic": "acids-bases",
     "question": "The property exhibited by concentrated sulphuric acid when it is used to prepare hydrogen chloride gas from potassium chloride:",
     "options": [
       "Dehydrating property",
@@ -225,6 +241,7 @@
   },
   {
     "id": "chem-017",
+    "topic": "organic",
     "question": "The hydrocarbon formed when sodium propanoate and soda lime are heated together:",
     "options": [
       "Methane",
@@ -239,6 +256,7 @@
   },
   {
     "id": "chem-018",
+    "topic": "acids-bases",
     "question": "The acid which does not form acid salt by a basic radical:",
     "options": [
       "H2CO3",
@@ -253,6 +271,7 @@
   },
   {
     "id": "chem-019",
+    "topic": "bonding",
     "question": "The general formula of hydrocarbons with single covalent bonds is:",
     "options": [
       "CnH2n+2",
@@ -267,6 +286,7 @@
   },
   {
     "id": "chem-020",
+    "topic": "acids-bases",
     "question": "The indicator which changes to pink colour in an alkaline solution is:",
     "options": [
       "Blue Litmus",
@@ -281,6 +301,7 @@
   },
   {
     "id": "chem-021",
+    "topic": "organic",
     "question": "Unsaturated hydrocarbons undergo:",
     "options": [
       "Addition reaction",
@@ -295,6 +316,7 @@
   },
   {
     "id": "chem-022",
+    "topic": "periodic",
     "question": "In the 2nd period Neon has maximum Ionization Potential because:",
     "options": [
       "It has unstable electronic configuration.",
@@ -309,6 +331,7 @@
   },
   {
     "id": "chem-023",
+    "topic": "metals",
     "question": "Copper, Zinc and Tin are the metals alloyed to form:",
     "options": [
       "Duralumin",
@@ -323,6 +346,7 @@
   },
   {
     "id": "chem-024",
+    "topic": "acids-bases",
     "question": "The metal hydroxide which reacts with both acids and alkalis to form salt and water is:",
     "options": [
       "Calcium hydroxide",
@@ -337,6 +361,7 @@
   },
   {
     "id": "chem-025",
+    "topic": "acids-bases",
     "question": "Reaction of an alcohol with a carboxylic acid in the presence of concentrated H2SO4 is termed as:",
     "options": [
       "Halogenation",
@@ -351,6 +376,7 @@
   },
   {
     "id": "chem-026",
+    "topic": "acids-bases",
     "question": "Conversion of Ethanol to Ethene by the action of concentrated sulphuric acid involves:",
     "options": [
       "Dehydration",
@@ -365,6 +391,7 @@
   },
   {
     "id": "chem-027",
+    "topic": "acids-bases",
     "question": "The oxidizing agent in the equation S + 2H2SO4 -> 3SO2 + 2H2O is:",
     "options": [
       "Sulphur",
@@ -379,6 +406,7 @@
   },
   {
     "id": "chem-028",
+    "topic": "periodic",
     "question": "Electron Affinity is maximum in:",
     "options": [
       "Mg",
@@ -393,6 +421,7 @@
   },
   {
     "id": "chem-029",
+    "topic": "bonding",
     "question": "The compound that is not a constituent of the electrolytic mixture used in the Hall-Heroult's process is:",
     "options": [
       "Al2O3",
@@ -407,6 +436,7 @@
   },
   {
     "id": "chem-030",
+    "topic": "metals",
     "question": "On passing ammonia gas over heated copper oxide for some time, a reddish-brown residue is left behind. What property of ammonia is demonstrated here?",
     "options": [
       "Basic property",
@@ -421,6 +451,7 @@
   },
   {
     "id": "chem-031",
+    "topic": "acids-bases",
     "question": "Rotten egg smell is due to the liberation of:",
     "options": [
       "HCl gas",
@@ -435,6 +466,7 @@
   },
   {
     "id": "chem-032",
+    "topic": "bonding",
     "question": "In the molecule of water, oxygen atom has:",
     "options": [
       "One shared pair of electrons.",
@@ -449,6 +481,7 @@
   },
   {
     "id": "chem-033",
+    "topic": "metals",
     "question": "A mineral from which the metal can be extracted economically and conveniently is known as:",
     "options": [
       "Matrix",
@@ -463,6 +496,7 @@
   },
   {
     "id": "chem-034",
+    "topic": "stoichiometry",
     "question": "Which gas decolourises potassium permanganate (KMnO4) solution?",
     "options": [
       "Sulphur dioxide",
@@ -477,6 +511,7 @@
   },
   {
     "id": "chem-035",
+    "topic": "organic",
     "question": "Which formula represents a saturated hydrocarbon?",
     "options": [
       "C4H8",
@@ -491,6 +526,7 @@
   },
   {
     "id": "chem-036",
+    "topic": "metals",
     "question": "The metal whose oxide can be reduced by common reducing agents:",
     "options": [
       "Copper",
@@ -505,6 +541,7 @@
   },
   {
     "id": "chem-037",
+    "topic": "organic",
     "question": "Which of the following options has all the compounds which are members of the same homologous series?",
     "options": [
       "CH4, C2H6, C3H8",
@@ -519,6 +556,7 @@
   },
   {
     "id": "chem-038",
+    "topic": "acids-bases",
     "question": "In the Contact Process SO3 gas is not directly dissolved in water to obtain sulphuric acid. Reason (R): Dense fog or misty droplets of sulphuric acid are formed which is difficult to condense.",
     "options": [
       "Both (A) and (R) are true, and (R) is the correct explanation of (A).",
@@ -533,6 +571,7 @@
   },
   {
     "id": "chem-039",
+    "topic": "periodic",
     "question": "Given the ions Cl-, Li+, Al3+, and K+, identify the pair of ions which have the same electronic configuration.",
     "options": [
       "Cl- & Li+",
@@ -547,6 +586,7 @@
   },
   {
     "id": "chem-040",
+    "topic": "acids-bases",
     "question": "Which pair of reactants can be best used to produce lead(II) sulphate?",
     "options": [
       "Sulphuric acid + Lead",
@@ -561,6 +601,7 @@
   },
   {
     "id": "chem-041",
+    "topic": "electrochemistry",
     "question": "Aqueous copper(II) sulphate is electrolysed using copper electrodes. Which statement about the electrolysis is not correct?",
     "options": [
       "An oxidation reaction occurs at the positive electrode.",
@@ -575,6 +616,7 @@
   },
   {
     "id": "chem-042",
+    "topic": "periodic",
     "question": "X, Y and Z are three metallic atoms in successive order belonging to the same group such that atomic radii of X is the smallest. Which of the three atoms is the best reducing agent?",
     "options": [
       "X",
@@ -589,6 +631,7 @@
   },
   {
     "id": "chem-043",
+    "topic": "organic",
     "question": "40 cm3 of methane (CH4) is reacted with 60 cm3 of oxygen according to CH4 + 2O2 -> CO2 + 2H2O. All volumes are measured at room temperature. What is the total volume of the gases remaining at the end of the reaction?",
     "options": [
       "60 cm3",
@@ -603,6 +646,7 @@
   },
   {
     "id": "chem-044",
+    "topic": "metals",
     "question": "Read the statements: I - Copper is a component in the alloy that is used to make medals. II - Aluminium is used in making the alloy stainless steel. III - Copper is a common component of both duralumin and brass. Which statements are correct?",
     "options": [
       "I & II",
@@ -617,6 +661,7 @@
   },
   {
     "id": "chem-045",
+    "topic": "acids-bases",
     "question": "Sodium hydroxide can react with which acid to form an acid salt?",
     "options": [
       "Nitric acid",
@@ -631,6 +676,7 @@
   },
   {
     "id": "chem-046",
+    "topic": "stoichiometry",
     "question": "How many moles are present in 10 g of CaCO3?",
     "options": [
       "10 moles",
@@ -645,6 +691,7 @@
   },
   {
     "id": "chem-047",
+    "topic": "acids-bases",
     "question": "A white precipitate is formed when dilute hydrochloric acid reacts with X. The white precipitate is soluble in excess of NH4OH and insoluble in dilute HNO3. Identify X.",
     "options": [
       "AgNO3",
@@ -659,6 +706,7 @@
   },
   {
     "id": "chem-048",
+    "topic": "stoichiometry",
     "question": "Assertion (A): In a solution containing equal concentration of Cu2+ ions and Ca2+ ions, Cu2+ ions will be discharged in preference to Ca2+ ions. Reason (R): Ca2+ ions are placed above Cu2+ ions in the electrochemical series.",
     "options": [
       "Both (A) and (R) are true, and (R) is the correct explanation of (A).",
@@ -673,6 +721,7 @@
   },
   {
     "id": "chem-049",
+    "topic": "metals",
     "question": "Assertion (A): Hydraulic washing is a method to separate impurities from the ore. Reason (R): In hydraulic washing, denser particles float and lighter particles settle down.",
     "options": [
       "Both (A) and (R) are true, and (R) is the correct explanation of (A).",
@@ -687,6 +736,7 @@
   },
   {
     "id": "chem-050",
+    "topic": "acids-bases",
     "question": "The oxide which reacts with both dilute hydrochloric acid and sodium hydroxide solution to form salt and water is:",
     "options": [
       "Basic oxide",
@@ -701,6 +751,7 @@
   },
   {
     "id": "chem-051",
+    "topic": "stoichiometry",
     "question": "Which of the following will occupy the volume 2.8 litres at S.T.P.?",
     "options": [
       "2 moles of carbon dioxide",
@@ -715,6 +766,7 @@
   },
   {
     "id": "chem-052",
+    "topic": "acids-bases",
     "question": "A salt solution which gives a reddish-brown precipitate with NaOH and a white precipitate with BaCl2 solution is:",
     "options": [
       "CuSO4",
@@ -729,6 +781,7 @@
   },
   {
     "id": "chem-053",
+    "topic": "organic",
     "question": "An alkane with molecular mass 44 is:",
     "options": [
       "CH4",
@@ -743,6 +796,7 @@
   },
   {
     "id": "chem-054",
+    "topic": "acids-bases",
     "question": "Which gas is evolved when ammonia gas is passed over buff yellow PbO?",
     "options": [
       "N2O",
@@ -757,6 +811,7 @@
   },
   {
     "id": "chem-055",
+    "topic": "acids-bases",
     "question": "Three different solutions X (sodium chloride solution), Y (acetic acid) and Z (sugar solution) were used for electrolysis by a student. When the circuit was completed, he noticed that the bulb glowed in the electrolytic cell containing:",
     "options": [
       "X & Y",
@@ -771,6 +826,7 @@
   },
   {
     "id": "chem-056",
+    "topic": "bonding",
     "question": "An element X has an electronic configuration 2, 2. The compound formed when X combines with oxygen is most likely to be:",
     "options": [
       "a compound with a low melting point.",
@@ -785,6 +841,7 @@
   },
   {
     "id": "chem-057",
+    "topic": "metals",
     "question": "If an element has a low ionisation potential, it is most likely to be a:",
     "options": [
       "metal",
@@ -799,6 +856,7 @@
   },
   {
     "id": "chem-058",
+    "topic": "acids-bases",
     "question": "A non-metal which reacts with concentrated sulphuric acid to form two gases which turn lime water milky is:",
     "options": [
       "Sulphur",
@@ -813,6 +871,7 @@
   },
   {
     "id": "chem-059",
+    "topic": "bonding",
     "question": "Which of the following element pairs will form an ionic bond?",
     "options": [
       "Elements of Group 1 & Group 2",
@@ -827,6 +886,7 @@
   },
   {
     "id": "chem-060",
+    "topic": "acids-bases",
     "question": "The electronic configuration of an element is 2,8,2. The hydroxide of this element can produce how many hydroxyl ions per molecule?",
     "options": [
       "3",
@@ -841,6 +901,7 @@
   },
   {
     "id": "chem-061",
+    "topic": "electrochemistry",
     "question": "With respect to the electrolysis of copper(II) sulphate solution using copper electrodes, which statement is correct?",
     "options": [
       "Copper metal is deposited at the negative electrode.",
@@ -855,6 +916,7 @@
   },
   {
     "id": "chem-062",
+    "topic": "organic",
     "question": "Identify the equation that shows the reaction of ethane with chlorine in the presence of ultraviolet light.",
     "options": [
       "C2H6 + Cl2 -> C2H6Cl2",
@@ -869,6 +931,7 @@
   },
   {
     "id": "chem-063",
+    "topic": "metals",
     "question": "The method which cannot be used for the preparation of copper salts is:",
     "options": [
       "bases",
@@ -883,6 +946,7 @@
   },
   {
     "id": "chem-064",
+    "topic": "bonding",
     "question": "The compound that has the highest melting point amongst the following is:",
     "options": [
       "Methane",
@@ -897,6 +961,7 @@
   },
   {
     "id": "chem-065",
+    "topic": "acids-bases",
     "question": "Assertion (A): Dilute Sulphuric acid is a stronger electrolyte than concentrated Sulphuric acid. Reason (R): Dilute Sulphuric acid has a higher concentration of mobile ions.",
     "options": [
       "(A) is true but (R) is false.",
@@ -911,6 +976,7 @@
   },
   {
     "id": "chem-066",
+    "topic": "organic",
     "question": "What volume of carbon dioxide is produced at STP when 5 litres of propane is burnt completely according to C3H8 + 5O2 -> 3CO2 + 4H2O?",
     "options": [
       "10 litres",
@@ -925,6 +991,7 @@
   },
   {
     "id": "chem-067",
+    "topic": "organic",
     "question": "An unsaturated hydrocarbon with three atoms of carbon and six atoms of hydrogen is:",
     "options": [
       "propyne",
@@ -939,6 +1006,7 @@
   },
   {
     "id": "chem-068",
+    "topic": "electrochemistry",
     "question": "In the electrolysis of molten aluminium oxide for extraction of aluminium, the following reactions take place: 1. Al3+ + 3e- -> Al; 2. 2O2- -> O2 + 4e-; 3. C + O2 -> CO2; 4. Al2O3 -> 2Al3+ + 3O2-. The reaction that takes place at the negative electrode is:",
     "options": [
       "1",
@@ -953,6 +1021,7 @@
   },
   {
     "id": "chem-069",
+    "topic": "acids-bases",
     "question": "A weak electrolyte is:",
     "options": [
       "Alcohol",
@@ -967,6 +1036,7 @@
   },
   {
     "id": "chem-071",
+    "topic": "metals",
     "question": "The main components of bronze are:",
     "options": [
       "Copper and tin",
@@ -981,6 +1051,7 @@
   },
   {
     "id": "chem-072",
+    "topic": "bonding",
     "question": "A polar covalent compound is:",
     "options": [
       "Methane",
@@ -995,6 +1066,7 @@
   },
   {
     "id": "chem-073",
+    "topic": "acids-bases",
     "question": "An acid which has two replaceable hydrogen ions:",
     "options": [
       "Acetic acid",
@@ -1009,6 +1081,7 @@
   },
   {
     "id": "chem-074",
+    "topic": "acids-bases",
     "question": "The hydroxide which is soluble in excess of NaOH is:",
     "options": [
       "Ferric hydroxide",
@@ -1023,6 +1096,7 @@
   },
   {
     "id": "chem-075",
+    "topic": "stoichiometry",
     "question": "If the RMM of carbon dioxide is 44, then its vapour density is:",
     "options": [
       "22",
@@ -1037,6 +1111,7 @@
   },
   {
     "id": "chem-076",
+    "topic": "acids-bases",
     "question": "Drying agent used to dry Hydrogen chloride gas:",
     "options": [
       "Concentrated Sulphuric acid",
@@ -1051,6 +1126,7 @@
   },
   {
     "id": "chem-077",
+    "topic": "metals",
     "question": "The catalyst used in the Haber's Process is:",
     "options": [
       "Molybdenum",
@@ -1065,6 +1141,7 @@
   },
   {
     "id": "chem-078",
+    "topic": "acids-bases",
     "question": "An aqueous compound which turns colourless phenolphthalein to pink:",
     "options": [
       "Ammonium hydroxide",
@@ -1079,6 +1156,7 @@
   },
   {
     "id": "chem-079",
+    "topic": "acids-bases",
     "question": "The gas formed when carbon reacts with concentrated sulphuric acid:",
     "options": [
       "Hydrogen",
@@ -1093,6 +1171,7 @@
   },
   {
     "id": "chem-080",
+    "topic": "organic",
     "question": "The organic compound prepared when Ethanol undergoes dehydration:",
     "options": [
       "Methane",
@@ -1107,6 +1186,7 @@
   },
   {
     "id": "chem-081",
+    "topic": "organic",
     "question": "The IUPAC name of methyl acetylene is:",
     "options": [
       "Propyne",
@@ -1121,6 +1201,7 @@
   },
   {
     "id": "chem-082",
+    "topic": "electrochemistry",
     "question": "The product formed at the cathode in electroplating of an article with Nickel is:",
     "options": [
       "Hydrogen gas",
@@ -1135,6 +1216,7 @@
   },
   {
     "id": "chem-083",
+    "topic": "periodic",
     "question": "An alkali metal found in period 3 and group 1 is:",
     "options": [
       "Magnesium",
@@ -1149,6 +1231,7 @@
   },
   {
     "id": "chem-084",
+    "topic": "periodic",
     "question": "Elements belonging to the same group have similar properties, because:",
     "options": [
       "they have similar electronic configuration in valence shell.",
@@ -1163,6 +1246,7 @@
   },
   {
     "id": "chem-085",
+    "topic": "periodic",
     "question": "With the increase in atomic number in a period:",
     "options": [
       "the metallic character increases.",
@@ -1177,6 +1261,7 @@
   },
   {
     "id": "chem-086",
+    "topic": "metals",
     "question": "Amongst lithium, sodium and potassium the atomic size of:",
     "options": [
       "All of them is same.",
@@ -1191,6 +1276,7 @@
   },
   {
     "id": "chem-087",
+    "topic": "periodic",
     "question": "On moving horizontally across a period, the number of electrons in outermost shell increase from:",
     "options": [
       "2 to 8",
@@ -1205,6 +1291,7 @@
   },
   {
     "id": "chem-088",
+    "topic": "periodic",
     "question": "Magnesium atom loses 2 electrons in its valence shell to acquire the stable configuration of nearest noble gas:",
     "options": [
       "Neon",
@@ -1219,6 +1306,7 @@
   },
   {
     "id": "chem-089",
+    "topic": "acids-bases",
     "question": "A compound of two non-metals which dissolves in water to form an alkali is:",
     "options": [
       "methane",
@@ -1233,6 +1321,7 @@
   },
   {
     "id": "chem-090",
+    "topic": "stoichiometry",
     "question": "One twelfth mass of carbon atom 6e2 is called:",
     "options": [
       "Atomic mass",
@@ -1247,6 +1336,7 @@
   },
   {
     "id": "chem-091",
+    "topic": "electrochemistry",
     "question": "The electrolyte used during silver plating is:",
     "options": [
       "silver nitrate solution",
@@ -1261,6 +1351,7 @@
   },
   {
     "id": "chem-092",
+    "topic": "periodic",
     "question": "Non-metals are generally:",
     "options": [
       "oxidizing agents",
@@ -1275,6 +1366,7 @@
   },
   {
     "id": "chem-093",
+    "topic": "acids-bases",
     "question": "A strong electrolyte from the following is:",
     "options": [
       "Acetic acid",
@@ -1289,6 +1381,7 @@
   },
   {
     "id": "chem-094",
+    "topic": "metals",
     "question": "The main components of brass are:",
     "options": [
       "Copper and zinc",
@@ -1303,6 +1396,7 @@
   },
   {
     "id": "chem-095",
+    "topic": "acids-bases",
     "question": "The drying agent used to dry NH3 is:",
     "options": [
       "P2O5",
@@ -1317,6 +1411,7 @@
   },
   {
     "id": "chem-096",
+    "topic": "organic",
     "question": "The general formula of alkynes is:",
     "options": [
       "CnH2n-2",

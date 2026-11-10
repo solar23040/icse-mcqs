@@ -2,6 +2,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { isKnownTopic } from '../src/lib/topics';
 
 export const SUBJECTS = [
   { slug: 'history', title: 'History & Civics' },
@@ -22,7 +23,7 @@ export const IDS_SNAPSHOT = 'scripts/ids.snapshot.json';
 export const ID_PATTERN = /^[a-z-]+-\d+$/;
 export const NEAR_DUPLICATE_THRESHOLD = 0.9;
 
-const REQUIRED_FIELDS = ['id', 'question', 'options', 'answer', 'explanation', 'verified'] as const;
+const REQUIRED_FIELDS = ['id', 'question', 'options', 'answer', 'explanation', 'topic', 'verified'] as const;
 
 export interface SubjectData {
   slug: SubjectSlug;
@@ -271,6 +272,18 @@ export function validateSubjects(subjects: readonly SubjectData[]): ValidationRe
 
       if (hasOwn(entry, 'verified') && typeof entry.verified !== 'boolean') {
         addError(subject, index, 'field "verified" must be a boolean');
+      }
+
+      if (hasOwn(entry, 'topic')) {
+        if (typeof entry.topic !== 'string' || entry.topic.trim() === '') {
+          addError(subject, index, 'field "topic" must be a non-empty string');
+        } else if (!isKnownTopic(subject.slug, entry.topic)) {
+          addError(
+            subject,
+            index,
+            `unknown topic "${entry.topic}" for ${subject.slug} (see src/lib/topics.ts)`,
+          );
+        }
       }
 
       if (hasOwn(entry, 'source') && typeof entry.source !== 'string') {

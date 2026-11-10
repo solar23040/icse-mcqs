@@ -1,6 +1,7 @@
 [
   {
     "id": "pe-001",
+    "topic": "growth",
     "question": "Adulthood starts from ______ years onwards.",
     "options": ["17", "18", "19", "20"],
     "answer": 2,
@@ -10,6 +11,7 @@
   },
   {
     "id": "pe-002",
+    "topic": "injuries",
     "question": "What is the full form of ACL?",
     "options": ["Anatomy Cruciate Ligament", "Anterior Cramp Ligament", "Anatomy Collateral Ligament", "Anterior Cruciate Ligament"],
     "answer": 3,
@@ -19,6 +21,7 @@
   },
   {
     "id": "pe-003",
+    "topic": "growth",
     "question": "The passing of traits from parents to their offspring is known as",
     "options": ["Puberty", "Infancy", "Childhood", "Heredity"],
     "answer": 3,
@@ -28,6 +31,7 @@
   },
   {
     "id": "pe-004",
+    "topic": "fitness",
     "question": "The ability to stay upright in control of body movement:",
     "options": ["Balance", "Strength", "Power", "Agility"],
     "answer": 0,
@@ -37,6 +41,7 @@
   },
   {
     "id": "pe-005",
+    "topic": "growth",
     "question": "To develop the ability to respect the attitudes and values of others is",
     "options": ["Emotional development", "Physical development", "Social development", "Psychological development"],
     "answer": 2,
@@ -46,6 +51,7 @@
   },
   {
     "id": "pe-006",
+    "topic": "growth",
     "question": "Which body type can be characterised by a round body?",
     "options": ["Endomorph", "Ectomorph", "Mesomorph", "None of these"],
     "answer": 0,
@@ -55,6 +61,7 @@
   },
   {
     "id": "pe-007",
+    "topic": "fitness",
     "question": "The ability to cover the maximum distance in minimum time is:",
     "options": ["Endurance", "Speed", "Strength", "Flexibility"],
     "answer": 1,
@@ -64,6 +71,7 @@
   },
   {
     "id": "pe-008",
+    "topic": "injuries",
     "question": "Which option is not a prevention of an injury?",
     "options": ["Warming up and cooling down to be done.", "Fitness of the participant.", "Proper Training of skills.", "Not resting between workout, using faulty skills and equipment."],
     "answer": 3,
@@ -73,6 +81,7 @@
   },
   {
     "id": "pe-009",
+    "topic": "nutrition",
     "question": "A diet containing right amount of nutrients for efficient working of body is called:",
     "options": ["Food", "Diet", "Stapled diet", "Balanced diet"],
     "answer": 3,
@@ -82,6 +91,7 @@
   },
   {
     "id": "pe-010",
+    "topic": "fitness",
     "question": "Which of the following statements correctly defines strength?",
     "options": ["The power that helps to lift and carry objects.", "The capacity to move a body part or whole body at a faster rate.", "The ability to resist fatigue.", "The ability to stretch muscles using external help."],
     "answer": 0,
@@ -91,6 +101,7 @@
   },
   {
     "id": "pe-011",
+    "topic": "nutrition",
     "question": "______ is an important element which makes up for almost 70% of our body weight.",
     "options": ["Water", "Fiber", "Minerals", "Fats"],
     "answer": 0,
@@ -100,6 +111,7 @@
   },
   {
     "id": "pe-012",
+    "topic": "fitness",
     "question": "The ability of the body to change direction quickly:",
     "options": ["Agility", "Co-ordination", "Flexibility", "Speed"],
     "answer": 0,
@@ -109,6 +121,7 @@
   },
   {
     "id": "pe-013",
+    "topic": "growth",
     "question": "______ means increase in size, height, length or weight.",
     "options": ["Growth", "Development", "Body types", "Obesity"],
     "answer": 0,
@@ -118,6 +131,7 @@
   },
   {
     "id": "pe-014",
+    "topic": "fitness",
     "question": "Periodization means:",
     "options": ["The regular training of sports and games.", "The irregular workout during sports and games.", "The specific process of training and work load every day.", "The systematic planning of athletic or physical training."],
     "answer": 3,
@@ -127,6 +141,7 @@
   },
   {
     "id": "pe-015",
+    "topic": "growth",
     "question": "The physical strength decreases in ______ stage.",
     "options": ["Adolescence", "Infancy", "Old age", "Adulthood"],
     "answer": 2,
@@ -136,6 +151,7 @@
   },
   {
     "id": "pe-016",
+    "topic": "growth",
     "question": "The stage from the age of 5 to 12 years is called",
     "options": ["Infancy", "Adolescence", "Adulthood", "Childhood"],
     "answer": 3,
@@ -145,6 +161,7 @@
   },
   {
     "id": "pe-017",
+    "topic": "injuries",
     "question": "What is full form of MCL?",
     "options": ["Medial Cruciate Ligament", "Medial Cramp Ligament", "Medial Crucial Ligament", "Medial Collateral Ligament"],
     "answer": 3,
@@ -154,6 +171,7 @@
   },
   {
     "id": "pe-018",
+    "topic": "growth",
     "question": "An education which develops harmonious growth and development of a child:",
     "options": ["Physical Fitness", "Health Education", "Physical Education", "Sports Training"],
     "answer": 2,
@@ -163,6 +181,7 @@
   },
   {
     "id": "pe-019",
+    "topic": "fitness",
     "question": "Exercise helps in increasing ______ to the brain.",
     "options": ["Ideas", "Oxygen flow", "Energy", "Rest"],
     "answer": 1,
@@ -172,6 +191,7 @@
   },
   {
     "id": "pe-020",
+    "topic": "games",
     "question": "What is the minimum qualification to become a basketball coach in India?",
     "options": ["NIS Diploma", "B.P.Ed", "M.Phil", "Ph.D"],
     "answer": 0,
@@ -181,6 +201,7 @@
   },
   {
     "id": "pe-021",
+    "topic": "nutrition",
     "question": "______ is used for growth and repair of all the cells in the body.",
     "options": ["Protein", "Vitamin", "Carbohydrate", "Sodium"],
     "answer": 0,
@@ -190,6 +211,7 @@
   },
   {
     "id": "pe-022",
+    "topic": "biomechanics",
     "question": "The body cannot repair itself without rest and ______",
     "options": ["continuity", "adaptation", "recovery", "frequency"],
     "answer": 2,
@@ -199,6 +221,7 @@
   },
   {
     "id": "pe-023",
+    "topic": "fitness",
     "question": "The ability of a person to do daily work without fatigue is called",
     "options": ["Progression", "Physical Fitness", "Balance", "Obesity"],
     "answer": 1,
@@ -208,6 +231,7 @@
   },
   {
     "id": "pe-024",
+    "topic": "fitness",
     "question": "The ability to perform movement/actions at a faster rate is called",
     "options": ["Endurance", "Power", "Stamina", "Speed"],
     "answer": 3,
@@ -217,6 +241,7 @@
   },
   {
     "id": "pe-025",
+    "topic": "growth",
     "question": "Assertion (A): The growth refers to the increase in size, length and weight. Reason (R): The growth can be felt only through estimate and inspection. In the context of the above two statements, which one of the following is correct?",
     "options": ["(A) is true, but (R) is false", "(A) is false, but (R) is true", "Both (A) and (R) are true and (R) is the correct explanation of (A)", "Both (A) and (R) are true, but (R) is not the correct explanation of (A)"],
     "answer": 0,
@@ -226,6 +251,7 @@
   },
   {
     "id": "pe-026",
+    "topic": "growth",
     "question": "Match the following: I. Physical development 1. A child recognizes his parents well. II. Psychological development 2. A child learns to roll over. III. Social development 3. A child is afraid of the dark in night. IV. Emotional development 4. A child learns to share a toy with a friend.",
     "options": ["I-1, II-3, III-4, IV-2", "I-3, II-4, III-2, IV-1", "I-4, II-3, III-1, IV-2", "I-2, II-1, III-4, IV-3"],
     "answer": 3,
@@ -235,6 +261,7 @@
   },
   {
     "id": "pe-027",
+    "topic": "biomechanics",
     "question": "Cartwheel in gymnastics is an example of",
     "options": ["Dynamic Balance", "Static Balance", "Active Balance", "Passive Balance"],
     "answer": 0,
@@ -244,6 +271,7 @@
   },
   {
     "id": "pe-028",
+    "topic": "nutrition",
     "question": "The unit used to describe the energy content of food is called as",
     "options": ["Litre", "Kilogram", "Calorie", "Meter"],
     "answer": 2,
@@ -253,6 +281,7 @@
   },
   {
     "id": "pe-029",
+    "topic": "growth",
     "question": "Which is the longest stage of human growth and development?",
     "options": ["Adulthood", "Childhood", "Infancy", "Adolescence"],
     "answer": 0,
@@ -262,6 +291,7 @@
   },
   {
     "id": "pe-030",
+    "topic": "injuries",
     "question": "What is the most common symptom of Achilles Tendonitis injury?",
     "options": ["Patients may experience knee instability", "Tenderness on the outside of the elbow", "Pain above the heel, especially when stretching the ankle", "Repeated vomiting or nausea"],
     "answer": 2,
@@ -271,6 +301,7 @@
   },
   {
     "id": "pe-031",
+    "topic": "fitness",
     "question": "According to the Principle of Progression, the overload should not be ______.",
     "options": ["Increased Rapidly", "Increased Normally", "Increased Specifically", "Increased Regularly"],
     "answer": 0,
@@ -280,6 +311,7 @@
   },
   {
     "id": "pe-032",
+    "topic": "growth",
     "question": "______ is essential for the healthy development of a child.",
     "options": ["Recreation", "Proper nutrition", "Meditation", "Exertion"],
     "answer": 1,
@@ -289,6 +321,7 @@
   },
   {
     "id": "pe-033",
+    "topic": "fitness",
     "question": "Health education is primarily concerned with:",
     "options": ["promoting medical treatment to individuals", "promoting healthy behaviour and lifestyle", "promoting medical research", "promoting new medical technologies"],
     "answer": 1,
@@ -298,6 +331,7 @@
   },
   {
     "id": "pe-034",
+    "topic": "growth",
     "question": "Assertion: Development is the sequence of age-related changes that occur as a person progresses in his life. Reason: Development includes both the biological and behavioural changes that take place as people grow older.",
     "options": ["Both (A) and (R) are true and (R) is the correct explanation of (A)", "Both (A) and (R) are true and (R) is not the correct explanation of (A)", "(A) is true and (R) are false", "(A) is false and (R) are true"],
     "answer": 0,
@@ -307,6 +341,7 @@
   },
   {
     "id": "pe-035",
+    "topic": "injuries",
     "question": "What is the symptom of muscle strain injury?",
     "options": ["A loud 'pop' or 'popping' sensation in the knee", "Swelling around the effected part", "Pain over the inside lower part of tibia or shin bone", "A feeling of instability or giving way with weight bearing"],
     "answer": 1,
@@ -316,6 +351,7 @@
   },
   {
     "id": "pe-036",
+    "topic": "injuries",
     "question": "Sprain is an injury of:",
     "options": ["Bone", "Skin", "Ligament", "Tendon"],
     "answer": 2,
@@ -325,6 +361,7 @@
   },
   {
     "id": "pe-037",
+    "topic": "fitness",
     "question": "Principle of ______ is important to achieve performance through the years.",
     "options": ["Adaption", "Variance", "Reversibility", "Continuity"],
     "answer": 3,
@@ -334,6 +371,7 @@
   },
   {
     "id": "pe-038",
+    "topic": "growth",
     "question": "Which physical trait is associated with an Ectomorph?",
     "options": ["Thin build", "Large Frame", "Broad shoulder", "Small feet"],
     "answer": 0,
@@ -343,6 +381,7 @@
   },
   {
     "id": "pe-039",
+    "topic": "growth",
     "question": "The body type most suitable for wrestling is ______.",
     "options": ["Pseudomorph", "Ectomorph", "Mesomorph", "Endomorph"],
     "answer": 2,
@@ -352,6 +391,7 @@
   },
   {
     "id": "pe-040",
+    "topic": "injuries",
     "question": "The common sign of an ankle sprain injury is:",
     "options": ["bruising on the toes", "pain along the shin bone", "swelling around the ankle joint", "numbness in the heel"],
     "answer": 2,
@@ -361,6 +401,7 @@
   },
   {
     "id": "pe-041",
+    "topic": "fitness",
     "question": "Match the following: I. Recovery 1. Become better at a particular exercise or skill II. Overload 2. There should be greater than normal load III. Adaptation 3. Body regenerates during rest IV. Progression 4. Overload should not be increased rapidly.",
     "options": ["I-3, II-4, III-1, IV-2", "I-3, II-2, III-1, IV-4", "I-1, II-2, III-4, IV-3", "I-3, II-1, III-2, IV-4"],
     "answer": 1,
@@ -370,6 +411,7 @@
   },
   {
     "id": "pe-042",
+    "topic": "injuries",
     "question": "How does a stress fracture occur?",
     "options": ["Repetitive pressure on the hip", "It is caused by repetitive over-stretching of the plantar fascia", "Direct blow to the epicondyle", "Sudden change in training and increased physical stress"],
     "answer": 3,
@@ -379,6 +421,7 @@
   },
   {
     "id": "pe-043",
+    "topic": "fitness",
     "question": "Stretching exercise improves",
     "options": ["Strength", "Power", "Coordination", "Flexibility"],
     "answer": 3,
@@ -388,6 +431,7 @@
   },
   {
     "id": "pe-044",
+    "topic": "biomechanics",
     "question": "Sports psychology deals with:",
     "options": ["Adolescence", "Body and its organ", "Behaviour of sports person", "Forces acting on body"],
     "answer": 2,
@@ -397,6 +441,7 @@
   },
   {
     "id": "pe-045",
+    "topic": "nutrition",
     "question": "What is the main purpose of fibre in the diet?",
     "options": ["To provide energy to the body", "To help build and repair muscles", "To aid in digestion and prevent constipation", "To boost the immune system"],
     "answer": 2,
@@ -406,6 +451,7 @@
   },
   {
     "id": "pe-046",
+    "topic": "growth",
     "question": "Development is a ______ process that occurs in an orderly predictable pattern.",
     "options": ["temporary", "static", "continuous", "random"],
     "answer": 2,
@@ -415,6 +461,7 @@
   },
   {
     "id": "pe-047",
+    "topic": "injuries",
     "question": "During a basketball game, a player twists his ankle. What is the immediate first aid response?",
     "options": ["Apply ice and elevate the ankle", "Have the player to continue playing in order to avoid stiffness", "Massage the ankle vigorously", "Administer anti-inflammatory medication"],
     "answer": 0,
@@ -424,6 +471,7 @@
   },
   {
     "id": "pe-048",
+    "topic": "injuries",
     "question": "A gymnastics coach notices that one of his athletes is consistently landing incorrectly while performing a routine exercise and putting excessive stress on his joints. Which of the following actions should the coach take to rectify the problem?",
     "options": ["Encourage the athlete to continue practising to \"toughen up\"", "Work with the athlete to correct his technique and reduce the impact on his joints", "Tell the athlete to stop performing the routine to avoid injury", "Ask the athlete to continue performing the routine with breaks at regular intervals"],
     "answer": 1,
@@ -433,6 +481,7 @@
   },
   {
     "id": "pe-049",
+    "topic": "growth",
     "question": "Which stage of life involves rebellion against parents and the society?",
     "options": ["Childhood", "Adulthood", "Adolescence", "Elderhood"],
     "answer": 2,
@@ -442,6 +491,7 @@
   },
   {
     "id": "pe-050",
+    "topic": "fitness",
     "question": "The ability of the muscle to exert maximum force is:",
     "options": ["Muscular endurance", "Flexibility", "Agility", "Muscular strength"],
     "answer": 3,
@@ -451,6 +501,7 @@
   },
   {
     "id": "pe-051",
+    "topic": "fitness",
     "question": "Enhancing the level of physical fitness is possible with the help of",
     "options": ["Coordination", "Strength", "Training", "Over nutrition"],
     "answer": 2,
@@ -460,6 +511,7 @@
   },
   {
     "id": "pe-052",
+    "topic": "fitness",
     "question": "The ability of a joint to move through a full range of motion is called",
     "options": ["Agility", "Speed", "Coordination", "Flexibility"],
     "answer": 3,
@@ -469,6 +521,7 @@
   },
   {
     "id": "pe-053",
+    "topic": "games",
     "question": "If you love a particular sport and have excellent verbal communication skills, then you can choose a career as a",
     "options": ["Sports person", "Sports manager", "Commentator", "Sports Official"],
     "answer": 2,
@@ -478,6 +531,7 @@
   },
   {
     "id": "pe-054",
+    "topic": "fitness",
     "question": "Which of the following helps to improve cardio-respiratory endurance?",
     "options": ["Lifting weights", "Anaerobic exercises", "Pull-ups", "Aerobic exercises"],
     "answer": 3,
@@ -487,6 +541,7 @@
   },
   {
     "id": "pe-055",
+    "topic": "growth",
     "question": "Which of the following body types is characterised by pear-shaped structure?",
     "options": ["Endomorph", "Mesomorph", "Ectomorph", "Pseudomorph"],
     "answer": 0,
@@ -496,6 +551,7 @@
   },
   {
     "id": "pe-056",
+    "topic": "injuries",
     "question": "Assertion (A): Poor physical fitness of players is the common cause of sports injuries. Reason (R): Physically fit players are less likely to sustain injuries during sports.",
     "options": ["Both (A) and (R) are true and (R) is the correct explanation of (A).", "Both (A) and (R) are true but (R) is not the correct explanation of (A).", "(A) is true and (R) is false.", "(A) is false and (R) is true."],
     "answer": 0,
@@ -505,6 +561,7 @@
   },
   {
     "id": "pe-057",
+    "topic": "fitness",
     "question": "Which of the following is a component of physical fitness?",
     "options": ["Variance", "Frequency", "Speed", "Individuality"],
     "answer": 2,
@@ -514,6 +571,7 @@
   },
   {
     "id": "pe-058",
+    "topic": "growth",
     "question": "Genetic disorder is caused by",
     "options": ["environmental factor", "abnormality in genes", "lifestyle", "temperature of the area"],
     "answer": 1,
@@ -523,6 +581,7 @@
   },
   {
     "id": "pe-059",
+    "topic": "fitness",
     "question": "Maintaining a regular schedule of training with minimal interruption is called",
     "options": ["principle of overload", "principle of periodisation", "principle of specificity", "principle of continuity"],
     "answer": 3,
@@ -532,6 +591,7 @@
   },
   {
     "id": "pe-060",
+    "topic": "fitness",
     "question": "Mahipal is a trainer of the Kolkata Football Team. In order to improve the endurance of his team, Mahipal designs a training program. Which of the following training methods should he follow?",
     "options": ["Increase intensity and duration of the training gradually", "Focus on high-intensity interval training only", "Incorporate strength training exercise only", "Ignore proper warm-up and cool-down procedures"],
     "answer": 0,
@@ -541,6 +601,7 @@
   },
   {
     "id": "pe-061",
+    "topic": "injuries",
     "question": "Match the following: I. Abrasion - 1. Head II. Concussion - 2. Ankle III. Torn ACL - 3. Skin IV. Achilles tendonitis - 4. Knee.",
     "options": ["I-3, II-1, III-4, IV-2", "I-3, II-4, III-2, IV-1", "I-4, II-3, III-1, IV-2", "I-2, II-3, III-4, IV-1"],
     "answer": 0,
@@ -550,6 +611,7 @@
   },
   {
     "id": "pe-062",
+    "topic": "games",
     "question": "The qualification required for a physical education teacher to teach at the school level in India is:",
     "options": ["PhD", "B.P.Ed.", "Sports management", "NIS"],
     "answer": 1,
@@ -559,6 +621,7 @@
   },
   {
     "id": "pe-063",
+    "topic": "biomechanics",
     "question": "Which body type is characterised as long and lean, with low body fat and little muscle?",
     "options": ["Endomorph", "Mesomorph", "Ectomorph", "Pseudomorph"],
     "answer": 2,
@@ -568,6 +631,7 @@
   },
   {
     "id": "pe-064",
+    "topic": "fitness",
     "question": "Health related physical fitness components are:",
     "options": ["Agility and Speed", "Cardiorespiratory endurance and Flexibility", "Balance and Coordination", "Power and Speed"],
     "answer": 1,
@@ -577,6 +641,7 @@
   },
   {
     "id": "pe-065",
+    "topic": "growth",
     "question": "The adulthood stage falls between the age of",
     "options": ["10 to 17 years", "14 to 18 years", "12 to 19 years", "19 to 65 years"],
     "answer": 3,
@@ -586,6 +651,7 @@
   },
   {
     "id": "pe-066",
+    "topic": "games",
     "question": "An umpire, referee, scorer, linesmen etc. at a sporting event is known as a/an",
     "options": ["coach", "official", "manager", "commentator"],
     "answer": 1,
@@ -595,6 +661,7 @@
   },
   {
     "id": "pe-067",
+    "topic": "nutrition",
     "question": "Assertion (A): A balanced diet depends on age; gender and the type of work that one is required to perform. Reason (R): A balanced diet is composed of carbohydrates, proteins, fats, vitamins, minerals and water.",
     "options": ["Both (A) and (R) are true and (R) is the correct explanation of (A).", "Both (A) and (R) are true but (R) is not the correct explanation of (A).", "(A) is true and (R) is false.", "(A) is false and (R) is true."],
     "answer": 1,
@@ -604,6 +671,7 @@
   },
   {
     "id": "pe-068",
+    "topic": "fitness",
     "question": "What is the primary purpose of warm-up exercise before physical activity?",
     "options": ["To improve performance", "To prevent injuries", "To increase strength", "To enhance flexibility"],
     "answer": 1,

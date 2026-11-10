@@ -1,6 +1,7 @@
 [
   {
     "id": "geo-001",
+    "topic": "climate",
     "question": "Which of the following area receives rain from the North East Monsoon?",
     "options": [
       "Konkan coast",
@@ -15,6 +16,7 @@
   },
   {
     "id": "geo-002",
+    "topic": "soil",
     "question": "Which is the most widespread soil of India?",
     "options": [
       "Red soil",
@@ -29,6 +31,7 @@
   },
   {
     "id": "geo-003",
+    "topic": "forests",
     "question": "Which type of forest is found mostly in the coastal areas of India?",
     "options": [
       "Tropical Evergreen Forest",
@@ -43,6 +46,7 @@
   },
   {
     "id": "geo-004",
+    "topic": "water",
     "question": "Which of the following is a ground water source?",
     "options": [
       "Pond",
@@ -57,6 +61,7 @@
   },
   {
     "id": "geo-005",
+    "topic": "industry",
     "question": "Copper is alloyed with Zinc to form:",
     "options": [
       "Stainless steel",
@@ -71,6 +76,7 @@
   },
   {
     "id": "geo-006",
+    "topic": "water",
     "question": "Hirakud dam is based on which of the following rivers?",
     "options": [
       "River Godavari",
@@ -85,6 +91,7 @@
   },
   {
     "id": "geo-007",
+    "topic": "agriculture",
     "question": "Which of the following is NOT a problem of Indian agriculture?",
     "options": [
       "Dependence on monsoon",
@@ -99,6 +106,7 @@
   },
   {
     "id": "geo-008",
+    "topic": "industry",
     "question": "Which of the following is a basic / key industry?",
     "options": [
       "Iron and Steel Industry",
@@ -113,6 +121,7 @@
   },
   {
     "id": "geo-009",
+    "topic": "agriculture",
     "question": "Which of the following is a staple food grain of Indians?",
     "options": [
       "Wheat",
@@ -127,6 +136,7 @@
   },
   {
     "id": "geo-010",
+    "topic": "waste",
     "question": "Which of the following method of waste disposal is harmful?",
     "options": [
       "Composting",
@@ -141,6 +151,7 @@
   },
   {
     "id": "geo-011",
+    "topic": "climate",
     "question": "What causes snowfall in Kashmir during winter?",
     "options": [
       "Tropical cyclone",
@@ -155,6 +166,7 @@
   },
   {
     "id": "geo-012",
+    "topic": "soil",
     "question": "Which of the following helps in soil conservation?",
     "options": [
       "Afforestation",
@@ -169,6 +181,7 @@
   },
   {
     "id": "geo-013",
+    "topic": "water",
     "question": "Which means of irrigation can be developed with minimum expenditure?",
     "options": [
       "Tube well",
@@ -183,6 +196,7 @@
   },
   {
     "id": "geo-014",
+    "topic": "forests",
     "question": "Read the table and identify the pair that is correctly matched: P—Tropical evergreen—Babool; Q—Tropical deciduous—Teak; R—Littoral—Ebony; S—Mountain forest—Banyan.",
     "options": [
       "P",
@@ -197,6 +211,7 @@
   },
   {
     "id": "geo-015",
+    "topic": "industry",
     "question": "Bauxite is the ore of:",
     "options": [
       "Aluminium",
@@ -211,6 +226,7 @@
   },
   {
     "id": "geo-016",
+    "topic": "waste",
     "question": "Identify the source of energy that leads to pollution:",
     "options": [
       "Tidal energy",
@@ -225,6 +241,7 @@
   },
   {
     "id": "geo-017",
+    "topic": "industry",
     "question": "Which of the following is NOT a centre for the iron and steel industry?",
     "options": [
       "Bhilai",
@@ -239,6 +256,7 @@
   },
   {
     "id": "geo-018",
+    "topic": "agriculture",
     "question": "Which of the following farming method is used to grow tea on a large scale?",
     "options": [
       "Subsistence farming",
@@ -253,6 +271,7 @@
   },
   {
     "id": "geo-019",
+    "topic": "transport",
     "question": "Which of the following means of transport has best use during floods / earthquake?",
     "options": [
       "Airways",
@@ -267,6 +286,7 @@
   },
   {
     "id": "geo-020",
+    "topic": "waste",
     "question": "Which of the following is a biodegradable waste?",
     "options": [
       "Broken glass",
@@ -281,6 +301,7 @@
   },
   {
     "id": "geo-021",
+    "topic": "climate",
     "question": "Assertion (A): Mumbai receives more rainfall than Pune. Reason (R): Mumbai gets rain from Arabian Sea branch of southwest monsoon.",
     "options": [
       "Both (A) and (R) are true and (R) is the correct explanation for (A).",
@@ -295,6 +316,7 @@
   },
   {
     "id": "geo-022",
+    "topic": "soil",
     "question": "Which of the following pairs of soils displays similar characteristics in terms of their colour and texture?",
     "options": [
       "Alluvial soil and laterite soil",
@@ -309,6 +331,7 @@
   },
   {
     "id": "geo-023",
+    "topic": "water",
     "question": "Which of the following prevents wastage of water?",
     "options": [
       "Canal",
@@ -323,6 +346,7 @@
   },
   {
     "id": "geo-024",
+    "topic": "industry",
     "question": "Balaghat : Manganese :: Mumbai High :",
     "options": [
       "Copper",
@@ -337,6 +361,7 @@
   },
   {
     "id": "geo-025",
+    "topic": "agriculture",
     "question": "A microbiological process that loosens the bark of a crop and facilitates removal of fibre from the stalk:",
     "options": [
       "Rolling",
@@ -351,6 +376,7 @@
   },
   {
     "id": "geo-026",
+    "topic": "industry",
     "question": "Which industry amongst the following has revolutionised the lifestyle of the Indian masses in recent years?",
     "options": [
       "Cotton Textile",
@@ -365,6 +391,7 @@
   },
   {
     "id": "geo-027",
+    "topic": "industry",
     "question": "Which of the following household products is associated with the petrochemical industry?",
     "options": [
       "Glass bottle",
@@ -379,6 +406,7 @@
   },
   {
     "id": "geo-028",
+    "topic": "transport",
     "question": "Raman, a dairy farmer in Ludhiana, supplies milk within the city on a daily basis. Which mode of transport is he most likely to use?",
     "options": [
       "Railway",
@@ -393,6 +421,7 @@
   },
   {
     "id": "geo-029",
+    "topic": "waste",
     "question": "The collection of discarded materials and converting them into useful products is:",
     "options": [
       "Recycling",
@@ -407,6 +436,7 @@
   },
   {
     "id": "geo-030",
+    "topic": "climate",
     "question": "Mawsynram, the rainiest place in the world, gets the rain from:",
     "options": [
       "South-west monsoon wind - Arabian Sea branch",
@@ -421,6 +451,7 @@
   },
   {
     "id": "geo-031",
+    "topic": "soil",
     "question": "Choose the characteristic that is true about Laterite soil.",
     "options": [
       "It is a clayey soil.",
@@ -435,6 +466,7 @@
   },
   {
     "id": "geo-032",
+    "topic": "forests",
     "question": "Identify the option which is most similar to: Tropical Evergreen vegetation : Tall trees and hardwood",
     "options": [
       "Tropical Deciduous vegetation : Pure stands",
@@ -449,6 +481,7 @@
   },
   {
     "id": "geo-033",
+    "topic": "soil",
     "question": "Assertion (A): Irrigation is practised in large parts of India. Reason (R): India has a variety of soil types.",
     "options": [
       "(A) is true and (R) is false.",
@@ -463,6 +496,7 @@
   },
   {
     "id": "geo-034",
+    "topic": "industry",
     "question": "Identify the type of coal that has the highest calorific value.",
     "options": [
       "Peat",
@@ -477,6 +511,7 @@
   },
   {
     "id": "geo-035",
+    "topic": "agriculture",
     "question": "Identify the crop that is grown in the Rabi cropping season.",
     "options": [
       "Sugarcane",
@@ -491,6 +526,7 @@
   },
   {
     "id": "geo-036",
+    "topic": "industry",
     "question": "Which industry is ideally located close to the raw material producing area?",
     "options": [
       "Silk industry",
@@ -505,6 +541,7 @@
   },
   {
     "id": "geo-037",
+    "topic": "agriculture",
     "question": "Which of the following is NOT suitable for composting?",
     "options": [
       "Fruit peels",

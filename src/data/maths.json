@@ -1,6 +1,7 @@
 [
   {
     "id": "math-001",
+    "topic": "algebra",
     "question": "If [[2, 0], [0, 4]][x; y] = [2; -8], the value of x and y respectively are:",
     "options": ["1, -2", "-2, 1", "1, 2", "-2, -1"],
     "answer": 0,
@@ -10,6 +11,7 @@
   },
   {
     "id": "math-002",
+    "topic": "algebra",
     "question": "If x - 2 is a factor of x^3 - kx - 12, then the value of k is:",
     "options": ["3", "2", "-2", "-3"],
     "answer": 2,
@@ -19,6 +21,7 @@
   },
   {
     "id": "math-003",
+    "topic": "probability",
     "question": "A letter is chosen at random from all the letters of the English alphabet. The probability that the letter chosen is a vowel is:",
     "options": ["4/26", "5/26", "21/26", "5/24"],
     "answer": 1,
@@ -28,6 +31,7 @@
   },
   {
     "id": "math-004",
+    "topic": "algebra",
     "question": "If 3 is a root of x^2 - px + 3 = 0, then p is equal to:",
     "options": ["4", "3", "5", "2"],
     "answer": 0,
@@ -37,6 +41,7 @@
   },
   {
     "id": "math-005",
+    "topic": "commercial",
     "question": "The printed price of an article is ₹3080. If the rate of GST is 10%, then the GST charged is:",
     "options": ["154", "308", "30.80", "15.40"],
     "answer": 1,
@@ -46,6 +51,7 @@
   },
   {
     "id": "math-006",
+    "topic": "trigonometry",
     "question": "(1 + sin A)(1 - sin A) is equal to:",
     "options": ["cosec^2 A", "sin^2 A", "sec^2 A", "cos^2 A"],
     "answer": 3,
@@ -55,6 +61,7 @@
   },
   {
     "id": "math-007",
+    "topic": "coordinate",
     "question": "The coordinates of the vertices of ΔABC are (-4, -2), (6, 2) and (4, 6). The centroid G is:",
     "options": ["(2, 2)", "(2, 3)", "(3, 3)", "(0, -1)"],
     "answer": 0,
@@ -64,6 +71,7 @@
   },
   {
     "id": "math-008",
+    "topic": "statistics",
     "question": "The mean proportional between 4 and 9 is:",
     "options": ["4", "6", "9", "36"],
     "answer": 1,
@@ -73,6 +81,7 @@
   },
   {
     "id": "math-009",
+    "topic": "statistics",
     "question": "Which of the following cannot be determined graphically for a grouped frequency distribution?",
     "options": ["Median", "Mode", "Quartiles", "Mean"],
     "answer": 3,
@@ -82,6 +91,7 @@
   },
   {
     "id": "math-010",
+    "topic": "mensuration",
     "question": "Volume of a cylinder of height 3 cm is 48π. Radius of the cylinder is:",
     "options": ["48 cm", "16 cm", "4 cm", "24 cm"],
     "answer": 2,
@@ -91,6 +101,7 @@
   },
   {
     "id": "math-011",
+    "topic": "commercial",
     "question": "Naveen deposits ₹800 every month in a recurring deposit account for 6 months. If he receives ₹4884 at the time of maturity, then the interest he earns is:",
     "options": ["84", "42", "24", "284"],
     "answer": 0,
@@ -100,6 +111,7 @@
   },
   {
     "id": "math-012",
+    "topic": "algebra",
     "question": "The solution set for the inequation 2x + 4 ≤ 14, x ∈ W is:",
     "options": ["{1,2,3,4,5}", "{0,1,2,3,4,5}", "{1,2,3,4}", "{0,1,2,3,4}"],
     "answer": 1,
@@ -109,6 +121,7 @@
   },
   {
     "id": "math-013",
+    "topic": "commercial",
     "question": "For an intra-state sale, the CGST paid by a dealer to the Central Government is ₹120. If the marked price of the article is ₹2000, the rate of GST is:",
     "options": ["6%", "10%", "12%", "16.67%"],
     "answer": 2,
@@ -118,6 +131,7 @@
   },
   {
     "id": "math-014",
+    "topic": "algebra",
     "question": "What must be subtracted from x^3 + x^2 - 2x + 1 so that the result is exactly divisible by x - 3?",
     "options": ["-31", "-30", "30", "31"],
     "answer": 3,
@@ -127,6 +141,7 @@
   },
   {
     "id": "math-015",
+    "topic": "algebra",
     "question": "The roots of the quadratic equation px^2 - qx + r = 0 are real and equal if:",
     "options": ["p^2 = 4qr", "q^2 = 4pr", "-q^2 = 4pr", "p^2 > 4qr"],
     "answer": 1,
@@ -136,6 +151,7 @@
   },
   {
     "id": "math-016",
+    "topic": "algebra",
     "question": "If A = [[2,2],[0,2]] and A^2 = [[4,x],[0,4]], then the value of x is:",
     "options": ["2", "4", "8", "10"],
     "answer": 2,
@@ -145,6 +161,7 @@
   },
   {
     "id": "math-017",
+    "topic": "statistics",
     "question": "The median of the observations 27, 31, 46, 52, x, x + 4, 71, 79, 85, 90 arranged in ascending order is 64. The value of x is:",
     "options": ["60", "61", "62", "66"],
     "answer": 2,
@@ -154,6 +171,7 @@
   },
   {
     "id": "math-018",
+    "topic": "coordinate",
     "question": "Points A(x, y), B(3, -2) and C(4, -5) are collinear. The value of y in terms of x is:",
     "options": ["3x - 11", "11 - 3x", "3x - 7", "7 - 3x"],
     "answer": 3,
@@ -163,6 +181,7 @@
   },
   {
     "id": "math-019",
+    "topic": "general",
     "question": "The table shows distance covered and time taken by a train at uniform speed. Distance (m): 60, 90, y; Time (s): 2, x, 5. The values of x and y are:",
     "options": ["x = 4, y = 150", "x = 3, y = 100", "x = 4, y = 100", "x = 3, y = 150"],
     "answer": 3,
@@ -172,6 +191,7 @@
   },
   {
     "id": "math-020",
+    "topic": "algebra",
     "question": "The 7th term of the A.P. 1/a, (1/a + 1), (1/a + 2), ... is:",
     "options": ["1/a + 6", "1/a + 7", "1/a + 8", "1/a + 7^7"],
     "answer": 0,
@@ -181,6 +201,7 @@
   },
   {
     "id": "math-021",
+    "topic": "commercial",
     "question": "The sum invested to purchase 15 shares of nominal value ₹75 available at a discount of 20% is:",
     "options": ["60", "90", "1350", "900"],
     "answer": 3,
@@ -190,6 +211,7 @@
   },
   {
     "id": "math-022",
+    "topic": "geometry",
     "question": "The circumcentre of a triangle is the point which is:",
     "options": ["at equal distance from the three sides of the triangle", "at equal distance from the three vertices of the triangle", "the point of intersection of the three medians", "the point of intersection of the three altitudes"],
     "answer": 1,
@@ -199,6 +221,7 @@
   },
   {
     "id": "math-023",
+    "topic": "trigonometry",
     "question": "Statement 1: sin^2 θ + cos^2 θ = 1. Statement 2: cosec^2 θ + cot^2 θ = 1. Which of the following is valid?",
     "options": ["only 1", "only 2", "both 1 and 2", "neither 1 nor 2"],
     "answer": 0,
@@ -208,6 +231,7 @@
   },
   {
     "id": "math-024",
+    "topic": "probability",
     "question": "Assertion (A): A die is thrown once and the probability of getting an even number is 2/3. Reason (R): The sample space for even numbers on a die is {2, 4, 6}.",
     "options": ["A is true, R is false", "A is false, R is true", "Both A and R are true", "Both A and R are false"],
     "answer": 1,
@@ -217,6 +241,7 @@
   },
   {
     "id": "math-025",
+    "topic": "mensuration",
     "question": "A rectangular sheet of paper of size 11 cm × 7 cm is first rotated about the side 11 cm and then about the side 7 cm to form a cylinder. The ratio of their curved surface areas is:",
     "options": ["1:1", "7:11", "11:7", "11π/7 : 7π/11"],
     "answer": 0,
@@ -226,6 +251,7 @@
   },
   {
     "id": "math-026",
+    "topic": "algebra",
     "question": "The quadratic equation 3x^2 + √7 x + 2 = 0 has:",
     "options": ["two equal real roots", "two distinct real roots", "more than two real roots", "no real roots"],
     "answer": 3,
@@ -235,6 +261,7 @@
   },
   {
     "id": "math-027",
+    "topic": "commercial",
     "question": "Mr. Anuj deposits ₹500 per month for 18 months in a recurring deposit account at a certain rate. If he earns ₹570 as interest at the time of maturity, his matured amount is:",
     "options": ["₹(500×18 + 570)", "₹(500×19 + 570)", "₹(500×18×19 + 570)", "₹(500×9×19 + 570)"],
     "answer": 0,
@@ -244,6 +271,7 @@
   },
   {
     "id": "math-028",
+    "topic": "probability",
     "question": "Which of the following cannot be the probability of any event?",
     "options": ["5/4", "0.25", "1/33", "67%"],
     "answer": 0,
@@ -253,6 +281,7 @@
   },
   {
     "id": "math-029",
+    "topic": "coordinate",
     "question": "The equation of the line passing through the origin and parallel to 3x + 4y + 7 = 0 is:",
     "options": ["3x + 4y + 5 = 0", "4x - 3y - 5 = 0", "4x - 3y = 0", "3x + 4y = 0"],
     "answer": 3,
@@ -262,6 +291,7 @@
   },
   {
     "id": "math-030",
+    "topic": "algebra",
     "question": "If A = [[0,1],[1,0]], then A^2 is equal to:",
     "options": ["[[1,1],[0,0]]", "[[0,0],[1,1]]", "[[1,0],[0,1]]", "[[0,1],[1,0]]"],
     "answer": 2,
@@ -271,6 +301,7 @@
   },
   {
     "id": "math-031",
+    "topic": "mensuration",
     "question": "If the volumes of two spheres are in the ratio 27:64, then the ratio of their radii is:",
     "options": ["3:4", "4:3", "9:16", "16:9"],
     "answer": 0,
@@ -280,6 +311,7 @@
   },
   {
     "id": "math-032",
+    "topic": "commercial",
     "question": "The marked price of an article is ₹1375. If CGST is charged at 4%, then the price of the article including GST is:",
     "options": ["55", "110", "1430", "1485"],
     "answer": 3,
@@ -289,6 +321,7 @@
   },
   {
     "id": "math-033",
+    "topic": "algebra",
     "question": "The solution set for 0 < -x/3 < 2, x ∈ Z is:",
     "options": ["{-5,-4,-3,-2,-1}", "{-6,-5,-4,-3,-2,-1}", "{-5,-4,-3,-2,-1,0}", "{-6,-5,-4,-3,-2,-1,0}"],
     "answer": 0,
@@ -298,6 +331,7 @@
   },
   {
     "id": "math-034",
+    "topic": "statistics",
     "question": "Assertion (A): The mean of the first 9 natural numbers is 4.5. Reason (R): Mean = sum of all observations / total number of observations.",
     "options": ["A is true, R is false", "A is false, R is true", "Both A and R are true and R is the correct reason for A", "Both A and R are true and R is not the correct reason for A"],
     "answer": 1,
@@ -307,6 +341,7 @@
   },
   {
     "id": "math-035",
+    "topic": "algebra",
     "question": "(x + 3), 1, (3x - 7) and -5 are in proportion. The value of x is:",
     "options": ["-1", "1", "-5", "5"],
     "answer": 0,
@@ -316,6 +351,7 @@
   },
   {
     "id": "math-036",
+    "topic": "commercial",
     "question": "The marked price of a refrigerator is ₹12000 and GST paid by the customer is ₹2160. The rate of GST is:",
     "options": ["5%", "12%", "18%", "28%"],
     "answer": 2,
@@ -325,6 +361,7 @@
   },
   {
     "id": "math-037",
+    "topic": "statistics",
     "question": "Rakhi's mobile number has the integers 1, 6, 9, 8, 9, 1, 7, 8, 9. The mode of the data is:",
     "options": ["1", "6", "8", "9"],
     "answer": 3,
@@ -334,6 +371,7 @@
   },
   {
     "id": "math-038",
+    "topic": "coordinate",
     "question": "Find the equation of a line whose y-intercept is 6 and is parallel to the x-axis.",
     "options": ["y = 6", "x = 6", "x + y = 6", "y - x = 6"],
     "answer": 0,
@@ -343,6 +381,7 @@
   },
   {
     "id": "math-039",
+    "topic": "commercial",
     "question": "Asha buys ₹20 shares of a company which pays 9% dividend at such a price that she gets a return of 12% on her investment. At what price did she buy each share?",
     "options": ["20", "15", "25", "18"],
     "answer": 1,
@@ -352,6 +391,7 @@
   },
   {
     "id": "math-040",
+    "topic": "mensuration",
     "question": "The total surface area of a solid sphere S1 and a solid hemisphere S2 are equal. The ratio of radii R and r is:",
     "options": ["1:1", "2:1", "√3:2", "2:√3"],
     "answer": 2,
@@ -361,6 +401,7 @@
   },
   {
     "id": "math-041",
+    "topic": "algebra",
     "question": "The nature of roots of the quadratic equation 3x^2 - 6x - 3 = 0 are:",
     "options": ["real and equal", "real, distinct and rational", "real, distinct and irrational", "no real roots"],
     "answer": 2,
@@ -370,6 +411,7 @@
   },
   {
     "id": "math-042",
+    "topic": "probability",
     "question": "Assertion (A): If a die is rolled, the probability of getting a number greater than 6 is 1/6. Reason (R): There are six possible outcomes when rolling a die, {1,2,3,4,5,6}.",
     "options": ["A is true and R is false", "A is false and R is true", "Both A and R are true and R is the correct explanation of A", "Both A and R are true but R is not the correct explanation of A"],
     "answer": 1,
@@ -379,6 +421,7 @@
   },
   {
     "id": "math-043",
+    "topic": "geometry",
     "question": "If the areas of two similar triangles are in the ratio 9:64, then the ratio of their corresponding altitudes is:",
     "options": ["3:8", "2:1", "9:64", "8:3"],
     "answer": 0,
@@ -388,6 +431,7 @@
   },
   {
     "id": "math-044",
+    "topic": "algebra",
     "question": "Assertion (A): The 9th term of the G.P. 6, -12, 24, -48, ... is a positive term. Reason (R): The value of (-2)^8 is always positive.",
     "options": ["A is true and R is false", "A is false and R is true", "Both A and R are true and R is the correct explanation of A", "Both A and R are true but R is not the correct explanation of A"],
     "answer": 2,

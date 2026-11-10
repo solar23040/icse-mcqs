@@ -6,7 +6,7 @@
   import { recordSubjectPractice } from '../../lib/activity';
   import { syncLeaderboard } from '../../lib/leaderboard-api';
   import { applyAnswer, applySession, defaultGameState, levelForGame, type GameEvent, type GameState } from '../../lib/gamification';
-  import { getGame, markSeen, recordAnswer, saveGame } from '../../lib/storage';
+  import { getGame, getBookmarks, markSeen, recordAnswer, recordQuestionResult, saveGame, toggleBookmark } from '../../lib/storage';
   import { badgeInfo } from '../../lib/badges';
   import { optionIndexFromKey, isTypingTarget, formatClock } from '../quiz/quiz-utils';
   import type { Question, Subject } from '../../lib/types';
@@ -46,11 +46,13 @@
   let sessionXp = $state(0);
   let sessionBadges = $state<string[]>([]);
   let liveMessage = $state('');
+  let bookmarks = $state<string[]>([]);
   let questionHeading = $state<HTMLHeadingElement | null>(null);
   let nextButton = $state<HTMLButtonElement | null>(null);
 
   const current = $derived(questions[index] ?? null);
   const answered = $derived(choice !== null);
+  const currentBookmarked = $derived(current ? bookmarks.includes(current.id) : false);
 
   function currentDay(): string {
     return today === '' ? localDay(new Date()) : today;
@@ -118,6 +120,7 @@
   function startSession(): void {
     today = localDay(new Date());
     game = getGame();
+    bookmarks = getBookmarks();
 
     if (mode === 'daily') {
       const day = currentDay();
@@ -172,7 +175,10 @@
       markSeen(question.subject, question.id);
       recordSubjectPractice(question.subject, new Date(), correct);
       const shouldCount = mode === 'sprint' || !dailyAlready;
-      if (shouldCount) recordAnswer(question.subject, correct);
+      if (shouldCount) {
+        recordAnswer(question.subject, correct);
+        recordQuestionResult(question.subject, question.id, correct);
+      }
     } catch {
       // Storage is fail-soft.
     }
@@ -290,6 +296,18 @@
     else game = getGame();
   }
 
+  function handleBookmarkToggle(): void {
+    const question = current;
+    if (!question) return;
+    try {
+      const saved = toggleBookmark(question.id);
+      bookmarks = getBookmarks();
+      liveMessage = saved ? 'Question saved for later.' : 'Question removed from saved.';
+    } catch {
+      // Storage is fail-soft.
+    }
+  }
+
   function handleStorage(e: StorageEvent): void {
     if (e.key === 'icse:game:v1' || !e.key) {
       game = getGame();
@@ -387,6 +405,25 @@
       <h2 bind:this={questionHeading} tabindex="-1" id="quiz-question" class="scroll-mt-24 rounded-lg text-xl font-bold leading-snug tracking-tight focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 sm:text-2xl">
         {current.question}
       </h2>
+
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+          {current.subject.replace('-', ' ')}
+        </span>
+        <button
+          type="button"
+          aria-pressed={currentBookmarked}
+          on:click={handleBookmarkToggle}
+          class="flex min-h-9 items-center gap-1.5 rounded-full border px-3 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 {currentBookmarked
+            ? 'border-amber-400 bg-amber-100 text-amber-900 dark:border-amber-500/60 dark:bg-amber-500/20 dark:text-amber-100'
+            : 'border-slate-300 bg-white text-slate-700 hover:border-amber-400 hover:bg-amber-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-amber-400 dark:hover:bg-slate-700'}"
+        >
+          <svg class="h-4 w-4" viewBox="0 0 20 20" fill={currentBookmarked ? 'currentColor' : 'none'} stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 3.5h10a1 1 0 0 1 1 1V17l-6-3.5L4 17V4.5a1 1 0 0 1 1-1z" />
+          </svg>
+          {currentBookmarked ? 'Saved' : 'Save question'}
+        </button>
+      </div>
 
       <div role="radiogroup" aria-labelledby="quiz-question" class="space-y-3">
         {#each current.options as option, optionIndex}

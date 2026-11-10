@@ -1,6 +1,7 @@
 [
   {
     "id": "hist-001",
+    "topic": "civics",
     "question": "A Supreme Court judge can continue in office till the age of:",
     "options": ["60 years", "62 years", "65 years", "67 years"],
     "answer": 2,
@@ -10,6 +11,7 @@
   },
   {
     "id": "hist-002",
+    "topic": "civics",
     "question": "Given details of a few Indian citizens: W is 20 and a famous actor; X is 48 and has been convicted for corruption; Y is 35 and has accepted foreign citizenship; Z is 50 and a scientist. Who is eligible to be appointed as the Prime Minister of India?",
     "options": ["X", "W", "Y", "Z"],
     "answer": 3,
@@ -19,6 +21,7 @@
   },
   {
     "id": "hist-003",
+    "topic": "civics",
     "question": "How can Mr. Amit, a non-member of the Parliament, be appointed to the Union Cabinet?",
     "options": [
       "He has to become a member of either house within six months of appointment.",
@@ -33,6 +36,7 @@
   },
   {
     "id": "hist-004",
+    "topic": "civics",
     "question": "How many elected members are there in the Rajya Sabha?",
     "options": ["235", "232", "238", "245"],
     "answer": 2,
@@ -42,6 +46,7 @@
   },
   {
     "id": "hist-005",
+    "topic": "civics",
     "question": "Choose the correct option with regard to an Ordinance.",
     "options": [
       "It is passed in the winter session of the Parliament.",
@@ -56,6 +61,7 @@
   },
   {
     "id": "hist-006",
+    "topic": "nationalism",
     "question": "Assertion (A): The Congress accepted the Mountbatten Plan. Reason (R): The only alternate to Partition was a Federation with a weak centre.",
     "options": [
       "(A) is true and (R) is false.",
@@ -70,6 +76,7 @@
   },
   {
     "id": "hist-007",
+    "topic": "british-rule",
     "question": "Anita wants to do a project on the Governor General who introduced the Subsidiary Alliance. Who among the following will she choose?",
     "options": ["Lord Wellesley", "Lord Cornwallis", "Lord Canning", "Lord Dalhousie"],
     "answer": 0,
@@ -79,6 +86,7 @@
   },
   {
     "id": "hist-008",
+    "topic": "world",
     "question": "From the given descriptions of the Cold War, choose the odd one out.",
     "options": [
       "It was a consequence of the Second World War.",
@@ -93,6 +101,7 @@
   },
   {
     "id": "hist-009",
+    "topic": "world",
     "question": "Which of the following countries suffered due to the atom bomb during World War II?",
     "options": ["France", "Japan", "Germany", "Britain"],
     "answer": 1,
@@ -102,6 +111,7 @@
   },
   {
     "id": "hist-010",
+    "topic": "world",
     "question": "Which of the following statements about the composition of the General Assembly is NOT true?",
     "options": [
       "All countries are members.",
@@ -116,6 +126,7 @@
   },
   {
     "id": "hist-011",
+    "topic": "nationalism",
     "question": "Identify the Early Nationalist leaders: P: Dadabhai Naoroji; Q: Bipin Chandra Pal; R: Surendranath Banerjee; S: Aurobindo Ghosh.",
     "options": ["P & Q", "R & S", "P & R", "Q & S"],
     "answer": 2,
@@ -125,6 +136,7 @@
   },
   {
     "id": "hist-012",
+    "topic": "post-independence",
     "question": "Which of the following has influenced the objectives of the Non-Aligned Movement?",
     "options": ["NATO", "The Panchsheel", "SEATO", "The Warsaw Pact"],
     "answer": 1,
@@ -134,6 +146,7 @@
   },
   {
     "id": "hist-013",
+    "topic": "civics",
     "question": "The Council of Ministers is collectively responsible to the:",
     "options": ["Lok Sabha", "President", "Rajya Sabha", "Prime Minister"],
     "answer": 0,
@@ -143,6 +156,7 @@
   },
   {
     "id": "hist-014",
+    "topic": "civics",
     "question": "Given details of a few Indian citizens: W is 25 and a famous journalist; X is 45 and an industrialist; Y is 35 and has declared insolvency; Z is 50 and has taken citizenship of another country. Who is eligible to be a member of the Rajya Sabha?",
     "options": ["X", "W", "Y", "Z"],
     "answer": 0,
@@ -152,6 +166,7 @@
   },
   {
     "id": "hist-015",
+    "topic": "civics",
     "question": "With reference to the Supreme Court of India, complete the following: Advisory Jurisdiction : Advise the President :: Judicial Review :",
     "options": [
       "Review its own judgements.",
@@ -166,6 +181,7 @@
   },
   {
     "id": "hist-016",
+    "topic": "civics",
     "question": "If an Adjournment Motion is passed in the Lok Sabha:",
     "options": [
       "the Lok Sabha will be dissolved.",
@@ -180,6 +196,7 @@
   },
   {
     "id": "hist-017",
+    "topic": "civics",
     "question": "Which emergency will be declared by the President if the security of the Nation is under threat?",
     "options": ["General Emergency", "Financial Emergency", "Constitutional Emergency", "President's Rule"],
     "answer": 0,
@@ -189,6 +206,7 @@
   },
   {
     "id": "hist-018",
+    "topic": "nationalism",
     "question": "Assertion (A): Lord Curzon partitioned Bengal in 1905. Reason (R): The Nationalists felt that the British wanted to divide the Hindus and the Muslims.",
     "options": [
       "(A) is true and (R) is false.",
@@ -203,6 +221,7 @@
   },
   {
     "id": "hist-019",
+    "topic": "nationalism",
     "question": "Identify the odd one out of the following Assertive Nationalist leaders.",
     "options": ["Bipin Chandra Pal", "Lala Lajpat Rai", "Dadabhai Naoroji", "Bal Gangadhar Tilak"],
     "answer": 2,
@@ -212,6 +231,7 @@
   },
   {
     "id": "hist-020",
+    "topic": "freedom",
     "question": "Identify the contributions of Subhash Chandra Bose: P: Was the Supreme Commander of INA; Q: Signed the Lucknow Pact; R: Led the Quit India Movement; S: Founded the Forward Bloc.",
     "options": ["P and Q", "Q and R", "P and S", "R and S"],
     "answer": 2,
@@ -221,6 +241,7 @@
   },
   {
     "id": "hist-021",
+    "topic": "nationalism",
     "question": "The market of a small industrial town is dominated by products of foreign companies. The local residents decide to save Indian industries by helping them increase sales. Which method of the Assertive Nationalists must they follow to become self-reliant?",
     "options": ["Passive Resistance", "National Education", "Swadeshi", "Revivalism"],
     "answer": 2,
@@ -230,6 +251,7 @@
   },
   {
     "id": "hist-022",
+    "topic": "world",
     "question": "Which of the following is NOT an objective of the United Nations Organisation?",
     "options": ["Disarm", "Disengage", "Decolonise", "Develop"],
     "answer": 1,
@@ -239,6 +261,7 @@
   },
   {
     "id": "hist-023",
+    "topic": "world",
     "question": "Which of the following is a common cause for the rise of dictatorship?",
     "options": ["Faith in Democracy", "Economic Crisis", "Freedom of Press", "Political Stability"],
     "answer": 1,
@@ -248,6 +271,7 @@
   },
   {
     "id": "hist-025",
+    "topic": "civics",
     "question": "Given details of a few Indian citizens: W is 30 and an army officer; X is 25 and a Union Leader; Y is 34 and a school Principal; Z is 69 and a retired Professor. Select the one who is eligible to be a Vice President.",
     "options": ["X", "W", "Y", "Z"],
     "answer": 3,
@@ -257,6 +281,7 @@
   },
   {
     "id": "hist-027",
+    "topic": "civics",
     "question": "Mr. Anand has been illegally detained by the police, and his family has not been able to meet him. The family members approach the High Court for help. Which writ will the court issue in this case?",
     "options": ["Habeas Corpus", "Quo Warranto", "Mandamus", "Certiorari"],
     "answer": 0,
@@ -266,6 +291,7 @@
   },
   {
     "id": "hist-029",
+    "topic": "world",
     "question": "Assertion (A): Hitler attacked Poland to capture the Danzig Port. Reason (R): Poland was accused of committing atrocities against the Germans.",
     "options": [
       "(A) is true and (R) is false.",
@@ -280,6 +306,7 @@
   },
   {
     "id": "hist-030",
+    "topic": "freedom",
     "question": "Arrange the following events in chronological order: 1. The Lucknow Pact 2. The Surat Split 3. The establishment of the Muslim League.",
     "options": ["1-2-3", "1-3-2", "3-2-1", "2-1-3"],
     "answer": 2,
@@ -289,6 +316,7 @@
   },
   {
     "id": "hist-031",
+    "topic": "world",
     "question": "Identify the odd one out of the following signatories of the Triple Entente.",
     "options": ["France", "Russia", "Japan", "England"],
     "answer": 2,
@@ -298,6 +326,7 @@
   },
   {
     "id": "hist-032",
+    "topic": "nationalism",
     "question": "A group of school students decides to take action based on the methods of the Early Nationalists. Which of the following actions are they NOT likely to adopt?",
     "options": [
       "Hold placards with the message 'Save Our Trees'.",
@@ -312,6 +341,7 @@
   },
   {
     "id": "hist-034",
+    "topic": "british-rule",
     "question": "Identify the correct pair of Governor-General and the policy or act associated with him.",
     "options": [
       "Doctrine of Lapse - Lord Canning",
@@ -326,6 +356,7 @@
   },
   {
     "id": "hist-035",
+    "topic": "world",
     "question": "Which of the following is NOT a consequence of the Second World War?",
     "options": [
       "Cold War",
@@ -340,6 +371,7 @@
   },
   {
     "id": "hist-036",
+    "topic": "nationalism",
     "question": "Read the description and choose the correct option: He was an Early Nationalist leader who presided over the second session of the Indian National Congress.",
     "options": ["Dadabhai Naoroji", "Gopal Krishna Gokhale", "Bipin Chandra Pal", "Lokmanya Tilak"],
     "answer": 0,
@@ -349,6 +381,7 @@
   },
   {
     "id": "hist-037",
+    "topic": "world",
     "question": "Which organ of the United Nations Organisation gives special power to its permanent members?",
     "options": ["The General Assembly", "The International Court of Justice", "The Security Council", "The Trusteeship Council"],
     "answer": 2,
@@ -358,6 +391,7 @@
   },
   {
     "id": "hist-038",
+    "topic": "civics",
     "question": "The International Court of Justice has how many judges?",
     "options": ["15", "10", "9", "5"],
     "answer": 0,
@@ -367,6 +401,7 @@
   },
   {
     "id": "hist-039",
+    "topic": "civics",
     "question": "In a system of government all administrative powers are divided between the Central and the State governments.",
     "options": ["Democracy", "Communist", "Parliamentary", "Federal"],
     "answer": 3,
@@ -376,6 +411,7 @@
   },
   {
     "id": "hist-040",
+    "topic": "civics",
     "question": "Motion which lays aside all other business to take up a definite matter of urgent importance:",
     "options": ["Cut", "Adjournment", "Prorogation", "No-confidence"],
     "answer": 1,
@@ -385,6 +421,7 @@
   },
   {
     "id": "hist-041",
+    "topic": "civics",
     "question": "The Union territory which participates in the procedure of President's election is:",
     "options": ["Puducherry", "Andaman Islands", "Daman and Diu", "Lakshadweep"],
     "answer": 0,
@@ -394,6 +431,7 @@
   },
   {
     "id": "hist-042",
+    "topic": "civics",
     "question": "The maximum duration a non-parliament member can remain in office as a minister is:",
     "options": ["1 year", "3 months", "5 months", "6 months"],
     "answer": 3,
@@ -403,6 +441,7 @@
   },
   {
     "id": "hist-043",
+    "topic": "civics",
     "question": "The District Judge acts as a ___ and maintains law and order in a district.",
     "options": ["Deputy Commissioner", "District Collector", "Sessions judge", "Municipal Commissioner"],
     "answer": 2,
@@ -412,6 +451,7 @@
   },
   {
     "id": "hist-044",
+    "topic": "world",
     "question": "The UN agency which published the monthly magazine 'Courier' is:",
     "options": ["UNICEF", "UNESCO", "WHO", "FAO"],
     "answer": 1,
@@ -421,6 +461,7 @@
   },
   {
     "id": "hist-045",
+    "topic": "civics",
     "question": "The present strength of the Lok Sabha is:",
     "options": ["550", "545", "543", "552"],
     "answer": 0,
@@ -430,6 +471,7 @@
   },
   {
     "id": "hist-046",
+    "topic": "civics",
     "question": "Name the presiding officer of the Lok Sabha.",
     "options": ["President", "Vice President", "Speaker", "Prime Minister"],
     "answer": 2,
@@ -439,6 +481,7 @@
   },
   {
     "id": "hist-047",
+    "topic": "civics",
     "question": "The power to legislate on the Residuary List lies with the:",
     "options": ["Legislative Assemblies", "Lok Sabha", "Rajya Sabha", "Parliament"],
     "answer": 3,
@@ -448,6 +491,7 @@
   },
   {
     "id": "hist-048",
+    "topic": "civics",
     "question": "The annual Budget is laid before the Parliament on which date every year?",
     "options": ["28 February", "29 February", "1 February", "30 March"],
     "answer": 2,
@@ -457,6 +501,7 @@
   },
   {
     "id": "hist-049",
+    "topic": "civics",
     "question": "Which of the following statements regarding an ordinance is not correct?",
     "options": [
       "It is issued by the Prime Minister.",
@@ -471,6 +516,7 @@
   },
   {
     "id": "hist-050",
+    "topic": "civics",
     "question": "The Prime Minister is:",
     "options": ["head of the state", "head of the government", "head of the state as well as government", "none of these"],
     "answer": 1,
@@ -480,6 +526,7 @@
   },
   {
     "id": "hist-051",
+    "topic": "british-rule",
     "question": "Annexation of which kingdom infuriated the Bengal sepoys and sparked off the Rebellion?",
     "options": ["Satara", "Jhansi", "Awadh", "Punjab"],
     "answer": 2,
@@ -489,6 +536,7 @@
   },
   {
     "id": "hist-052",
+    "topic": "nationalism",
     "question": "Reactionary policies of which of the following Viceroys gave a great impetus to the arousing of nationalism?",
     "options": ["Lord Lytton", "Lord Curzon", "Lord Ripon", "Both (a) and (b)"],
     "answer": 3,
@@ -498,6 +546,7 @@
   },
   {
     "id": "hist-053",
+    "topic": "freedom",
     "question": "Choose the wrong pair regarding Congress session and its President.",
     "options": ["1886: W.C. Bonnerjee", "1947: J.B. Kripalani", "1924: Mahatma Gandhi", "1918: Pt. M.M. Malaviya"],
     "answer": 0,
@@ -507,6 +556,7 @@
   },
   {
     "id": "hist-054",
+    "topic": "nationalism",
     "question": "Who founded the Kesari & Mahratta journals?",
     "options": ["Lala Lajpat Rai", "Lokmanya Tilak", "Annie Besant", "G.K. Gokhale"],
     "answer": 1,
@@ -516,6 +566,7 @@
   },
   {
     "id": "hist-055",
+    "topic": "nationalism",
     "question": "When did the Congress split between Moderates & Radicals?",
     "options": ["1907", "1885", "1924", "1916"],
     "answer": 0,
@@ -525,6 +576,7 @@
   },
   {
     "id": "hist-056",
+    "topic": "british-rule",
     "question": "The Morley-Minto Reforms introduced communal electorate in:",
     "options": ["1809", "1909", "1919", "1935"],
     "answer": 1,
@@ -534,6 +586,7 @@
   },
   {
     "id": "hist-057",
+    "topic": "nationalism",
     "question": "The newspapers New India and The Common Weal were associated with:",
     "options": ["Annie Bajaj", "B.G. Tilak", "Lajpat Rai", "Annie Besant"],
     "answer": 3,
@@ -543,6 +596,7 @@
   },
   {
     "id": "hist-058",
+    "topic": "freedom",
     "question": "Arrest of which of the following leaders sparked off an agitation in Amritsar culminating in the massacre of Jallianwala Bagh?",
     "options": ["Mahatma Gandhi", "Lajpat Rai", "Dr Satyapal and Saifuddin Kitchlew", "Ali Brothers"],
     "answer": 2,
@@ -552,6 +606,7 @@
   },
   {
     "id": "hist-059",
+    "topic": "freedom",
     "question": "The Gandhi-Irwin Pact led to the suspension of which national movement?",
     "options": ["Non-Cooperation Movement", "Bardoli Satyagraha", "Champaran Satyagraha", "Civil Disobedience Movement"],
     "answer": 3,
@@ -561,6 +616,7 @@
   },
   {
     "id": "hist-060",
+    "topic": "world",
     "question": "The March on Rome is related to which dictator?",
     "options": ["Adolf Hitler", "Mussolini", "Napoleon", "Winston Churchill"],
     "answer": 1,
@@ -570,6 +626,7 @@
   },
   {
     "id": "hist-061",
+    "topic": "civics",
     "question": "Identify the exclusive powers of the Rajya Sabha: P: Can introduce a new All India Service; Q: Can impeach the President; R: Can never be dissolved as a whole; S: Can introduce a Money Bill.",
     "options": ["P and Q", "R and S", "P and R", "Q and S"],
     "answer": 2,
@@ -579,6 +636,7 @@
   },
   {
     "id": "hist-063",
+    "topic": "civics",
     "question": "Given details of a few Indian citizens: W is 34 and a Professor in a Government College; X is 35 and has taken up citizenship of the United States of America; Y is 27 and a reputed sportsperson; Z is 36 and a scientist. Select the person who fulfils the eligibility criteria to become the President of India.",
     "options": ["W", "X", "Y", "Z"],
     "answer": 3,
@@ -588,6 +646,7 @@
   },
   {
     "id": "hist-065",
+    "topic": "civics",
     "question": "Choose the correct option to replace the underlined word: The Union ministers are collectively responsible to the Prime Minister.",
     "options": ["Lok Sabha", "Rajya Sabha", "President", "Speaker"],
     "answer": 0,
@@ -597,6 +656,7 @@
   },
   {
     "id": "hist-066",
+    "topic": "civics",
     "question": "Residents of Jodhpur got married and later separated. The matter was placed before the Lok Adalat Family Court, where counselling helped the parties agree to live together and withdraw their divorce petition. Which advantage of the Lok Adalat is highlighted?",
     "options": ["Saves money", "Speedy justice", "Works on the spirit of compromise", "Reduces the burden on High Courts"],
     "answer": 2,
@@ -606,6 +666,7 @@
   },
   {
     "id": "hist-067",
+    "topic": "nationalism",
     "question": "Assertion (A): The Indian National Congress was formed in 1885. Reason (R): The main aim of the Indian National Congress at its inception was to demand complete independence for India.",
     "options": [
       "(A) is true and (R) is false.",
@@ -620,6 +681,7 @@
   },
   {
     "id": "hist-068",
+    "topic": "nationalism",
     "question": "Arrange the following events in chronological order: 1. The Dandi March 2. The Second Round Table Conference 3. The Simon Commission.",
     "options": ["3-1-2", "1-3-2", "3-2-1", "2-1-3"],
     "answer": 0,
@@ -629,6 +691,7 @@
   },
   {
     "id": "hist-069",
+    "topic": "nationalism",
     "question": "Anand's area has had no water supply for three days despite repeated complaints. Being a follower of the beliefs and methods of the Early Nationalists, which method is Anand NOT likely to approve?",
     "options": [
       "Peaceful procession by the residents",
@@ -643,6 +706,7 @@
   },
   {
     "id": "hist-070",
+    "topic": "world",
     "question": "Identify the cities most affected by American action in World War II.",
     "options": ["Rome, Berlin", "Tokyo, Berlin", "Hiroshima, Nagasaki", "Tokyo, Rome"],
     "answer": 2,
@@ -652,6 +716,7 @@
   },
   {
     "id": "hist-073",
+    "topic": "british-rule",
     "question": "Read the description and choose the correct option: This was a significant event in Indian history. Many underlying causes included economic exploitation, social reforms, and political annexations by the British. Even in its failure it ignited nationalism. Its immediate cause was:",
     "options": [
       "introduction of the Doctrine of Lapse",
@@ -666,6 +731,7 @@
   },
   {
     "id": "hist-075",
+    "topic": "nationalism",
     "question": "Identify the correct pair of leader and their contribution.",
     "options": [
       "Surendranath Banerjee - Assertive Nationalist",
@@ -680,6 +746,7 @@
   },
   {
     "id": "hist-076",
+    "topic": "world",
     "question": "Which of the following scenarios describes the Non-Alignment Policy (NAM)?",
     "options": [
       "A country forms a military alliance only with the United States.",
@@ -694,6 +761,7 @@
   },
   {
     "id": "hist-077",
+    "topic": "civics",
     "question": "District Judge : ___ cases :: Sessions Judge : Criminal Cases",
     "options": ["Advisory", "Civil", "Constitutional", "Appellate"],
     "answer": 1,
@@ -703,6 +771,7 @@
   },
   {
     "id": "hist-078",
+    "topic": "freedom",
     "question": "Assertion (A): The Civil Disobedience Movement was renewed by Mahatma Gandhi. Reason (R): The Second Round Table Conference was a failure.",
     "options": [
       "(R) contradicts (A).",
@@ -717,6 +786,7 @@
   },
   {
     "id": "hist-079",
+    "topic": "civics",
     "question": "The government of Country X has introduced a law similar to the Ilbert Bill introduced in 1883. Who will be impacted by this Bill?",
     "options": ["The Farmers", "The Artisans", "The Soldiers", "The Judges"],
     "answer": 3,
@@ -726,6 +796,7 @@
   },
   {
     "id": "hist-081",
+    "topic": "freedom",
     "question": "Identify the ODD ONE out of the following objectives of the Muslim League.",
     "options": [
       "To promote among Muslims of India, support for the British",
@@ -740,6 +811,7 @@
   },
   {
     "id": "hist-082",
+    "topic": "nationalism",
     "question": "Your school has organized a poster-making competition on the topic 'Education empowerment for Girls in India'. Which leader would MOST LIKELY be part of the poster?",
     "options": ["Surendranath Banerjee", "Pherozeshah Mehta", "Dadabhai Naoroji", "Jyotiba Phule"],
     "answer": 3,
@@ -749,6 +821,7 @@
   },
   {
     "id": "hist-083",
+    "topic": "freedom",
     "question": "Read the description and identify the person: He established the Forward Bloc and coined the slogan 'Delhi Chalo'.",
     "options": ["Mahatma Gandhi", "Subash Chandra Bose", "Bal Gangadhar Tilak", "Dadabhai Naoroji"],
     "answer": 1,

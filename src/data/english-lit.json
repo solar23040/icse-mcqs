@@ -1,6 +1,7 @@
 [
   {
     "id": "lit-001",
+    "topic": "julius-caesar",
     "question": "What does Antony describe as 'thou bleeding piece of earth'?",
     "options": [
       "Caesar's robe that was stained with his blood",
@@ -15,6 +16,7 @@
   },
   {
     "id": "lit-002",
+    "topic": "julius-caesar",
     "question": "When Brutus says 'ambition's debt is paid', he means that",
     "options": [
       "Caesar's greed for power and possession had resulted in his death",
@@ -29,6 +31,7 @@
   },
   {
     "id": "lit-003",
+    "topic": "julius-caesar",
     "question": "After Antony's speech following Caesar's assassination, the angry mob kills",
     "options": [
       "Cinna the conspirator",
@@ -43,6 +46,7 @@
   },
   {
     "id": "lit-004",
+    "topic": "julius-caesar",
     "question": "When Antony says 'He must be taught, and train'd, and bid go forth: A barren-spirited fellow', he refers to",
     "options": [
       "Octavius",
@@ -57,6 +61,7 @@
   },
   {
     "id": "lit-005",
+    "topic": "julius-caesar",
     "question": "Who were the members of the Second Triumvirate, formed to rule over Rome after Caesar's assassination?",
     "options": [
       "Julius Caesar, Crassus, Pompey",
@@ -71,6 +76,7 @@
   },
   {
     "id": "lit-006",
+    "topic": "julius-caesar",
     "question": "Which of the following words best describes Cassius's mood when he says: 'Come, Antony, and young Octavius, come, Revenge yourselves alone on Cassius'?",
     "options": [
       "anxious",
@@ -85,6 +91,7 @@
   },
   {
     "id": "lit-007",
+    "topic": "poetry",
     "question": "In the poem 'Haunted Houses', what does the speaker see at his fireside that the stranger cannot?",
     "options": [
       "the speaker only sees what is physically present",
@@ -99,6 +106,7 @@
   },
   {
     "id": "lit-008",
+    "topic": "poetry",
     "question": "In the poem 'The Glove and the Lions', who does Count de Lorge 'sigh for'?",
     "options": [
       "The lions that ramped and roared",
@@ -113,6 +121,7 @@
   },
   {
     "id": "lit-009",
+    "topic": "poetry",
     "question": "Select the option that shows the correct relationship between Statement 1 and Statement 2 from 'When Great Trees Fall'. Statement 1: When great trees fall, the world is left permanently unstable. Statement 2: In the poem, the natural world is depicted as reacting with fear and uncertainty when great trees fall.",
     "options": [
       "(1) is false, but (2) is true.",
@@ -127,6 +136,7 @@
   },
   {
     "id": "lit-010",
+    "topic": "poetry",
     "question": "The poem 'A Considerable Speck' expresses Frost's",
     "options": [
       "love for the little organism",
@@ -141,6 +151,7 @@
   },
   {
     "id": "lit-011",
+    "topic": "poetry",
     "question": "Which of the given options contains the figure of speech that appears in the following line from the poem 'The Power of Music'? 'And in the sky the feathered fly turn turtle while They're winging,'",
     "options": [
       "You're one month on in the middle of May",
@@ -155,6 +166,7 @@
   },
   {
     "id": "lit-012",
+    "topic": "prose",
     "question": "In the short story 'With the Photographer', the narrator asks the photographer 'Is it me?' because",
     "options": [
       "He is delighted with the photographer's skill",
@@ -169,6 +181,7 @@
   },
   {
     "id": "lit-013",
+    "topic": "prose",
     "question": "In the short story 'The Elevator', which of the following does Martin's father NOT do when Martin expresses his fear of the elevator?",
     "options": [
       "He dismisses Martin's concerns",
@@ -183,6 +196,7 @@
   },
   {
     "id": "lit-014",
+    "topic": "prose",
     "question": "Arrange the following events from 'The Pedestrian' in the correct sequence: 1. One night, as he was nearing home, he was stopped by a police car. 2. Since his answers were considered odd and unacceptable, he was forced to enter the car and taken away. 3. Leonard Mead loved to walk through the empty streets at night. 4. A metallic voice from the car asked him a series of questions.",
     "options": [
       "2, 1, 3, 4",
@@ -197,6 +211,7 @@
   },
   {
     "id": "lit-015",
+    "topic": "prose",
     "question": "Where was Adjoa born?",
     "options": [
       "Nigeria",
@@ -211,6 +226,7 @@
   },
   {
     "id": "lit-016",
+    "topic": "prose",
     "question": "Why did M. Hamel have to leave the school after forty years of service?",
     "options": [
       "He was not allowed to teach French any longer",
@@ -225,6 +241,7 @@
   },
   {
     "id": "lit-017",
+    "topic": "julius-caesar",
     "question": "What were Julius Caesar's dying words?",
     "options": [
       "'Caesar, now be still...'",
@@ -239,6 +256,7 @@
   },
   {
     "id": "lit-018",
+    "topic": "julius-caesar",
     "question": "Which of the following phrases best describes Antony's mood when he says: 'O mighty Caesar! dost thou lie so low? Are all thy conquests, glories, triumphs, spoils, Shrunk to this little measure?'",
     "options": [
       "frustration and rage",
@@ -253,6 +271,7 @@
   },
   {
     "id": "lit-019",
+    "topic": "julius-caesar",
     "question": "Which of the following does Antony NOT say about Caesar in his funeral speech?",
     "options": [
       "Caesar was ambitious and wanted to be crowned king.",
@@ -267,6 +286,7 @@
   },
   {
     "id": "lit-020",
+    "topic": "julius-caesar",
     "question": "Antony says, 'These many then shall die; their names are prick'd.' These words reveal that he is",
     "options": [
       "ruthless",
@@ -281,6 +301,7 @@
   },
   {
     "id": "lit-021",
+    "topic": "julius-caesar",
     "question": "During their quarrel, Brutus says to Cassius, 'Away, slight man!' Brutus's tone in the above line can be best described as",
     "options": [
       "disappointed",
@@ -295,6 +316,7 @@
   },
   {
     "id": "lit-022",
+    "topic": "julius-caesar",
     "question": "Towards the end of the play, Pindarus reports that Titinius had been captured by enemy troops. What does Cassius do on hearing this news?",
     "options": [
       "He orders an immediate attack to rescue Titinius.",
@@ -309,6 +331,7 @@
   },
   {
     "id": "lit-023",
+    "topic": "prose",
     "question": "What did Martin dislike about the elevator in his apartment building?",
     "options": [
       "The unpleasant smell",
@@ -323,6 +346,7 @@
   },
   {
     "id": "lit-024",
+    "topic": "prose",
     "question": "Arrange the following events from 'With the Photographer' in the correct sequence: 1. Even as he was protesting, the photographer managed to take a candid photograph with which he was very pleased. 2. At the studio, the photographer's criticism of his face made the author feel worthless and unattractive. 3. Disturbed and upset by the photographer's criticisms and instructions, the author voiced his protest. 4. The author wanted to have his photograph taken.",
     "options": [
       "3, 2, 1, 4",
@@ -337,6 +361,7 @@
   },
   {
     "id": "lit-025",
+    "topic": "prose",
     "question": "'Nana has many voices. There is a special one she uses to shut everyone up.' What do these lines from 'The Girl Who Can' tell us about Nana?",
     "options": [
       "She is a loud, rude woman.",
@@ -351,6 +376,7 @@
   },
   {
     "id": "lit-026",
+    "topic": "prose",
     "question": "What were the people in Mead's neighbourhood doing when he was out walking at night?",
     "options": [
       "Watching television",
@@ -365,6 +391,7 @@
   },
   {
     "id": "lit-027",
+    "topic": "prose",
     "question": "In 'The Last Lesson', Franz says that 'all our bad news had come from there.' What does 'there' refer to?",
     "options": [
       "The school building",
@@ -379,6 +406,7 @@
   },
   {
     "id": "lit-028",
+    "topic": "poetry",
     "question": "Which of the given options contains the figure of speech that appears in the following lines from Longfellow's poem 'Haunted Houses'? 'The spirit-world around this world of sense Floats like an atmosphere, ...'",
     "options": [
       "'Strange, it is a huge nothing that we fear.'",
@@ -393,6 +421,7 @@
   },
   {
     "id": "lit-029",
+    "topic": "poetry",
     "question": "The mood in the poem 'When Great Trees Fall' moves from",
     "options": [
       "hurt to wonder",
@@ -407,6 +436,7 @@
   },
   {
     "id": "lit-030",
+    "topic": "poetry",
     "question": "In the poem 'The Glove and the Lions', King Francis exclaims 'rightly done!'. What action of Count de Lorge does he applaud when he says this?",
     "options": [
       "Leaping into the pit full of angry lions.",
@@ -421,6 +451,7 @@
   },
   {
     "id": "lit-031",
+    "topic": "poetry",
     "question": "Select the option that shows the correct relationship between Statement 1 and Statement 2 based on the poem 'A Considerable Speck'. Statement 1: The mite on the paper ran, crept, faltered, hesitated and cowered. Statement 2: The poet-narrator realised that it was an intelligent living creature.",
     "options": [
       "Statement 1 is true and Statement 2 is false.",
@@ -435,6 +466,7 @@
   },
   {
     "id": "lit-032",
+    "topic": "poetry",
     "question": "Sukumar Ray's poem 'The Power of Music' can be classified as ______.",
     "options": [
       "nonsense verse",

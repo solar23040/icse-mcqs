@@ -47,6 +47,9 @@ function seedProgress(): void {
   storage.recordAnswer('maths', true);
   storage.recordAnswer('maths', false);
   storage.markWrong('maths', 'm2', 5000);
+  storage.toggleBookmark('m1');
+  storage.recordQuestionResult('maths', 'm1', true);
+  storage.recordQuestionResult('maths', 'm1', false);
   storage.setUserName('Aryan');
   storage.setUserDescription('Preparing for boards.');
 
@@ -70,6 +73,8 @@ describe('sync snapshots', () => {
     expect(snapshot.stats.maths).toEqual({ attempted: 2, correct: 1 });
     expect(snapshot.wrong.maths).toEqual(['m2']);
     expect(snapshot.wrongAt.maths).toEqual({ m2: 5000 });
+    expect(snapshot.bookmarks).toEqual(['m1']);
+    expect(snapshot.qstats.maths).toEqual({ m1: { attempted: 2, correct: 1 } });
     expect(snapshot.username).toBe('Aryan');
     expect(snapshot.description).toBe('Preparing for boards.');
 
@@ -86,6 +91,8 @@ describe('sync snapshots', () => {
     expect(storage.getStats('maths')).toEqual({ attempted: 2, correct: 1 });
     expect(storage.getWrong('maths')).toEqual(['m2']);
     expect(storage.getWrongTimestamps('maths')).toEqual({ m2: 5000 });
+    expect(storage.getBookmarks()).toEqual(['m1']);
+    expect(storage.getQuestionStats('maths')).toEqual({ m1: { attempted: 2, correct: 1 } });
     expect(storage.getUserName()).toBe('Aryan');
     expect(storage.getUserDescription()).toBe('Preparing for boards.');
   });
@@ -118,6 +125,8 @@ describe('sync snapshots', () => {
       stats: { maths: { attempted: 2, correct: 1 } },
       wrong: { maths: ['m2'] },
       wrongAt: { maths: { m2: 1000 } },
+      bookmarks: ['m1'],
+      qstats: { maths: { m1: { attempted: 2, correct: 1 } } },
       username: 'Local',
       description: 'Local bio',
     })!;
@@ -142,6 +151,13 @@ describe('sync snapshots', () => {
       stats: { maths: { attempted: 5, correct: 4 } },
       wrong: { maths: ['m3'] },
       wrongAt: { maths: { m2: 2000, m3: 3000 } },
+      bookmarks: ['m2'],
+      qstats: {
+        maths: {
+          m1: { attempted: 3, correct: 2 },
+          m2: { attempted: 1, correct: 0 },
+        },
+      },
       username: 'Remote',
     })!;
 
@@ -170,6 +186,11 @@ describe('sync snapshots', () => {
     expect(merged.stats.maths).toEqual({ attempted: 5, correct: 4 });
     expect(merged.wrong.maths).toEqual(['m2', 'm3']);
     expect(merged.wrongAt.maths).toEqual({ m2: 2000, m3: 3000 });
+    expect(merged.bookmarks).toEqual(['m1', 'm2']);
+    expect(merged.qstats.maths).toEqual({
+      m1: { attempted: 3, correct: 2 },
+      m2: { attempted: 1, correct: 0 },
+    });
     expect(merged.username).toBe('Local');
     expect(merged.description).toBe('Local bio');
   });

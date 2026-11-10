@@ -1,15 +1,47 @@
-import { getGame, getSeen, getStats, saveGame, saveSeen, saveStats } from './storage';
+import {
+  getBookmarks,
+  getGame,
+  getQuestionStats,
+  getSeen,
+  getStats,
+  saveGame,
+  saveQuestionStats,
+  saveSeen,
+  saveStats,
+  setBookmarks,
+  type QuestionStats,
+} from './storage';
 import type { Subject } from './types';
 import { SUBJECTS } from './subjects';
 
 const TRANSFER_VERSION = 1;
 
-interface TransferPayload {
-  v: typeof TRANSFER_VERSION;
-  checksum: string;
+interface TransferCore {
   game: ReturnType<typeof getGame>;
   seen: Partial<Record<Subject, string[]>>;
   stats: Partial<Record<Subject, { attempted: number; correct: number }>>;
+  bookmarks: string[];
+  qstats: Partial<Record<Subject, QuestionStats>>;
+}
+
+interface TransferPayload extends TransferCore {
+  v: typeof TRANSFER_VERSION;
+  checksum: string;
+}
+
+/**
+ * Only fields that exist in the payload are hashed, so codes exported before
+ * bookmarks and per-question stats existed still validate.
+ */
+function coreOf(record: Record<string, unknown>): Record<string, unknown> {
+  const core: Record<string, unknown> = {
+    game: record.game,
+    seen: record.seen,
+    stats: record.stats,
+  };
+  if (record.bookmarks !== undefined) core.bookmarks = record.bookmarks;
+  if (record.qstats !== undefined) core.qstats = record.qstats;
+  return core;
 }
 
 function checksumOf(value: unknown): string {
@@ -30,6 +62,31 @@ function base64ToUtf8(text: string): string {
   return decodeURIComponent(escape(atob(text)));
 }
 
+function stringList(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return [...new Set(value.filter((item): item is string => typeof item === 'string' && item.length > 0))];
+}
+
+function cleanQuestionStats(value: unknown): QuestionStats {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) return {};
+  const stats: QuestionStats = {};
+  for (const [id, entry] of Object.entries(value as Record<string, unknown>)) {
+    if (id === '' || typeof entry !== 'object' || entry === null) continue;
+    const record = entry as { attempted?: unknown; correct?: unknown };
+    const attempted =
+      typeof record.attempted === 'number' && Number.isFinite(record.attempted)
+        ? Math.max(0, Math.trunc(record.attempted))
+        : 0;
+    if (attempted === 0) continue;
+    const correct =
+      typeof record.correct === 'number' && Number.isFinite(record.correct)
+        ? Math.min(attempted, Math.max(0, Math.trunc(record.correct)))
+        : 0;
+    stats[id] = { attempted, correct };
+  }
+  return stats;
+}
+
 export function exportProgress(): string {
   const subjects = SUBJECTS.map((subject) => subject.slug);
   const seen = Object.fromEntries(subjects.map((subject) => [subject, getSeen(subject)])) as Partial<
@@ -38,8 +95,11 @@ export function exportProgress(): string {
   const stats = Object.fromEntries(
     subjects.map((subject) => [subject, getStats(subject)]),
   ) as Partial<Record<Subject, { attempted: number; correct: number }>>;
+  const qstats = Object.fromEntries(
+    subjects.map((subject) => [subject, getQuestionStats(subject)]),
+  ) as Partial<Record<Subject, QuestionStats>>;
 
-  const core = { game: getGame(), seen, stats };
+  const core = { game: getGame(), seen, stats, bookmarks: getBookmarks(), qstats };
   const payload: TransferPayload = {
     v: TRANSFER_VERSION,
     checksum: checksumOf(core),
@@ -66,9 +126,9 @@ export function importProgress(code: string): ImportResult {
 
   const record = payload as Record<string, unknown>;
   if (record.v !== TRANSFER_VERSION) return { ok: false, error: 'unknown_version' };
-
-  const core = { game: record.game, seen: record.seen, stats: record.stats };
-  if (record.checksum !== checksumOf(core)) return { ok: false, error: 'checksum_mismatch' };
+  if (record.checksum !== checksumOf(coreOf(record))) {
+    return { ok: false, error: 'checksum_mismatch' };
+  }
 
   if (typeof record.game !== 'object' || record.game === null) {
     return { ok: false, error: 'invalid_game' };
@@ -79,6 +139,7 @@ export function importProgress(code: string): ImportResult {
 
   const seen = (record.seen ?? {}) as Partial<Record<Subject, unknown>>;
   const stats = (record.stats ?? {}) as Partial<Record<Subject, unknown>>;
+  const qstats = (record.qstats ?? {}) as Partial<Record<Subject, unknown>>;
 
   try {
     saveGame(game);
@@ -99,6 +160,14 @@ export function importProgress(code: string): ImportResult {
           correct: Math.max(0, Math.trunc((stat as { correct: number }).correct)),
         });
       }
+      if (qstats[subject] !== undefined) {
+        saveQuestionStats(subject, cleanQuestionStats(qstats[subject]));
+      }
+    }
+
+    // Older codes have no bookmarks field; leave the local list untouched then.
+    if (record.bookmarks !== undefined) {
+      setBookmarks(stringList(record.bookmarks));
     }
   } catch {
     return { ok: false, error: 'storage_error' };

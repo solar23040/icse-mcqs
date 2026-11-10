@@ -3,10 +3,13 @@ import { DAILY_GOAL_OPTIONS, WRONG_BOX_LOCK_MS } from './config';
 import { defaultGameState, levelFromXp, type GameState } from './gamification';
 import type { Subject } from './types';
 
-interface Stats {
+export interface Stats {
   attempted: number;
   correct: number;
 }
+
+/** Per-question answer history, keyed by question id. */
+export type QuestionStats = Record<string, Stats>;
 
 /**
  * Mirrors every read/write so the app keeps working when localStorage is
@@ -319,6 +322,66 @@ export function saveStats(subject: Subject, stats: { attempted: number; correct:
   );
 }
 
+/* ── Per-question stats (weak-topic accuracy) ──────────────────────────── */
+
+function questionStatsKey(subject: Subject): string {
+  return scopedKey(`mcq:${subject}:qstats`);
+}
+
+function parseQuestionStats(raw: string): QuestionStats {
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) return {};
+
+    const result: QuestionStats = {};
+    for (const [id, value] of Object.entries(parsed as Record<string, unknown>)) {
+      if (id === '' || typeof value !== 'object' || value === null) continue;
+      const record = value as { attempted?: unknown; correct?: unknown };
+      const attempted = toCount(record.attempted);
+      if (attempted === 0) continue;
+      result[id] = { attempted, correct: Math.min(attempted, toCount(record.correct)) };
+    }
+    return result;
+  } catch {
+    return {};
+  }
+}
+
+export function getQuestionStats(subject: Subject): QuestionStats {
+  const raw = readRaw(questionStatsKey(subject));
+  return raw === null ? {} : parseQuestionStats(raw);
+}
+
+export function getQuestionResult(subject: Subject, id: string): Stats {
+  return getQuestionStats(subject)[id] ?? emptyStats();
+}
+
+export function recordQuestionResult(subject: Subject, id: string, correct: boolean): void {
+  if (id === '') return;
+  const stats = getQuestionStats(subject);
+  const entry = stats[id] ?? emptyStats();
+  entry.attempted += 1;
+  if (correct) entry.correct += 1;
+  stats[id] = entry;
+  writeRaw(questionStatsKey(subject), JSON.stringify(stats));
+}
+
+export function saveQuestionStats(subject: Subject, stats: QuestionStats): void {
+  const clean: QuestionStats = {};
+  for (const [id, value] of Object.entries(stats)) {
+    if (id === '') continue;
+    const attempted = toCount(value?.attempted);
+    if (attempted === 0) continue;
+    clean[id] = { attempted, correct: Math.min(attempted, toCount(value?.correct)) };
+  }
+
+  if (Object.keys(clean).length === 0) {
+    removeRaw(questionStatsKey(subject));
+  } else {
+    writeRaw(questionStatsKey(subject), JSON.stringify(clean));
+  }
+}
+
 function gameKey(): string {
   return scopedKey('icse:game:v1');
 }
@@ -446,6 +509,56 @@ export const recordWrong = markWrong;
 export const removeWrong = unmarkWrong;
 export const resetWrongQuestions = resetWrong;
 export const clearWrong = resetWrong;
+
+/* ── Bookmarked questions ─────────────────────────────────────────────── */
+
+function bookmarksKey(): string {
+  return scopedKey('icse:bookmarks:v1');
+}
+
+function notify(event: string, detail: unknown): void {
+  if (typeof window === 'undefined' || typeof CustomEvent !== 'function') return;
+  try {
+    window.dispatchEvent(new CustomEvent(event, { detail }));
+  } catch {
+    // Best-effort event notification
+  }
+}
+
+/** Question ids the learner flagged for later. Ids are globally unique. */
+export function getBookmarks(): string[] {
+  const raw = readRaw(bookmarksKey());
+  return raw === null ? [] : parseSeen(raw);
+}
+
+export function setBookmarks(ids: readonly string[]): void {
+  const unique = [...new Set(ids.filter((id) => typeof id === 'string' && id.length > 0))];
+  if (unique.length === 0) {
+    removeRaw(bookmarksKey());
+  } else {
+    writeRaw(bookmarksKey(), JSON.stringify(unique));
+  }
+  notify('icse:bookmarksUpdate', unique);
+}
+
+export function isBookmarked(id: string): boolean {
+  return getBookmarks().includes(id);
+}
+
+/** Adds or removes a bookmark, returning the new saved state. */
+export function toggleBookmark(id: string): boolean {
+  if (id === '') return false;
+  const current = getBookmarks();
+  const next = current.includes(id)
+    ? current.filter((value) => value !== id)
+    : [...current, id];
+  setBookmarks(next);
+  return next.includes(id);
+}
+
+export function resetBookmarks(): void {
+  setBookmarks([]);
+}
 
 /* ── User display name ────────────────────────────────────────────────── */
 

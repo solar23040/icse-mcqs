@@ -25,10 +25,12 @@ export interface BuildSessionOptions {
   mode?: SessionMode;
   /** Leitner box per question id, supplied by the caller from game state. */
   boxes?: Record<string, 0 | 1 | 2 | 3>;
+  /** Only use questions tagged with one of these topic slugs. */
+  topics?: string[];
   rng?: () => number;
 }
 
-function toSessionQuestion(question: Question, rng: () => number): SessionQuestion {
+export function toSessionQuestion(question: Question, rng: () => number): SessionQuestion {
   // Shuffle indices alongside the text so duplicate option strings still map
   // back to the original answer correctly.
   const indexed = question.options.map((text, index) => ({ text, index }));
@@ -40,6 +42,7 @@ function toSessionQuestion(question: Question, rng: () => number): SessionQuesti
     options: shuffledOptions.map((option) => option.text),
     correctIndex: shuffledOptions.findIndex((option) => option.index === question.answer),
     explanation: question.explanation,
+    topic: question.topic,
   };
 }
 
@@ -51,19 +54,25 @@ export function buildSession(
 ): { questions: SessionQuestion[]; unseenCount: number; poolExhausted: boolean } {
   const mode = typeof options === 'string' ? options : (options?.mode ?? 'unseen');
   const boxes = typeof options === 'object' ? (options.boxes ?? {}) : {};
+  const topics = typeof options === 'object' ? options.topics : undefined;
   const rng = typeof options === 'object' ? (options.rng ?? Math.random) : Math.random;
 
+  const topicSet = topics && topics.length > 0 ? new Set(topics) : null;
+  const allQuestions = topicSet
+    ? all.filter((question) => topicSet.has(question.topic))
+    : all;
+
   const seen = new Set(seenIds);
-  const unseen = all.filter((question) => !seen.has(question.id));
+  const unseen = allQuestions.filter((question) => !seen.has(question.id));
   const unseenCount = unseen.length;
 
   let candidates: Question[];
   if (mode === 'review') {
-    const weakest = all.filter((question) => {
+    const weakest = allQuestions.filter((question) => {
       const box = boxes[question.id];
       return box === 0 || box === 1;
     });
-    const middle = all.filter((question) => boxes[question.id] === 2);
+    const middle = allQuestions.filter((question) => boxes[question.id] === 2);
     candidates = [
       ...shuffle(weakest, rng),
       ...shuffle(middle, rng),

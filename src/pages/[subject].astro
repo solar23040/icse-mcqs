@@ -41,7 +41,7 @@ const comingSoon = placeholder || questions.length === 0;
         ? 'Questions for this subject are being written and checked right now. Check back soon.'
         : 'Choose a session length, then work through each question at your own pace.'}
     </p>
-    {!comingSoon && <SubjectMastery client:load questions={questions} />}
+    {!comingSoon && <SubjectMastery client:load subject={subject} questions={questions} />}
   </section>
 
   {

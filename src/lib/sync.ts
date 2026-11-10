@@ -1,7 +1,9 @@
 import { DAILY_GOAL_OPTIONS } from './config';
 import { defaultGameState, levelFromXp, type GameState } from './gamification';
 import {
+  getBookmarks,
   getGame,
+  getQuestionStats,
   getSeen,
   getStats,
   getWrong,
@@ -9,11 +11,14 @@ import {
   getUserDescription,
   getUserName,
   saveGame,
+  saveQuestionStats,
   saveSeen,
   saveStats,
   saveWrongState,
+  setBookmarks,
   setUserDescription,
   setUserName,
+  type QuestionStats,
 } from './storage';
 import { SUBJECTS } from './subjects';
 import type { Subject } from './types';
@@ -35,6 +40,9 @@ export interface SyncData {
   wrong: Partial<Record<Subject, string[]>>;
   /** When each wrong question entered the Wrong box (epoch ms). */
   wrongAt: Partial<Record<Subject, Record<string, number>>>;
+  bookmarks: string[];
+  /** Per-question attempts, used for weak-topic accuracy. */
+  qstats: Partial<Record<Subject, QuestionStats>>;
   username: string | null;
   description: string | null;
 }
@@ -141,6 +149,18 @@ function normaliseTimestamps(value: unknown): Record<string, number> {
   return timestamps;
 }
 
+function normaliseQuestionStats(value: unknown): QuestionStats {
+  if (!isRecord(value)) return {};
+  const stats: QuestionStats = {};
+  for (const [id, entry] of Object.entries(value)) {
+    if (id === '' || !isRecord(entry)) continue;
+    const attempted = toCount(entry.attempted);
+    if (attempted === 0) continue;
+    stats[id] = { attempted, correct: Math.min(attempted, toCount(entry.correct)) };
+  }
+  return stats;
+}
+
 function normaliseSubjectMap<T>(
   value: unknown,
   parse: (entry: unknown) => T,
@@ -166,6 +186,8 @@ export function normaliseSyncData(value: unknown): SyncData | null {
     stats: normaliseSubjectMap(value.stats, normaliseStats),
     wrong: normaliseSubjectMap(value.wrong, stringList),
     wrongAt: normaliseSubjectMap(value.wrongAt, normaliseTimestamps),
+    bookmarks: stringList(value.bookmarks),
+    qstats: normaliseSubjectMap(value.qstats, normaliseQuestionStats),
     username:
       typeof value.username === 'string' && value.username.trim().length > 0
         ? value.username.trim().slice(0, 20)
@@ -183,12 +205,14 @@ export function captureSyncData(updatedAt = Date.now()): SyncData {
   const stats: SyncData['stats'] = {};
   const wrong: SyncData['wrong'] = {};
   const wrongAt: SyncData['wrongAt'] = {};
+  const qstats: SyncData['qstats'] = {};
 
   for (const { slug } of SUBJECTS) {
     seen[slug] = getSeen(slug);
     stats[slug] = getStats(slug);
     wrong[slug] = getWrong(slug);
     wrongAt[slug] = getWrongTimestamps(slug);
+    qstats[slug] = getQuestionStats(slug);
   }
 
   return {
@@ -199,6 +223,8 @@ export function captureSyncData(updatedAt = Date.now()): SyncData {
     stats,
     wrong,
     wrongAt,
+    bookmarks: getBookmarks(),
+    qstats,
     username: getUserName(),
     description: getUserDescription(),
   };
@@ -215,7 +241,10 @@ export function applySyncData(value: unknown): boolean {
     saveSeen(slug, data.seen[slug] ?? []);
     saveStats(slug, data.stats[slug] ?? { attempted: 0, correct: 0 });
     saveWrongState(slug, data.wrong[slug] ?? [], data.wrongAt[slug] ?? {});
+    saveQuestionStats(slug, data.qstats[slug] ?? {});
   }
+
+  setBookmarks(data.bookmarks);
 
   if (data.username) setUserName(data.username);
   if (data.description) setUserDescription(data.description);
@@ -295,6 +324,16 @@ function mergeTimestamps(
   return timestamps;
 }
 
+function mergeQuestionStats(a: QuestionStats | undefined, b: QuestionStats | undefined): QuestionStats {
+  const stats: QuestionStats = {};
+  for (const id of new Set([...Object.keys(a ?? {}), ...Object.keys(b ?? {})])) {
+    const attempted = Math.max(a?.[id]?.attempted ?? 0, b?.[id]?.attempted ?? 0);
+    const correct = Math.min(attempted, Math.max(a?.[id]?.correct ?? 0, b?.[id]?.correct ?? 0));
+    if (attempted > 0) stats[id] = { attempted, correct };
+  }
+  return stats;
+}
+
 /**
  * Combines two snapshots without doubling progress. `local` wins ties such as
  * the display name; published answers and mistakes are unioned.
@@ -304,12 +343,14 @@ export function mergeSyncData(local: SyncData, remote: SyncData, updatedAt = Dat
   const stats: SyncData['stats'] = {};
   const wrong: SyncData['wrong'] = {};
   const wrongAt: SyncData['wrongAt'] = {};
+  const qstats: SyncData['qstats'] = {};
 
   for (const { slug } of SUBJECTS) {
     seen[slug] = unionStrings(local.seen[slug], remote.seen[slug]);
     stats[slug] = mergeStats(local.stats[slug], remote.stats[slug]);
     wrong[slug] = unionStrings(local.wrong[slug], remote.wrong[slug]);
     wrongAt[slug] = mergeTimestamps(local.wrongAt[slug], remote.wrongAt[slug]);
+    qstats[slug] = mergeQuestionStats(local.qstats[slug], remote.qstats[slug]);
   }
 
   return {
@@ -320,6 +361,8 @@ export function mergeSyncData(local: SyncData, remote: SyncData, updatedAt = Dat
     stats,
     wrong,
     wrongAt,
+    bookmarks: unionStrings(local.bookmarks, remote.bookmarks),
+    qstats,
     username: local.username ?? remote.username,
     description: local.description ?? remote.description,
   };

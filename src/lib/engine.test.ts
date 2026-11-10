@@ -9,6 +9,7 @@ function makeQuestion(id: string, overrides: Partial<Question> = {}): Question {
     options: ['Alpha', 'Beta', 'Gamma', 'Delta'],
     answer: 0,
     explanation: `Explanation ${id}`,
+    topic: 'general',
     verified: true,
     ...overrides,
   };
@@ -110,6 +111,7 @@ describe('buildSession', () => {
       options: expect.any(Array),
       correctIndex: expect.any(Number),
       explanation: 'Explanation q1',
+      topic: 'general',
     });
     expect(question).not.toHaveProperty('source');
     expect(question).not.toHaveProperty('verified');
@@ -280,6 +282,30 @@ describe('buildWrongSession', () => {
 
     expect(result.questions).toEqual([]);
     expect(result.wrongCount).toBe(0);
+    expect(result.poolExhausted).toBe(true);
+  });
+});
+
+describe('topic-filtered sessions', () => {
+  it('only builds questions tagged with the requested topics', () => {
+    const pool = [
+      makeQuestion('a1', { topic: 'algebra' }),
+      makeQuestion('a2', { topic: 'algebra' }),
+      makeQuestion('g1', { topic: 'geometry' }),
+      makeQuestion('gen1', { topic: 'general' }),
+    ];
+
+    const result = buildSession(pool, [], 'all', { topics: ['algebra'] });
+
+    expect(result.questions.map((question) => question.id).sort()).toEqual(['a1', 'a2']);
+    expect(result.unseenCount).toBe(2);
+    expect(result.poolExhausted).toBe(false);
+  });
+
+  it('returns an exhausted pool when the topic has no questions', () => {
+    const result = buildSession(makePool(2), [], 5, { topics: ['probability'] });
+
+    expect(result.questions).toEqual([]);
     expect(result.poolExhausted).toBe(true);
   });
 });
