@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="ICSE MCQs">
+  <rect width="512" height="512" rx="112" fill="#4f46e5"/>
+  <circle cx="256" cy="256" r="196" fill="#4338ca" opacity="0.45"/>
+  <text x="256" y="292" text-anchor="middle" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="224" font-weight="700" fill="#ffffff">10</text>
+  <text x="256" y="386" text-anchor="middle" font-family="DejaVu Sans, Arial, Helvetica, sans-serif" font-size="64" font-weight="700" letter-spacing="10" fill="#c7d2fe">MCQ</text>
+</svg>

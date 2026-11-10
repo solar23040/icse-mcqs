@@ -30,6 +30,14 @@ const pageTitle = title ? `${title} | ICSE 10 MCQs` : 'ICSE Class 10 MCQ Practic
     <meta name="description" content={description} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     <meta name="color-scheme" content="light dark" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#4f46e5" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1e1b4b" media="(prefers-color-scheme: dark)" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="ICSE MCQs" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <script is:inline>
       (() => {
         let stored = null;
@@ -110,5 +118,19 @@ const pageTitle = title ? `${title} | ICSE 10 MCQs` : 'ICSE Class 10 MCQ Practic
         </div>
       </div>
     </footer>
+
+    {
+      import.meta.env.PROD && (
+        <script is:inline>
+          if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+              navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' }).catch(() => {
+                /* Offline support is optional; the site works without it. */
+              });
+            });
+          }
+        </script>
+      )
+    }
   </body>
 </html>

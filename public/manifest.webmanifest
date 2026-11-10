@@ -1,0 +1,54 @@
+{
+  "id": "/",
+  "name": "ICSE Class 10 MCQ Practice",
+  "short_name": "ICSE MCQs",
+  "description": "Practise ICSE Class 10 multiple-choice questions by subject, drill weak topics and sit timed mock exams.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f8fafc",
+  "theme_color": "#4f46e5",
+  "lang": "en-IN",
+  "categories": ["education", "productivity"],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Mock exam",
+      "short_name": "Mock exam",
+      "description": "Start a timed mixed-subject paper",
+      "url": "/mock"
+    },
+    {
+      "name": "Bookmarked questions",
+      "short_name": "Bookmarks",
+      "description": "Practise the questions you saved",
+      "url": "/"
+    }
+  ]
+}
