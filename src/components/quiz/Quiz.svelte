@@ -103,6 +103,11 @@
   let questionDeadline = 0;
   let questionTimerId: ReturnType<typeof setInterval> | null = null;
 
+  let feedback: 'correct' | 'wrong' | null = null;
+  let feedbackKey = 0;
+  let feedbackTimerId: ReturnType<typeof setTimeout> | null = null;
+  let shakeTimerId: ReturnType<typeof setTimeout> | null = null;
+
   let current: SessionQuestion | null = null;
   let answered = false;
   let isLast = false;
@@ -191,12 +196,50 @@
     if (clockTimerId) clearInterval(clockTimerId);
     clockTimerId = null;
 
+    if (feedbackTimerId) clearTimeout(feedbackTimerId);
+    if (shakeTimerId) clearTimeout(shakeTimerId);
+    feedbackTimerId = null;
+    shakeTimerId = null;
+
+    if (typeof document !== 'undefined') {
+      document.documentElement.classList.remove('screen-shake');
+    }
+
     if (typeof window !== 'undefined') {
       window.removeEventListener('icse:gameUpdate', handleGameUpdate);
       window.removeEventListener('storage', handleStorage);
       window.removeEventListener('pageshow', handlePageShow);
     }
   });
+
+  /** Full-screen colour flash plus a short page shake. Cosmetic, so it fails soft. */
+  function playAnswerFeedback(kind: 'correct' | 'wrong'): void {
+    if (typeof window === 'undefined' || typeof document === 'undefined') return;
+
+    feedback = kind;
+    feedbackKey += 1;
+    if (feedbackTimerId) clearTimeout(feedbackTimerId);
+    feedbackTimerId = setTimeout(() => {
+      feedback = null;
+      feedbackTimerId = null;
+    }, 600);
+
+    const reduceMotion =
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return;
+
+    const root = document.documentElement;
+    root.classList.remove('screen-shake');
+    // Force a reflow so back-to-back answers restart the animation.
+    void root.offsetWidth;
+    root.classList.add('screen-shake');
+    if (shakeTimerId) clearTimeout(shakeTimerId);
+    shakeTimerId = setTimeout(() => {
+      root.classList.remove('screen-shake');
+      shakeTimerId = null;
+    }, 450);
+  }
 
   function currentDay(): string {
     return today === '' ? localDay(new Date()) : today;
@@ -494,6 +537,7 @@
     stopQuestionTimer();
 
     const correct = optionIndex !== null && optionIndex === question.correctIndex;
+    playAnswerFeedback(correct ? 'correct' : 'wrong');
 
     if (correct) {
       correctCount += 1;
@@ -801,6 +845,15 @@
 </script>
 
 <svelte:window on:keydown={handleKeydown} />
+
+{#if feedback}
+  {#key feedbackKey}
+    <div
+      class="answer-flash {feedback === 'correct' ? 'answer-flash-correct' : 'answer-flash-wrong'}"
+      aria-hidden="true"
+    ></div>
+  {/key}
+{/if}
 
 <section
   class="mx-auto w-full max-w-2xl rounded-3xl border border-slate-200 bg-white p-5 text-slate-900 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 sm:p-8"
