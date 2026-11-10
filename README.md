@@ -51,6 +51,33 @@ After a session, the start screen shows a **Practice mistakes** mode with a coun
 
 Mistake practice is a study aid: it does not change the saved `attempted`/`correct` stats or the seen-question progress. The wrong-question ids are stored per subject under `mcq:<subject>:wrong` in `localStorage`, next to `mcq:<subject>:seen` and `mcq:<subject>:stats`.
 
+## Bookmarked questions
+
+Every question has a **Save question** button, both in normal practice and in challenge mode. Saved ids are listed under `icse:bookmarks:v1` in `localStorage`, and the subject start screen shows a **Practise bookmarked (n)** button that runs a shuffled session from that list. Saving and unsaving is instant and works without an account. Bookmarks travel with progress export and cross-device sync.
+
+## Topic drills and weak topics
+
+Each question is tagged with a `topic` slug from `src/lib/topics.ts`. The subject page shows a **Topics** panel with per-topic accuracy and mastery, and a **Practise weakest topic** button. Topic links use `?topic=<slug>` on the subject page, which starts a shuffled drill using only that topic.
+
+Weak-topic detection needs at least five answers before it trusts an accuracy figure; until then it falls back to the least-mastered topic you have started. The `general` topic is never recommended.
+
+Tags are assigned by the heuristic rules in `scripts/tag-topics.ts`. Re-run it after adding questions, then review the reported `general` fallbacks by hand:
+
+```bash
+npx tsx scripts/tag-topics.ts
+```
+
+## Mock exam
+
+`/mock` runs a timed, mixed-subject paper. Choose 10, 25, or 50 questions; the timer allows one minute per question. You can change answers and jump around with the question palette until you submit, then the paper is marked at once with:
+
+- overall score, wrong and unanswered counts, time used, and XP gained;
+- a per-subject and per-topic breakdown, weakest first;
+- the correct answer and explanation for every question;
+- a link that starts a drill on your weakest topic.
+
+Only answered questions are written to stats, mastery, mistakes, and the leaderboard at submit time. Leaving the page mid-exam asks for confirmation first, and running out of time submits automatically.
+
 ## Weekly summary
 
 The home page's **This week** card shows the last seven local days: questions answered, accuracy, active days, a small day-by-day bar chart, and the subjects practised. It also counts mistake and retry practice, so it reflects everything you did rather than only scored sessions.
@@ -114,11 +141,12 @@ Editing `POLL_OPTIONS` is enough to change the list. Never reuse an id for a dif
 
 | Field         | Type       | Required | Rules |
 | ------------- | ---------- | -------- | ----- |
-| `id`          | `string`   | yes      | Non-empty and unique across all five data files. Use the subject prefix. |
+| `id`          | `string`   | yes      | Non-empty and unique across all data files. Use the subject prefix. |
 | `question`    | `string`   | yes      | Non-empty. Must be unique after ignoring case, whitespace, and punctuation. |
 | `options`     | `string[]` | yes      | Exactly 4 non-empty strings. Options within one question must be unique after normalisation. |
 | `answer`      | `number`   | yes      | Integer index into `options`, from `0` to `3`. |
 | `explanation` | `string`   | yes      | Non-empty. Shown after answering. |
+| `topic`       | `string`   | yes      | A topic slug for that subject from `src/lib/topics.ts`, or `general`. |
 | `verified`    | `boolean`  | yes      | `true` only after the content has been checked. |
 | `source`      | `string`   | no       | Internal note about where the question came from. Never rendered in the UI. |
 
@@ -129,6 +157,7 @@ Do **not** add fields named `year` or `paper`, at any nesting level. The validat
 ```json
 {
   "id": "hist-006",
+  "topic": "civics",
   "question": "Replace this with the question text.",
   "options": [
     "First option",
@@ -194,6 +223,14 @@ npx vitest run scripts/validate.test.ts
 ```
 
 The tests cover every validation rule, the near-duplicate report, report formatting, and the shipped placeholder files.
+
+## Installable app and offline use
+
+The site is a PWA. `public/manifest.webmanifest` provides the install metadata and icons, and a hand-written `public/sw.js` caches the app shell. On Chrome/Edge/Android use the browser's **Install app** action; on iOS use **Share → Add to Home Screen**. The installed app opens in its own window and keeps the theme colour.
+
+The service worker is registered in production builds only, so `npm run dev` never serves stale files. It precaches the home page and its hashed bundles, caches pages as you visit them, and serves them network-first. API calls (`/api/*`) and `/dev` are never cached. If you are offline and open a page you have not visited, the cached home page is shown instead.
+
+To test offline behaviour, run `npm run build && npx astro preview`, load a page, then switch the browser to offline mode. If you change the caching strategy, bump `VERSION` in `public/sw.js` so old caches are cleared on activation.
 
 ## Deploy
 
